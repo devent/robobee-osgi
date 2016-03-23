@@ -1,0 +1,16 @@
+.project
+.settings
+.classpath
+target
+test-output
+*~
+*~?
+*~??
+*.class
+*.log
+jspf.cache
+.directory
+.factorypath
+.apt_generated
+runner/
+bin/
