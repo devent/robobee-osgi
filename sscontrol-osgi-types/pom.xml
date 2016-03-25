@@ -3,23 +3,24 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
 		<artifactId>compiled-bundle-settings</artifactId>
 		<version>1.0-SNAPSHOT</version>
-        <relativePath>sscontrol-osgi/poms/compiled/</relativePath>
+		<relativePath>sscontrol-osgi/poms/compiled/</relativePath>
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>com.anrisoftware.core</bundle.symbolicName>
-		<bundle.namespace>com.anrisoftware.core</bundle.namespace>
+		<bundle.symbolicName>com.anrisoftware.types</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.types</bundle.namespace>
 	</properties>
 
 	<groupId>com.anrisoftware.sscontrol.osgi</groupId>
-	<artifactId>sscontrol-osgi-core</artifactId>
-    <name>sscontrol-osgi - ${bundle.symbolicName}</name>
+	<artifactId>sscontrol-osgi-types</artifactId>
+	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
+	<description>Defines the common types used by services and scripts.</description>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -35,6 +36,10 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>osgi_R4_compendium</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
 	</dependencies>
 

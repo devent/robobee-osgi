@@ -2,22 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
 		<artifactId>shared-plugin-settings</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<modelVersion>4.0.0</modelVersion>
 	<artifactId>wrapper-bundle-settings</artifactId>
-
 	<name>sscontrol-osgi - wrapper instructions</name>
+	<description>Simple OSGi wrapper around third-party jar(s)</description>
 
 	<!-- | don't apply project details to wrapped jars -->
 	<organization />
-	<description>
-    Simple OSGi wrapper around third-party jar(s)
-  </description>
 	<licenses>
 		<license />
 	</licenses>
@@ -25,6 +23,11 @@
 	<packaging>pom</packaging>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-log</artifactId>
+			<version>2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
