@@ -53,40 +53,38 @@
 						<goals> <goal>eclipse</goal> </goals> </execution> -->
 				</executions>
 			</plugin>
-
-            <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <configuration>
-                    <basedir>${basedir}</basedir>
-                    <header>${basedir}/src/main/resources/header.txt</header>
-                    <aggregate>true</aggregate>
-                    <encoding>${file.encoding}</encoding>
-                    <strictCheck>true</strictCheck>
-                    <properties>
-                        <project.name>${project.artifactId}</project.name>
-                        <project.year>${project.custom.year}</project.year>
-                        <project.user.name>${project.custom.user.name}</project.user.name>
-                        <project.user.email>${project.custom.user.email}</project.user.email>
-                    </properties>
-                    <excludes>
-                        <exclude>**/*.txt</exclude>
-                        <exclude>runner/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                        <groovy>SLASHSTAR_STYLE</groovy>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<configuration>
+					<basedir>${basedir}</basedir>
+					<header>${basedir}/src/main/resources/header.txt</header>
+					<aggregate>true</aggregate>
+					<encoding>${file.encoding}</encoding>
+					<strictCheck>true</strictCheck>
+					<properties>
+						<project.name>${project.artifactId}</project.name>
+						<project.year>${project.custom.year}</project.year>
+						<project.user.name>${project.custom.user.name}</project.user.name>
+						<project.user.email>${project.custom.user.email}</project.user.email>
+					</properties>
+					<excludes>
+						<exclude>**/*.txt</exclude>
+						<exclude>runner/**</exclude>
+					</excludes>
+					<mapping>
+						<java>SLASHSTAR_STYLE</java>
+						<groovy>SLASHSTAR_STYLE</groovy>
+					</mapping>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -102,12 +100,8 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.ops4j</groupId>
-										<artifactId>
-											maven-pax-plugin
-										</artifactId>
-										<versionRange>
-											[1.6.0,)
-										</versionRange>
+										<artifactId>maven-pax-plugin</artifactId>
+										<versionRange>[1.6.0,)</versionRange>
 										<goals>
 											<goal>testCompile</goal>
 											<goal>compile</goal>

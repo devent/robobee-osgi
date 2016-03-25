@@ -20,6 +20,7 @@ package com.anrisoftware.parser.internal;
 
 import java.net.URI;
 
+import com.anrisoftware.core.external.Service;
 import com.anrisoftware.parser.external.ParserService;
 
 /**
@@ -28,7 +29,7 @@ import com.anrisoftware.parser.external.ParserService;
 public class ParserServiceImpl implements ParserService {
 
     @Override
-    public <T> T parse(URI resource) {
+    public <T extends Service> T parse(URI resource) {
         // TODO Auto-generated method stub
         return null;
     }

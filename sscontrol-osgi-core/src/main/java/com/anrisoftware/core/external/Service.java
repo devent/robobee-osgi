@@ -1,34 +1,28 @@
 /*
  * Copyright 2011-2016 Erwin Müller <erwin.mueller@deventm.org>
  *
- * This file is part of sscontrol-osgi-parser.
+ * This file is part of sscontrol-osgi-core.
  *
- * sscontrol-osgi-parser is free software: you can redistribute it and/or modify it
+ * sscontrol-osgi-core is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
- * sscontrol-osgi-parser is distributed in the hope that it will be useful, but
+ * sscontrol-osgi-core is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with sscontrol-osgi-parser. If not, see <http://www.gnu.org/licenses/>.
+ * along with sscontrol-osgi-core. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.parser.external;
-
-import java.net.URI;
-
-import com.anrisoftware.core.external.Service;
+package com.anrisoftware.core.external;
 
 /**
- * Parses the resource.
+ * Server service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ParserService {
-
-    <T extends Service> T parse(URI resource);
+public interface Service {
 }
