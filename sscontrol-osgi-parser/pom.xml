@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <parent>
-    <relativePath>sscontrol-osgi/poms/compiled/</relativePath>
-    <groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
-    <artifactId>compiled-bundle-settings</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+	<modelVersion>4.0.0</modelVersion>
 
-  <properties>
-    <bundle.symbolicName>com.anrisoftware.parser</bundle.symbolicName>
-    <bundle.namespace>com.anrisoftware.parser</bundle.namespace>
-  </properties>
+	<parent>
+		<groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>sscontrol-osgi/poms/compiled/</relativePath>
+	</parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.anrisoftware.sscontrol.osgi</groupId>
-  <artifactId>sscontrol-parser</artifactId>
-  <version>1.0-SNAPSHOT</version>
+	<properties>
+		<bundle.symbolicName>com.anrisoftware.parser</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.parser</bundle.namespace>
+	</properties>
 
-  <name>${bundle.symbolicName}</name>
+	<groupId>com.anrisoftware.sscontrol.osgi</groupId>
+	<artifactId>sscontrol-osgi-parser</artifactId>
+	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
+	<packaging>bundle</packaging>
 
-  <packaging>bundle</packaging>
-
-  <dependencies>
-    <!--
-     | uncomment to add all imported (non-local) bundles to your compilation classpath
-    <dependency>
-      <type>pom</type>
-      <groupId>${parent.groupId}</groupId>
-      <artifactId>provision</artifactId>
-      <optional>true</optional>
-    </dependency>
-    -->
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_core</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_compendium</artifactId>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
+	<dependencies>
+		<!-- | uncomment to add all imported (non-local) bundles to your compilation
+			classpath <dependency> <type>pom</type> <groupId>${parent.groupId}</groupId>
+			<artifactId>provision</artifactId> <optional>true</optional> </dependency> -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi_R4_core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi_R4_compendium</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>
