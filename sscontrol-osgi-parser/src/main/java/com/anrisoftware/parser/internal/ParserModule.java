@@ -18,17 +18,14 @@
  */
 package com.anrisoftware.parser.internal;
 
-import java.net.URI;
-
 import com.anrisoftware.parser.external.ParserService;
+import com.google.inject.AbstractModule;
 
-/**
- * Internal implementation of our example OSGi service
- */
-public class ParseServiceImpl implements ParserService {
+public class ParserModule extends AbstractModule {
 
-    public String parse(URI resource) {
-        // TODO Auto-generated method stub
-        return null;
+    @Override
+    protected void configure() {
+        bind(ParserService.class).to(ParserServiceImpl.class);
     }
+
 }

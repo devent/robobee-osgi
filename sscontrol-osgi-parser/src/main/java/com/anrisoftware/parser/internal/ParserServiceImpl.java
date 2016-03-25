@@ -16,17 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-parser. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.parser.external;
+package com.anrisoftware.parser.internal;
 
 import java.net.URI;
 
-/**
- * Parses the resource.
- *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
- */
-public interface ParserService {
+import com.anrisoftware.parser.external.ParserService;
 
-    <T> T parse(URI resource);
+/**
+ * Internal implementation of our example OSGi service
+ */
+public class ParserServiceImpl implements ParserService {
+
+    @Override
+    public <T> T parse(URI resource) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

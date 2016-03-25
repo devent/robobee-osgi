@@ -6,11 +6,10 @@
     <artifactId>sscontrol-bundle</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>RoboBee :: Bundle</name>
+    <name>sscontrol-osgi - bundle</name>
 
     <modules>
         <module>sscontrol-osgi</module>
-        <module>sscontrol-osgi-parser</module>
     </modules>
 
 </project>
