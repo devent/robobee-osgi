@@ -3,7 +3,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>com.anrisoftware.globalpom</groupId>
@@ -17,14 +17,15 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>sscontrol-osgi - parent</name>
 	<description>Generated using Pax-Construct</description>
+	<inceptionYear>2016</inceptionYear>
+    <packaging>pom</packaging>
 
 	<properties>
+		<project.custom.year>${project.inceptionYear}</project.custom.year>
 		<!-- | some example OSGi runtime properties -->
 		<org.osgi.service.http.port>8080</org.osgi.service.http.port>
 		<org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
 	</properties>
-
-	<packaging>pom</packaging>
 
 	<modules>
 		<module>poms</module>
@@ -36,9 +37,9 @@
 		<module>com.anrisoftware.globalpom.log</module>
 	</modules>
 
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
 
 	<build>
 
