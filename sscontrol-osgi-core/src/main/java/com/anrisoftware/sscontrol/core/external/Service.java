@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2016 Erwin Müller <erwin.mueller@deventm.org>
+ * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
  *
  * This file is part of sscontrol-osgi-core.
  *
