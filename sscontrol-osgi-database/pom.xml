@@ -13,11 +13,12 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>com.anrisoftware.database</bundle.symbolicName>
-		<bundle.namespace>com.anrisoftware.database</bundle.namespace>
+		<bundle.symbolicName>com.anrisoftware.sscontrol.database</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.sscontrol.database</bundle.namespace>
+		<project.custom.bundle.activator>${bundle.namespace}.internal.DatabaseActivator</project.custom.bundle.activator>
 	</properties>
 
-	<groupId>com.anrisoftware.sscontrol.osgi</groupId>
+	<groupId>com.anrisoftware.sscontrol</groupId>
 	<artifactId>sscontrol-osgi-database</artifactId>
 	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
 	<packaging>bundle</packaging>
@@ -37,25 +38,25 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.anrisoftware.sscontrol.osgi</groupId>
+			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-osgi-core</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>bundle</type>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol.osgi</groupId>
-            <artifactId>sscontrol-osgi-types</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-osgi-types</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<type>bundle</type>
+		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-assistedinject</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
@@ -85,10 +86,10 @@
 			<artifactId>globalpom-log</artifactId>
 			<version>2.0</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

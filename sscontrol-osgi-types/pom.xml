@@ -13,11 +13,12 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>com.anrisoftware.types</bundle.symbolicName>
-		<bundle.namespace>com.anrisoftware.types</bundle.namespace>
+		<bundle.symbolicName>com.anrisoftware.sscontrol.types</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.sscontrol.types</bundle.namespace>
+        <project.custom.bundle.activator>${bundle.namespace}.internal.TypesActivator</project.custom.bundle.activator>
 	</properties>
 
-	<groupId>com.anrisoftware.sscontrol.osgi</groupId>
+	<groupId>com.anrisoftware.sscontrol</groupId>
 	<artifactId>sscontrol-osgi-types</artifactId>
 	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
 	<description>Defines the common types used by services and scripts.</description>

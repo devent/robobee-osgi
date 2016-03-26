@@ -13,11 +13,12 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>com.anrisoftware.core</bundle.symbolicName>
-		<bundle.namespace>com.anrisoftware.core</bundle.namespace>
+		<bundle.symbolicName>com.anrisoftware.sscontrol.core</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.sscontrol.core</bundle.namespace>
+		<project.custom.bundle.activator>${bundle.namespace}.internal.CoreActivator</project.custom.bundle.activator>
 	</properties>
 
-	<groupId>com.anrisoftware.sscontrol.osgi</groupId>
+	<groupId>com.anrisoftware.sscontrol</groupId>
 	<artifactId>sscontrol-osgi-core</artifactId>
     <name>sscontrol-osgi - ${bundle.symbolicName}</name>
 	<packaging>bundle</packaging>
