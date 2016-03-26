@@ -21,6 +21,7 @@ package com.anrisoftware.sscontrol.database.internal;
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
+import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseAccessImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
@@ -38,6 +39,9 @@ public class DatabaseModule extends AbstractModule {
                 DatabaseDbImpl.class).build(DatabaseDbImplFactory.class));
         install(new FactoryModuleBuilder().implement(DatabaseUser.class,
                 DatabaseUserImpl.class).build(DatabaseUserImplFactory.class));
+        install(new FactoryModuleBuilder().implement(DatabaseAccessImpl.class,
+                DatabaseAccessImpl.class)
+                .build(DatabaseAccessImplFactory.class));
     }
 
 }

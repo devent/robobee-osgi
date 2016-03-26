@@ -18,6 +18,26 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
+import java.util.List;
+
+import com.anrisoftware.sscontrol.types.external.UserPassword;
+
+/**
+ * Database user.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public interface DatabaseUser {
+
+    /**
+     * Returns the user name and password.
+     */
+    UserPassword getUser();
+
+    /**
+     * Returns the list of databases that the user have access to.
+     */
+    List<DatabaseAccess> getAccess();
 
 }

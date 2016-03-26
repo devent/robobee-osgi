@@ -19,13 +19,18 @@
 package com.anrisoftware.sscontrol.database.internal;
 
 import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.adminSet;
+import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.bindSet;
 import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.dbAdded;
+import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.userAdded;
+
+import java.net.InetSocketAddress;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
+import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 
 /**
@@ -41,7 +46,11 @@ final class DatabaseImplLogger extends AbstractLogger {
 
         dbAdded("Database {} added to {}"),
 
-        adminSet("Admin user {} set to {}");
+        adminSet("Admin user {} set to {}"),
+
+        userAdded("User {} added to {}"),
+
+        bindSet("Bind address {} set to {}");
 
         private String name;
 
@@ -68,5 +77,13 @@ final class DatabaseImplLogger extends AbstractLogger {
 
     void adminSet(DatabaseImpl database, UserPassword admin) {
         debug(adminSet, admin, database);
+    }
+
+    void userAdded(DatabaseImpl database, DatabaseUser user) {
+        debug(userAdded, user, database);
+    }
+
+    void bindSet(DatabaseImpl database, InetSocketAddress bindAddress) {
+        debug(bindSet, bindAddress, database);
     }
 }

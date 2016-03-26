@@ -18,12 +18,24 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
+import com.google.inject.assistedinject.Assisted;
 
+/**
+ * Database.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public class DatabaseDbImpl implements DatabaseDb {
 
     public interface DatabaseDbImplFactory {
@@ -32,8 +44,26 @@ public class DatabaseDbImpl implements DatabaseDb {
 
     }
 
+    private final String name;
+
+    @Inject
+    DatabaseDbImpl(@Assisted Map<String, Object> args) {
+        this.name = toName(args.get("name"));
+    }
+
+    @SuppressWarnings("deprecation")
+    private String toName(Object object) {
+        notNull(object, "name=null");
+        return ObjectUtils.toString(object);
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).toString();
+        return new ToStringBuilder(this).append("name", name).toString();
     }
 }

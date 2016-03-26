@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,10 +100,13 @@ public class DatabaseImpl implements Database {
         } else {
             this.bindAddress = new InetSocketAddress(host, port);
         }
+        log.bindSet(this, bindAddress);
     }
 
     @SuppressWarnings("deprecation")
     public void admin(Map<String, Object> args) {
+        notNull(args.get("user"), "user=null");
+        notNull(args.get("password"), "password=null");
         String name = ObjectUtils.toString(args.get("user"));
         String password = ObjectUtils.toString(args.get("password"));
         this.adminUser = userPasswordService.create(name, password);
@@ -119,6 +124,7 @@ public class DatabaseImpl implements Database {
         args.put("name", name);
         DatabaseUser user = userFactory.create(args);
         users.add(user);
+        log.userAdded(this, user);
         return user;
     }
 
@@ -158,6 +164,7 @@ public class DatabaseImpl implements Database {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).toString();
+        return new ToStringBuilder(this).append("bind", bindAddress)
+                .append("admin", adminUser).toString();
     }
 }

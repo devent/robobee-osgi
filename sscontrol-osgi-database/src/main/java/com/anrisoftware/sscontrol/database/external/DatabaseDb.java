@@ -18,6 +18,17 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
+/**
+ * Database.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public interface DatabaseDb {
+
+    /**
+     * Returns the name of the database.
+     */
+    String getName();
 
 }
