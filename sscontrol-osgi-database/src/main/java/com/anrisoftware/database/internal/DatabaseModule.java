@@ -22,6 +22,7 @@ import com.anrisoftware.database.external.Database;
 import com.anrisoftware.database.external.DatabaseDb;
 import com.anrisoftware.database.external.DatabaseUser;
 import com.anrisoftware.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
+import com.anrisoftware.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -31,6 +32,8 @@ public class DatabaseModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Database.class).to(DatabaseImpl.class);
+        install(new FactoryModuleBuilder().implement(DatabaseImpl.class,
+                DatabaseImpl.class).build(DatabaseImplFactory.class));
         install(new FactoryModuleBuilder().implement(DatabaseDb.class,
                 DatabaseDbImpl.class).build(DatabaseDbImplFactory.class));
         install(new FactoryModuleBuilder().implement(DatabaseUser.class,

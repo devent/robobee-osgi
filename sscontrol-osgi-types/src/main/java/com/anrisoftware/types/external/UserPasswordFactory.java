@@ -18,20 +18,13 @@
  */
 package com.anrisoftware.types.external;
 
-/**
- * User name and password credentials.
- *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
- */
-public interface UserPassword {
+import com.google.inject.assistedinject.Assisted;
 
-    String getName();
+public interface UserPasswordFactory {
 
-    String getPassword();
+    UserPassword create();
 
-    UserPassword changeName(String name);
-
-    UserPassword changePassword(String password);
+    UserPassword create(@Assisted("name") String name,
+            @Assisted("password") String password);
 
 }

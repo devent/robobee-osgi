@@ -28,6 +28,7 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.database.external.Database
+import com.anrisoftware.types.internal.TypesModule
 import com.google.inject.Guice
 
 @Slf4j
@@ -47,6 +48,6 @@ class DatabaseScriptTest {
     @Before
     void setupTest() {
         toStringStyle
-        Guice.createInjector(new DatabaseModule()).injectMembers(this)
+        Guice.createInjector(new DatabaseModule(), new TypesModule()).injectMembers(this)
     }
 }

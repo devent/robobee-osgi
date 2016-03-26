@@ -18,6 +18,8 @@
  */
 package com.anrisoftware.database.internal;
 
+import static com.google.inject.Guice.createInjector;
+
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -26,7 +28,6 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import com.anrisoftware.database.external.Database;
-import com.google.inject.Guice;
 
 /**
  * Extension of the default OSGi bundle activator
@@ -38,7 +39,7 @@ public class DatabaseActivator implements BundleActivator {
 
     @Override
     public void start(BundleContext bc) throws Exception {
-        Guice.createInjector(new DatabaseModule()).injectMembers(this);
+        createInjector(new DatabaseServicesModule(bc)).injectMembers(this);
         Properties props = new Properties();
         bc.registerService(Database.class.getName(), database, props);
     }

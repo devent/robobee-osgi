@@ -16,27 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-database. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.database.external;
+package com.anrisoftware.database.internal;
 
-import java.net.InetSocketAddress;
-import java.util.List;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
-import com.anrisoftware.types.external.UserPassword;
+import com.anrisoftware.types.external.UserPasswordService;
+import com.google.inject.AbstractModule;
 
-/**
- * Public API representing an example OSGi service
- */
-public interface Database {
+public class DatabaseServicesModule extends AbstractModule {
 
-    Database setBindAddress(InetSocketAddress address);
+    private final BundleContext context;
 
-    InetSocketAddress getBindAddress();
+    public DatabaseServicesModule(BundleContext bc) {
+        this.context = bc;
+    }
 
-    Database setAdminUser(UserPassword userPassword);
+    @Override
+    protected void configure() {
+        retriveServices();
+        install(new DatabaseModule());
+    }
 
-    UserPassword getAdminUser();
+    private void retriveServices() {
+        ServiceReference reference = context
+                .getServiceReference(UserPasswordService.class.getName());
+        bind(UserPasswordService.class).toInstance(
+                (UserPasswordService) context.getService(reference));
+    }
 
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
 }

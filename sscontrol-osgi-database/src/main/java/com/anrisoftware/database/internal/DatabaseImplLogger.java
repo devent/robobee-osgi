@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.database.internal;
 
+import static com.anrisoftware.database.internal.DatabaseImplLogger._.adminSet;
 import static com.anrisoftware.database.internal.DatabaseImplLogger._.dbAdded;
 
 import javax.inject.Singleton;
@@ -25,6 +26,7 @@ import javax.inject.Singleton;
 import com.anrisoftware.database.external.Database;
 import com.anrisoftware.database.external.DatabaseDb;
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.types.external.UserPassword;
 
 /**
  * Logging for {@link DatabaseImpl}.
@@ -37,7 +39,9 @@ final class DatabaseImplLogger extends AbstractLogger {
 
     enum _ {
 
-        dbAdded("Database {} added to {}");
+        dbAdded("Database {} added to {}"),
+
+        adminSet("Admin user {} set to {}");
 
         private String name;
 
@@ -60,5 +64,9 @@ final class DatabaseImplLogger extends AbstractLogger {
 
     public void dbAdded(Database database, DatabaseDb db) {
         debug(dbAdded, db, database);
+    }
+
+    void adminSet(DatabaseImpl database, UserPassword admin) {
+        debug(adminSet, admin, database);
     }
 }

@@ -18,20 +18,7 @@
  */
 package com.anrisoftware.types.external;
 
-/**
- * User name and password credentials.
- *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
- */
-public interface UserPassword {
+public interface UserPasswordService {
 
-    String getName();
-
-    String getPassword();
-
-    UserPassword changeName(String name);
-
-    UserPassword changePassword(String password);
-
+    UserPassword create(String name, String password);
 }

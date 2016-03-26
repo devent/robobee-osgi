@@ -18,33 +18,20 @@
  */
 package com.anrisoftware.types.internal;
 
-import java.util.Properties;
-
 import javax.inject.Inject;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
+import com.anrisoftware.types.external.UserPassword;
+import com.anrisoftware.types.external.UserPasswordFactory;
 import com.anrisoftware.types.external.UserPasswordService;
-import com.google.inject.Guice;
 
-/**
- * Extension of the default OSGi bundle activator
- */
-public class TypesActivator implements BundleActivator {
+public class UserPasswordServiceImpl implements UserPasswordService {
 
     @Inject
-    private UserPasswordService userPasswordService;
+    private UserPasswordFactory userPasswordFactory;
 
     @Override
-    public void start(BundleContext bc) throws Exception {
-        Guice.createInjector(new TypesModule()).injectMembers(this);
-        Properties props = new Properties();
-        bc.registerService(UserPasswordService.class.getName(),
-                userPasswordService, props);
+    public UserPassword create(String name, String password) {
+        return userPasswordFactory.create(name, password);
     }
 
-    @Override
-    public void stop(BundleContext bc) throws Exception {
-    }
 }

@@ -26,7 +26,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.felix.scr.annotations.Component;
 
 import com.anrisoftware.database.external.Database;
 import com.anrisoftware.database.external.DatabaseDb;
@@ -34,11 +36,23 @@ import com.anrisoftware.database.external.DatabaseUser;
 import com.anrisoftware.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
 import com.anrisoftware.types.external.UserPassword;
+import com.anrisoftware.types.external.UserPasswordService;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Internal implementation of our example OSGi service
  */
+@Component(name = "com.anrisoftware.database.internal", immediate = true)
 public class DatabaseImpl implements Database {
+
+    public interface DatabaseImplFactory {
+
+        DatabaseImpl create();
+
+        DatabaseImpl create(@Assisted Database database);
+
+    }
 
     private final List<DatabaseDb> dbs;
 
@@ -48,22 +62,50 @@ public class DatabaseImpl implements Database {
     private DatabaseImplLogger log;
 
     @Inject
+    private DatabaseImplFactory databaseFactory;
+
+    @Inject
     private DatabaseDbImplFactory dbFactory;
 
     @Inject
     private DatabaseUserImplFactory userFactory;
 
+    @Inject
+    private UserPasswordService userPasswordService;
+
+    private InetSocketAddress bindAddress;
+
+    private UserPassword adminUser;
+
+    @AssistedInject
     DatabaseImpl() {
         this.dbs = new ArrayList<DatabaseDb>();
         this.users = new ArrayList<DatabaseUser>();
     }
 
-    public void bind(Map<String, Object> args, String host) {
-
+    @AssistedInject
+    DatabaseImpl(@Assisted Database database) {
+        this.dbs = new ArrayList<DatabaseDb>(database.getDatabases());
+        this.users = new ArrayList<DatabaseUser>(database.getUsers());
+        this.bindAddress = database.getBindAddress();
+        this.adminUser = database.getAdminUser();
     }
 
-    public void admin(Map<String, Object> args) {
+    public void bind(Map<String, Object> args, String host) {
+        Integer port = (Integer) args.get("port");
+        if (host == null) {
+            this.bindAddress = new InetSocketAddress(port);
+        } else {
+            this.bindAddress = new InetSocketAddress(host, port);
+        }
+    }
 
+    @SuppressWarnings("deprecation")
+    public void admin(Map<String, Object> args) {
+        String name = ObjectUtils.toString(args.get("user"));
+        String password = ObjectUtils.toString(args.get("password"));
+        this.adminUser = userPasswordService.create(name, password);
+        log.adminSet(this, adminUser);
     }
 
     public DatabaseDb db(Map<String, Object> args) {
@@ -81,20 +123,37 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Database setBind(InetSocketAddress address) {
-        // TODO Auto-generated method stub
-        return null;
+    public Database setBindAddress(InetSocketAddress address) {
+        DatabaseImpl database = databaseFactory.create(this);
+        database.bindAddress = address;
+        return database;
     }
 
     @Override
-    public Database setAdmin(UserPassword userPassword) {
-        // TODO Auto-generated method stub
-        return null;
+    public InetSocketAddress getBindAddress() {
+        return bindAddress;
+    }
+
+    @Override
+    public Database setAdminUser(UserPassword user) {
+        DatabaseImpl database = databaseFactory.create(this);
+        database.adminUser = user;
+        return database;
+    }
+
+    @Override
+    public UserPassword getAdminUser() {
+        return adminUser;
     }
 
     @Override
     public List<DatabaseDb> getDatabases() {
         return Collections.unmodifiableList(dbs);
+    }
+
+    @Override
+    public List<DatabaseUser> getUsers() {
+        return Collections.unmodifiableList(users);
     }
 
     @Override
