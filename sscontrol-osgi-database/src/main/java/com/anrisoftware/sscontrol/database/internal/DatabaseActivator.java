@@ -20,6 +20,7 @@ package com.anrisoftware.sscontrol.database.internal;
 
 import static com.google.inject.Guice.createInjector;
 
+import java.util.Dictionary;
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -37,10 +38,11 @@ public class DatabaseActivator implements BundleActivator {
     @Inject
     private DatabaseImpl database;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void start(BundleContext bc) throws Exception {
         createInjector(new DatabaseServicesModule(bc)).injectMembers(this);
-        Properties props = new Properties();
+        Dictionary props = new Properties();
         bc.registerService(Database.class.getName(), database, props);
     }
 

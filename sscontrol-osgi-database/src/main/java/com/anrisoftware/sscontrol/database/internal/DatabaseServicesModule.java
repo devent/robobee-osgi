@@ -40,6 +40,7 @@ public class DatabaseServicesModule extends AbstractModule {
         install(new DatabaseModule());
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void retriveServices() {
         ServiceReference reference = context
                 .getServiceReference(UserPasswordService.class.getName());
