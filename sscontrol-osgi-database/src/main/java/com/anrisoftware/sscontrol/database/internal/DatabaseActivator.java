@@ -26,11 +26,8 @@ import javax.inject.Inject;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 import com.anrisoftware.sscontrol.database.external.Database;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
-import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 
 /**
  * Extension of the default OSGi bundle activator
@@ -45,13 +42,6 @@ public class DatabaseActivator implements BundleActivator {
         createInjector(new DatabaseServicesModule(bc)).injectMembers(this);
         Properties props = new Properties();
         bc.registerService(Database.class.getName(), database, props);
-        ServiceReference reference = bc
-                .getServiceReference(UserPasswordService.class.getName());
-        UserPasswordService userPasswordService = (UserPasswordService) bc
-                .getService(reference);
-        System.out.println(userPasswordService.getClass());// TODO println
-        UserPassword user = userPasswordService.create("a", "p");
-        System.out.println(user);// TODO println
     }
 
     @Override

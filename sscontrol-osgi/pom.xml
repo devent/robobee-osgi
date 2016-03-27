@@ -18,7 +18,7 @@
 	<name>sscontrol-osgi - parent</name>
 	<description>Generated using Pax-Construct</description>
 	<inceptionYear>2016</inceptionYear>
-    <packaging>pom</packaging>
+	<packaging>pom</packaging>
 
 	<properties>
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
@@ -41,10 +41,52 @@
 		<maven>2.2.1</maven>
 	</prerequisites>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.servicemix.bundles</groupId>
+				<artifactId>
+                    org.apache.servicemix.bundles.javax-inject
+                </artifactId>
+				<version>1_2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.servicemix.bundles</groupId>
+				<artifactId>
+                    org.apache.servicemix.bundles.aopalliance
+                </artifactId>
+				<version>1.0_4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.servicemix.bundles</groupId>
+				<artifactId>
+                    org.apache.servicemix.bundles.asm
+                </artifactId>
+				<version>3.3.1_1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpom-groovytestutils</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpom-log</artifactId>
+				<version>2.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
 	<build>
 
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.ops4j</groupId>
+					<artifactId>maven-pax-plugin</artifactId>
+					<version>1.6.0</version>
+				</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
@@ -80,7 +122,6 @@
 			<plugin>
 				<groupId>org.ops4j</groupId>
 				<artifactId>maven-pax-plugin</artifactId>
-				<version>1.6.0</version>
 				<configuration>
 					<!-- | some example Pax-Runner settings -->
 					<provision>
@@ -94,6 +135,7 @@
 			</plugin>
 
 			<plugin>
+				<!-- Ignore runner/ -->
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
 				<configuration>

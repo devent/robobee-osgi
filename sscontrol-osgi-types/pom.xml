@@ -9,7 +9,7 @@
 		<groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
 		<artifactId>compiled-bundle-settings</artifactId>
 		<version>1.0-SNAPSHOT</version>
-		<relativePath>sscontrol-osgi/poms/compiled/</relativePath>
+		<relativePath>../sscontrol-osgi/poms/compiled/</relativePath>
 	</parent>
 
 	<properties>
