@@ -33,9 +33,12 @@
 		<module>poms</module>
 		<module>provision</module>
 		<module>../sscontrol-osgi-core</module>
-		<module>../sscontrol-osgi-types</module>
-		<module>../sscontrol-osgi-parser</module>
 		<module>../sscontrol-osgi-database</module>
+		<module>../sscontrol-osgi-debug</module>
+		<module>../sscontrol-osgi-dhclient</module>
+		<module>../sscontrol-osgi-parser</module>
+		<module>../sscontrol-osgi-test</module>
+		<module>../sscontrol-osgi-types</module>
 		<module>com.anrisoftware.globalpom.log</module>
 	</modules>
 
@@ -61,6 +64,11 @@
 			<dependency>
 				<groupId>org.ops4j.pax.url</groupId>
 				<artifactId>pax-url-aether</artifactId>
+				<version>${url.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.url</groupId>
+				<artifactId>pax-url-wrap</artifactId>
 				<version>${url.version}</version>
 			</dependency>
 			<dependency>

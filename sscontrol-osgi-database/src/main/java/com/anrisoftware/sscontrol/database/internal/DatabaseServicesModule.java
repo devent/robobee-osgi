@@ -21,8 +21,8 @@ package com.anrisoftware.sscontrol.database.internal;
 import static com.google.inject.util.Providers.of;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
+import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.AbstractModule;
 
@@ -40,12 +40,16 @@ public class DatabaseServicesModule extends AbstractModule {
         install(new DatabaseModule());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void retriveServices() {
-        ServiceReference reference = context
-                .getServiceReference(UserPasswordService.class.getName());
         bind(UserPasswordService.class).toProvider(
-                of((UserPasswordService) context.getService(reference)));
+                of((UserPasswordService) context.getService(context
+                        .getServiceReference(UserPasswordService.class
+                                .getName()))));
+        bind(ToStringService.class)
+                .toProvider(
+                        of((ToStringService) context.getService(context
+                                .getServiceReference(ToStringService.class
+                                        .getName()))));
     }
 
 }

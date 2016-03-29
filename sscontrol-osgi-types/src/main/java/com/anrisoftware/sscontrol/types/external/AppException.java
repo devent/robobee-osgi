@@ -16,23 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-types. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.types.internal;
+package com.anrisoftware.sscontrol.types.external;
 
-import com.anrisoftware.sscontrol.types.external.ToStringService;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
-import com.anrisoftware.sscontrol.types.external.UserPasswordFactory;
-import com.anrisoftware.sscontrol.types.external.UserPasswordService;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import org.apache.commons.lang3.exception.ContextedException;
 
-public class TypesModule extends AbstractModule {
+@SuppressWarnings("serial")
+public class AppException extends ContextedException {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder().implement(UserPassword.class,
-                UserPasswordImpl.class).build(UserPasswordFactory.class));
-        bind(UserPasswordService.class).to(UserPasswordServiceImpl.class);
-        bind(ToStringService.class).to(ToStringServiceImpl.class);
+    protected AppException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    protected AppException(String message) {
+        super(message);
     }
 
 }

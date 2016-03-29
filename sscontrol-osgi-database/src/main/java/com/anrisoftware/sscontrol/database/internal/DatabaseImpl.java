@@ -23,6 +23,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,8 @@ import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.assistedinject.Assisted;
@@ -75,6 +78,10 @@ public class DatabaseImpl implements Database {
     @Inject
     private UserPasswordService userPasswordService;
 
+    @Inject
+    private ToStringService toStringService;
+
+
     private InetSocketAddress bindAddress;
 
     private UserPassword adminUser;
@@ -93,13 +100,15 @@ public class DatabaseImpl implements Database {
         this.adminUser = database.getAdminUser();
     }
 
-    public void bind(Map<String, Object> args, String host) {
+    public void bind(Map<String, Object> args, String host) throws AppException {
+        args.put("host", host);
+        bind(args);
+    }
+
+    private void bind(Map<String, Object> args) throws AppException {
+        String host = toStringService.toString(args, "host");
         Integer port = (Integer) args.get("port");
-        if (host == null) {
-            this.bindAddress = new InetSocketAddress(port);
-        } else {
-            this.bindAddress = new InetSocketAddress(host, port);
-        }
+        this.bindAddress = new InetSocketAddress(host, port);
         log.bindSet(this, bindAddress);
     }
 
@@ -122,10 +131,22 @@ public class DatabaseImpl implements Database {
 
     public DatabaseUser user(Map<String, Object> args, String name) {
         args.put("name", name);
+        return user((LinkedHashMap<String, Object>) args);
+    }
+
+    public DatabaseUser user(LinkedHashMap<String, Object> args) {
         DatabaseUser user = userFactory.create(args);
         users.add(user);
         log.userAdded(this, user);
         return user;
+    }
+
+    public void debug(Map<String, Object> args, String name) {
+
+    }
+
+    public void debug(Map<String, Object> args) {
+
     }
 
     @Override

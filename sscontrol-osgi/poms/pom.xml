@@ -20,7 +20,6 @@
 	<modules>
 		<module>wrappers</module>
 		<module>compiled</module>
-        <module>testing</module>
 	</modules>
 
     <dependencyManagement>

@@ -13,23 +13,23 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>com.anrisoftware.sscontrol.database</bundle.symbolicName>
-		<bundle.namespace>com.anrisoftware.sscontrol.database</bundle.namespace>
-		<project.custom.bundle.activator>${bundle.namespace}.internal.DatabaseActivator</project.custom.bundle.activator>
+		<bundle.symbolicName>com.anrisoftware.sscontrol.debug</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.sscontrol.debug</bundle.namespace>
+		<project.custom.bundle.activator>${bundle.namespace}.internal.DebugActivator</project.custom.bundle.activator>
 	</properties>
 
 	<groupId>com.anrisoftware.sscontrol</groupId>
-	<artifactId>sscontrol-osgi-database</artifactId>
+	<artifactId>sscontrol-osgi-debug</artifactId>
 	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>
 		<!-- test dependencies -->
-		<dependency>
-			<groupId>com.anrisoftware.globalpom</groupId>
-			<artifactId>globalpom-groovytestutils</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- compile dependencies -->
 		<dependency>

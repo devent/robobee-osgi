@@ -18,39 +18,25 @@
  */
 package com.anrisoftware.sscontrol.types.internal;
 
-import java.util.Properties;
+import java.util.Map;
 
-import javax.inject.Inject;
+import org.apache.commons.lang3.ObjectUtils;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.ArgumentNullException;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
-import com.anrisoftware.sscontrol.types.external.UserPasswordService;
-import com.google.inject.Guice;
 
-/**
- * Extension of the default OSGi bundle activator
- */
-public class TypesActivator implements BundleActivator {
+public class ToStringServiceImpl implements ToStringService {
 
-    @Inject
-    private UserPasswordService userPasswordService;
-
-    @Inject
-    private ToStringService toStringService;
-
+    @SuppressWarnings("deprecation")
     @Override
-    public void start(BundleContext bc) throws Exception {
-        Guice.createInjector(new TypesModule()).injectMembers(this);
-        Properties props = new Properties();
-        bc.registerService(UserPasswordService.class.getName(),
-                userPasswordService, props);
-        bc.registerService(ToStringService.class.getName(), toStringService,
-                props);
+    public String toString(Map<String, Object> args, String arg)
+            throws AppException {
+        Object value = args.get(arg);
+        if (value == null) {
+            throw new ArgumentNullException(args, arg);
+        }
+        return ObjectUtils.toString(value);
     }
 
-    @Override
-    public void stop(BundleContext bc) throws Exception {
-    }
 }

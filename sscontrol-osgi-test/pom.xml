@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.anrisoftware.sscontrol.osgi.build</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../sscontrol-osgi/poms/compiled/</relativePath>
+	</parent>
+
+	<properties>
+		<bundle.symbolicName>com.anrisoftware.sscontrol.test</bundle.symbolicName>
+		<bundle.namespace>com.anrisoftware.sscontrol.test</bundle.namespace>
+		<project.custom.bundle.activator>${bundle.namespace}.internal.TestActivator</project.custom.bundle.activator>
+	</properties>
+
+	<groupId>com.anrisoftware.sscontrol</groupId>
+	<artifactId>sscontrol-osgi-test</artifactId>
+	<name>sscontrol-osgi - ${bundle.symbolicName}</name>
+	<description>Defines the common types used by services and scripts.</description>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<!-- compile dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.globalpom</groupId>
+			<artifactId>globalpom-groovytestutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-container-native</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-junit4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-link-mvn</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.url</groupId>
+			<artifactId>pax-url-aether</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.url</groupId>
+			<artifactId>pax-url-wrap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+
+        <!-- own bundles -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-database</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+
+		<!-- | uncomment to add all imported (non-local) bundles to your compilation
+			classpath <dependency> <type>pom</type> <groupId>${parent.groupId}</groupId>
+			<artifactId>provision</artifactId> <optional>true</optional> </dependency> -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi_R4_core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi_R4_compendium</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+</project>
