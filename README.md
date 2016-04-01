@@ -1,6 +1,56 @@
 RoboBee - Simple Server Control
 ===============================
 
+# Introduction
+
+![RoboBee overview.](https://anrisoftware.com/projects/projects/sscontrol-osgi-docu/repository/revisions/master/raw/images/sscontrol-overview_en.svg)
+
+## Idea
+
+The idea to create a new server configuration tool was born out of a simple concideration,
+the configuration of each new server is always the same for the same stack, and the stack
+is always similar, i.e. web server, database server, email server, DNS server.
+So, I asked myself, what if I could just tell the computer to install and configure me the stack
+on the server, without for me to actually have any knowledge how to configure it.
+The user should be able to tell the computer to just install and setup, for example, a web-server
+without to have the actual knowledge how to do it. All the knowledge how to 
+install and configure the server should be contained in the application that is 
+installing and configures the server.
+
+## Expert Knowledge
+
+RoboBee will contain expert knowledge to install and configure the server
+with the needed services and applications. The expert knowledge will contain 
+best practices in regards to security and it will updated regularly to
+fix bugs and to react to new security issues.
+To ensure a constant flow of updated expert knowledge, the [OSGi technology](https://www.osgi.org)
+will be used for RoboBee. OSGi container allows for seamlessly updates of
+the modules that contain the expert knowledge from a central repository.
+
+## OSGi Container
+
+There are multiple OSGi container implementations (Apache Felix, Equinox OSGi, Knopflerfish, etc.)
+and RoboBee will be able
+to run on those, but also it will provide its own container, [Karaf](http://karaf.apache.org).
+Based on the Karaf container, RoboBee can be installed on a GNU/Linux server
+just as any other application and run as a service in the background.
+The communication between RoboBee and the user is done via a SSH connection and the
+OSGi console.
+
+## Domain Specific Language
+
+The user is expected to write simple scripts in a domain specific language (DSL)
+based on Groovy that communicate the wishes of the user to RoboBee. A syntax
+must be followed that groups the server services into categories, like web server,
+DNS server, mail server, etc. and also have application categories like Wordpress,
+Drupal, Postfix, MySQL, etc. The user is assumed to have only very basic knowledge 
+of those services and applications, for example, the user should know that the MySQL database
+server have an administration user, provides databases and have users that have
+permissions to create tables in those databases. But this kind of knowledge
+is not expert knowledge and is expected from the user to have. Expert knowledge in this
+case would be how to install the MySQL server, configure the server, create
+databases and users on the server and grant the users permissions to those databases.
+
 # Vision of the Solution
 
 ## Vision Statement
@@ -93,7 +143,6 @@ a declarative domain specific language (DSL) based on Ruby. It is developed
 by [Puppet Labs](https://puppetlabs.com)
 
 ### Chef,
-\begin{quotation}
 
 > "[is a] configuration management tool written in Ruby and Erlang. It uses a 
 pure-Ruby, domain-specific language (DSL) for writing system configuration 
