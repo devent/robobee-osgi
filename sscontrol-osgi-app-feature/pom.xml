@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.anrisoftware.sscontrol</groupId>
+		<artifactId>sscontrol-osgi</artifactId>
+		<version>1.0-SNAPSHOT</version>
+        <relativePath>../sscontrol-osgi/</relativePath>
+	</parent>
+
+	<artifactId>sscontrol-osgi-app-feature</artifactId>
+	<packaging>feature</packaging>
+	<name>sscontrol-osgi - app-feature</name>
+	<description>sscontrol-osgi-app-feature details</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.karaf.tooling</groupId>
+				<artifactId>karaf-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<startLevel>50</startLevel>
+					<aggregateFeatures>true</aggregateFeatures>
+					<checkDependencyChange>true</checkDependencyChange>
+					<failOnDependencyChange>false</failOnDependencyChange>
+					<logDependencyChanges>true</logDependencyChanges>
+					<overwriteChangedDependencies>true</overwriteChangedDependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
