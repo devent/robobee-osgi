@@ -3,61 +3,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.anrisoftware.globalpom</groupId>
-        <artifactId>globalpom-parent</artifactId>
-        <version>2.1-SNAPSHOT</version>
-        <relativePath />
-    </parent>
-
     <groupId>com.anrisoftware.sscontrol</groupId>
-    <artifactId>sscontrol-bundle</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>root</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>sscontrol-osgi - bundle</name>
+    <name>sscontrol-osgi - root</name>
 
     <modules>
-        <module>sscontrol-osgi</module>
-        <module>sscontrol-osgi-app-feature</module>
-    </modules>
-    
-    <build>
-
-        <plugins>
-            <plugin>
-                <!-- Ignore runner/ -->
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <configuration>
-                    <basedir>${basedir}</basedir>
-                    <header>${basedir}/header.txt</header>
-                    <aggregate>true</aggregate>
-                    <encoding>${file.encoding}</encoding>
-                    <strictCheck>true</strictCheck>
-                    <properties>
-                        <project.name>${project.artifactId}</project.name>
-                        <project.year>${project.custom.year}</project.year>
-                        <project.user.name>${project.custom.user.name}</project.user.name>
-                        <project.user.email>${project.custom.user.email}</project.user.email>
-                    </properties>
-                    <excludes>
-                        <exclude>**</exclude>
-                    </excludes>
-                    <mapping>
-                        <java>SLASHSTAR_STYLE</java>
-                        <groovy>SLASHSTAR_STYLE</groovy>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-    </build>
+        <module>sscontrol-osgi-parent</module>
+  </modules>
 
 </project>
