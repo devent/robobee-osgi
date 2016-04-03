@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-model</artifactId>
+			<artifactId>sscontrol-osgi-types</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>

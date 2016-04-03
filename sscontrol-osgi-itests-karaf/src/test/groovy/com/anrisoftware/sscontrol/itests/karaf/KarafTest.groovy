@@ -44,17 +44,12 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite
 import org.ops4j.pax.exam.util.PathUtils
 import org.osgi.framework.BundleContext
 
-import com.anrisoftware.sscontrol.model.TaskService
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 class KarafTest {
 
     @Inject
     BundleContext bundleContext
-
-    @Inject
-    TaskService taskService
 
     File getConfigFile(String path) {
         return new File(this.getClass().getResource(path).getFile());
@@ -70,12 +65,10 @@ class KarafTest {
         def repo = maven('com.anrisoftware.sscontrol', 'sscontrol-osgi-features').versionAsInProject().type('xml')
         options << karafDistributionConfiguration().frameworkUrl(karafUrl).name('Apache Karaf').unpackDirectory('target/exam' as File)
         //options << keepRuntimeFolder()
-        options << features(repo, 'example-tasklist-cdi')
+        options << features(repo, 'sscontrol-osgi')
     }
 
     @Test
     void test1() throws Exception {
-        def tasks = taskService.getTasks()
-        assert tasks.size() == 2
     }
 }
