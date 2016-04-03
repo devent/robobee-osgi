@@ -12,6 +12,7 @@
 
     <artifactId>sscontrol-osgi-features</artifactId>
     <packaging>pom</packaging>
+    <name>sscontrol-osgi - features</name>
 
     <build>
         <resources>
