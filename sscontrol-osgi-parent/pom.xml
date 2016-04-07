@@ -22,21 +22,16 @@
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
 		<project.custom.source.source>1.7</project.custom.source.source>
 		<project.custom.source.target>1.7</project.custom.source.target>
-		<project.custom.blueprint.scanpath>com.anrisoftware.sscontrol</project.custom.blueprint.scanpath>
+		<project.custom.bundle.namespace>com.anrisoftware.sscontrol</project.custom.bundle.namespace>
 		<org.osgi.service.http.port>8080</org.osgi.service.http.port>
 		<org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
 	</properties>
 
 	<modules>
-		<module>../sscontrol-osgi-model</module>
-		<module>../sscontrol-osgi-persistence</module>
-		<module>../sscontrol-osgi-ui</module>
-		<module>../sscontrol-osgi-features</module>
-		<module>../sscontrol-osgi-tasklist-service</module>
-		<module>../sscontrol-osgi-angular-ui</module>
-		<module>../sscontrol-osgi-types</module>
         <module>../sscontrol-osgi-database</module>
+		<module>../sscontrol-osgi-features</module>
 		<module>../sscontrol-osgi-itests-karaf</module>
+        <module>../sscontrol-osgi-types</module>
 	</modules>
 
 	<dependencies>
@@ -58,6 +53,10 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr.annotations</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -72,52 +71,68 @@
 				<artifactId>globalpom-log</artifactId>
 				<version>2.1-SNAPSHOT</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.servicemix.bundles</groupId>
-				<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-				<version>1_2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.servicemix.bundles</groupId>
-				<artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
-				<version>1.0_4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.servicemix.bundles</groupId>
-				<artifactId>org.apache.servicemix.bundles.asm</artifactId>
-				<version>3.3.1_1</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.felix</groupId>
+										<artifactId>maven-scr-plugin</artifactId>
+										<versionRange>[1.7.4,)</versionRange>
+										<goals>
+											<goal>scr</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+											<runOnConfiguration>true</runOnConfiguration>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
+					<Export-Package>!${project.custom.bundle.namespace}.internal.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
+					<Private-Package>${project.custom.bundle.namespace}.internal.*</Private-Package>
 					<instructions>
 						<_include>osgi.bnd</_include>
 					</instructions>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.aries.blueprint</groupId>
-				<artifactId>blueprint-maven-plugin</artifactId>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>generate-scr-scrdescriptor</id>
 						<goals>
-							<goal>blueprint-generate</goal>
+							<goal>scr</goal>
 						</goals>
-						<phase>process-classes</phase>
 					</execution>
 				</executions>
-				<configuration>
-					<scanPaths>
-						<scanPath>${project.custom.blueprint.scanpath}</scanPath>
-					</scanPaths>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

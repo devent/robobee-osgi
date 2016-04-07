@@ -20,8 +20,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.UserPassword;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * User name and password credentials.
@@ -35,15 +33,11 @@ public class UserPasswordImpl implements UserPassword {
 
     private final String password;
 
-    @AssistedInject
-    UserPasswordImpl() {
-        this.name = null;
-        this.password = null;
+    public UserPasswordImpl() {
+        this(null, null);
     }
 
-    @AssistedInject
-    UserPasswordImpl(@Assisted("name") String name,
-            @Assisted("password") String password) {
+    public UserPasswordImpl(String name, String password) {
         this.name = name;
         this.password = password;
     }

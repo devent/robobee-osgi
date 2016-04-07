@@ -15,20 +15,25 @@
  */
 package com.anrisoftware.sscontrol.types.internal;
 
-import javax.inject.Inject;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.types.external.UserPassword;
-import com.anrisoftware.sscontrol.types.external.UserPasswordFactory;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 
+/**
+ * Creates the user with a password.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+@Component
+@Service(UserPasswordService.class)
 public class UserPasswordServiceImpl implements UserPasswordService {
-
-    @Inject
-    private UserPasswordFactory userPasswordFactory;
 
     @Override
     public UserPassword create(String name, String password) {
-        return userPasswordFactory.create(name, password);
+        return new UserPasswordImpl(name, password);
     }
 
 }

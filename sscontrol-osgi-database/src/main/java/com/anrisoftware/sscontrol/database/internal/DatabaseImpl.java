@@ -28,7 +28,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.felix.scr.annotations.Component;
 
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
@@ -43,9 +42,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * Internal implementation of our example OSGi service
+ * Database script service.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-@Component(name = "com.anrisoftware.database.internal", immediate = true)
 public class DatabaseImpl implements Database {
 
     public interface DatabaseImplFactory {
@@ -77,7 +78,6 @@ public class DatabaseImpl implements Database {
 
     @Inject
     private ToStringService toStringService;
-
 
     private InetSocketAddress bindAddress;
 

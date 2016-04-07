@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-        <project.custom.bundle.activator>com.anrisoftware.sscontrol.database.internal.DatabaseActivator</project.custom.bundle.activator>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.database</project.custom.bundle.namespace>
 	</properties>
 
 	<artifactId>sscontrol-osgi-database</artifactId>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
 			<artifactId>sscontrol-osgi-types</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 			<type>bundle</type>
 		</dependency>
 

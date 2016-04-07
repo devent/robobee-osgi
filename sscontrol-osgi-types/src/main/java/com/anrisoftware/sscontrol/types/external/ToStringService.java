@@ -17,7 +17,20 @@ package com.anrisoftware.sscontrol.types.external;
 
 import java.util.Map;
 
+/**
+ * Converts an argument to a String.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public interface ToStringService {
 
-    String toString(Map<String, Object> args, String arg) throws AppException;
+    /**
+     * Converts the specified argument to a {@link String}.
+     *
+     * @throws ArgumentNullException
+     *             if the argument is {@code null}.
+     */
+    String toString(Map<String, Object> args, String argName)
+            throws AppException;
 }

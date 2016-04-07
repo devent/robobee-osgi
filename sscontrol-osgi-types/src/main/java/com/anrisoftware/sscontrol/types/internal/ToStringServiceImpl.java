@@ -18,11 +18,21 @@ package com.anrisoftware.sscontrol.types.internal;
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentNullException;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 
+/**
+ * Converts an argument to a String.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+@Component
+@Service(ToStringService.class)
 public class ToStringServiceImpl implements ToStringService {
 
     @SuppressWarnings("deprecation")

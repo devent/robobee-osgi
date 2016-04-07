@@ -17,19 +17,16 @@ package com.anrisoftware.sscontrol.types.internal;
 
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
-import com.anrisoftware.sscontrol.types.external.UserPasswordFactory;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class TypesModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(UserPassword.class,
-                UserPasswordImpl.class).build(UserPasswordFactory.class));
-        bind(UserPasswordService.class).to(UserPasswordServiceImpl.class);
         bind(ToStringService.class).to(ToStringServiceImpl.class);
+        bind(UserPassword.class).to(UserPasswordImpl.class);
+        bind(UserPasswordService.class).to(UserPasswordServiceImpl.class);
     }
 
 }

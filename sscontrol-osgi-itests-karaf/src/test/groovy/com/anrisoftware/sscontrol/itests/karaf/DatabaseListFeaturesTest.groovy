@@ -28,47 +28,39 @@
  */
 package com.anrisoftware.sscontrol.itests.karaf;
 
+import static org.apache.commons.lang3.StringUtils.*
 import static org.ops4j.pax.exam.CoreOptions.*
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.ops4j.pax.exam.Configuration
 import org.ops4j.pax.exam.Option
 import org.ops4j.pax.exam.junit.PaxExam
-import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy
-import org.ops4j.pax.exam.spi.reactors.PerSuite
-import org.ops4j.pax.exam.util.PathUtils
-import org.osgi.framework.BundleContext
+import org.ops4j.pax.exam.spi.reactors.PerClass
+
+import com.anrisoftware.sscontrol.database.external.DatabaseService
 
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerSuite.class)
-class KarafTest {
+@ExamReactorStrategy(PerClass.class)
+@CompileStatic
+@Slf4j
+class DatabaseListFeaturesTest extends AbstractBundleTest {
 
     @Inject
-    BundleContext bundleContext
+    DatabaseService databaseService
 
-    File getConfigFile(String path) {
-        return new File(this.getClass().getResource(path).getFile());
-    }
-
-    @Configuration
-    Option[] config() {
-        def options = []
-        def karafUrl = maven('org.apache.karaf', 'apache-karaf', '4.0.4').type('tar.gz')
-        options << junitBundles()
-        options << systemProperty('logback.configurationFile').value("file:${PathUtils.baseDir}/src/test/resources/logback-test.xml")
-        options << logLevel(LogLevel.INFO)
-        def repo = maven('com.anrisoftware.sscontrol', 'sscontrol-osgi-features').versionAsInProject().type('xml')
-        options << karafDistributionConfiguration().frameworkUrl(karafUrl).name('Apache Karaf').unpackDirectory('target/exam' as File)
-        //options << keepRuntimeFolder()
-        options << features(repo, 'sscontrol-osgi')
+    List<Option> createConfig() {
+        def options = super.createConfig()
+        options << features(repo, 'sscontrol-osgi-database')
     }
 
     @Test
-    void test1() throws Exception {
+    void "database service loaded"() {
+        executeCommand."list features"()
     }
 }

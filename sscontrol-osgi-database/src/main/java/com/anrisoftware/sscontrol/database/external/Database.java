@@ -21,7 +21,10 @@ import java.util.List;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 
 /**
- * Public API representing an example OSGi service
+ * Database script service.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
 public interface Database {
 
