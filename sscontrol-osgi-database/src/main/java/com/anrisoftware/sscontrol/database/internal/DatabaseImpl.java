@@ -20,20 +20,22 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
+import com.anrisoftware.sscontrol.debug.external.DebugLogging;
+import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
@@ -83,6 +85,8 @@ public class DatabaseImpl implements Database {
 
     private UserPassword adminUser;
 
+    private DebugLogging debug;
+
     @AssistedInject
     DatabaseImpl() {
         this.dbs = new ArrayList<DatabaseDb>();
@@ -97,53 +101,84 @@ public class DatabaseImpl implements Database {
         this.adminUser = database.getAdminUser();
     }
 
+    @Inject
+    public void setDebugService(DebugService debugService) {
+        this.debug = debugService.create();
+    }
+
     public void bind(Map<String, Object> args, String host) throws AppException {
         args.put("host", host);
         bind(args);
     }
 
-    private void bind(Map<String, Object> args) throws AppException {
+    /**
+     * Sets the binding host.
+     * <ul>
+     * <li>{@code "host"} the host address.
+     * <li>{@code "port"} the host port.
+     * </ul>
+     */
+    public void bind(Map<String, Object> args) throws AppException {
         String host = toStringService.toString(args, "host");
         Integer port = (Integer) args.get("port");
         this.bindAddress = new InetSocketAddress(host, port);
         log.bindSet(this, bindAddress);
     }
 
-    @SuppressWarnings("deprecation")
-    public void admin(Map<String, Object> args) {
+    public void admin(Map<String, Object> args) throws AppException {
         notNull(args.get("user"), "user=null");
         notNull(args.get("password"), "password=null");
-        String name = ObjectUtils.toString(args.get("user"));
-        String password = ObjectUtils.toString(args.get("password"));
+        String name = toStringService.toString(args, "user");
+        String password = toStringService.toString(args, "password");
         this.adminUser = userPasswordService.create(name, password);
         log.adminSet(this, adminUser);
     }
 
+    public DatabaseDb db(Map<String, Object> args, String name) {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put("name", name);
+        return db(a);
+    }
+
+    public DatabaseDb db(String name) {
+        Map<String, Object> a = new HashMap<String, Object>();
+        a.put("name", name);
+        return db(a);
+    }
+
     public DatabaseDb db(Map<String, Object> args) {
-        DatabaseDb db = dbFactory.create(args);
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        DatabaseDb db = dbFactory.create();
+        InvokerHelper.invokeMethod(db, "db", a);
         dbs.add(db);
         log.dbAdded(this, db);
         return db;
     }
 
     public DatabaseUser user(Map<String, Object> args, String name) {
-        args.put("name", name);
-        return user((LinkedHashMap<String, Object>) args);
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put("name", name);
+        return user(a);
     }
 
-    public DatabaseUser user(LinkedHashMap<String, Object> args) {
-        DatabaseUser user = userFactory.create(args);
+    public DatabaseUser user(Map<String, Object> args) {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        DatabaseUser user = userFactory.create();
+        InvokerHelper.invokeMethod(user, "user", a);
         users.add(user);
         log.userAdded(this, user);
         return user;
     }
 
     public void debug(Map<String, Object> args, String name) {
-
+        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        arguments.put("name", name);
+        InvokerHelper.invokeMethod(debug, "debug", arguments);
     }
 
     public void debug(Map<String, Object> args) {
-
+        Map<String, Object> arguments = new HashMap<String, Object>(args);
+        InvokerHelper.invokeMethod(debug, "debug", arguments);
     }
 
     @Override
@@ -181,8 +216,14 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
+    public DebugLogging getDebug() {
+        return debug;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("bind", bindAddress)
-                .append("admin", adminUser).toString();
+                .append("admin", adminUser).append("dbs", dbs)
+                .append("users", users).toString();
     }
 }

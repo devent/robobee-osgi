@@ -29,6 +29,7 @@
 
 	<modules>
         <module>../sscontrol-osgi-database</module>
+        <module>../sscontrol-osgi-debug</module>
 		<module>../sscontrol-osgi-features</module>
 		<module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-types</module>

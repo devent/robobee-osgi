@@ -15,17 +15,15 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
-import static org.apache.commons.lang3.Validate.notNull;
-
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.ToStringService;
 
 /**
  * Database.
@@ -37,26 +35,49 @@ public class DatabaseDbImpl implements DatabaseDb {
 
     public interface DatabaseDbImplFactory {
 
-        DatabaseDbImpl create(Map<String, Object> args);
+        DatabaseDbImpl create();
 
     }
-
-    private final String name;
 
     @Inject
-    DatabaseDbImpl(@Assisted Map<String, Object> args) {
-        this.name = toName(args.get("name"));
+    private ToStringService toString;
+
+    private String name;
+
+    private String charset;
+
+    private String collate;
+
+    public DatabaseDb db(Map<String, Object> args) throws AppException {
+        this.name = toString.toString(args, "name");
+        if (args.containsKey("charset")) {
+            this.charset = toString.toString(args, "charset");
+            this.collate = toString.toString(args, "collate");
+        }
+        return this;
     }
 
-    @SuppressWarnings("deprecation")
-    private String toName(Object object) {
-        notNull(object, "name=null");
-        return ObjectUtils.toString(object);
+    public void script(String text) {
+
+    }
+
+    public void script(Map<String, Object> args) {
+
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getCharset() {
+        return charset;
+    }
+
+    @Override
+    public String getCollate() {
+        return collate;
     }
 
     @Override

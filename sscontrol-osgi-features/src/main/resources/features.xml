@@ -29,7 +29,8 @@
 	<feature name="sscontrol-osgi-database" version="${project.version}">
         <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/2.1-SNAPSHOT</bundle>
 	    <bundle>mvn:${project.groupId}/sscontrol-osgi-types/${project.version}</bundle>
-		<bundle>mvn:${project.groupId}/sscontrol-osgi-database/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-debug/${project.version}</bundle>
+	    <bundle>mvn:${project.groupId}/sscontrol-osgi-database/${project.version}</bundle>
 	</feature>
 
 	<feature name="sscontrol-osgi-log-dependencies" version="${project.version}">

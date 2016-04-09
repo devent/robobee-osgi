@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.internal;
+package com.anrisoftware.sscontrol.debug.internal;
 
 import static com.google.inject.util.Providers.of;
 
@@ -24,52 +24,41 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.database.external.Database;
-import com.anrisoftware.sscontrol.database.external.DatabaseService;
-import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
+import com.anrisoftware.sscontrol.debug.external.DebugLogging;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
-import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
 /**
- * Creates the database.
+ * Creates the debug logging.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component(immediate = true)
-@Service(DatabaseService.class)
-public class DatabaseServiceImpl implements DatabaseService {
+@Service(DebugService.class)
+public class DebugServiceImpl implements DebugService {
 
     @Inject
-    private DatabaseImplFactory databaseFactory;
-
-    @Reference
-    private UserPasswordService userPasswordService;
+    private DebugLoggingImplFactory debugFactory;
 
     @Reference
     private ToStringService toStringService;
 
-    @Reference
-    private DebugService debugService;
-
     @Override
-    public Database create() {
-        return databaseFactory.create();
+    public DebugLogging create() {
+        return debugFactory.create();
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new DatabaseModule(), new AbstractModule() {
+        Guice.createInjector(new DebugLoggingModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(UserPasswordService.class).toProvider(
-                        of(userPasswordService));
                 bind(ToStringService.class).toProvider(of(toStringService));
-                bind(DebugService.class).toProvider(of(debugService));
             }
         }).injectMembers(this);
     }

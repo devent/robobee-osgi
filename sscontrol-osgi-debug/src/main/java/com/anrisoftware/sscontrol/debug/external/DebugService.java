@@ -13,33 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.external;
-
-import java.net.InetSocketAddress;
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+package com.anrisoftware.sscontrol.debug.external;
 
 /**
- * Database script service.
+ * Creates the debug logging.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database {
+public interface DebugService {
 
-    Database setBindAddress(InetSocketAddress address);
+    DebugLogging create();
 
-    InetSocketAddress getBindAddress();
-
-    Database setAdminUser(UserPassword userPassword);
-
-    UserPassword getAdminUser();
-
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
 }

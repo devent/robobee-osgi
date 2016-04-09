@@ -13,33 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.external;
+package com.anrisoftware.sscontrol.debug.external;
 
-import java.net.InetSocketAddress;
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+import java.util.Map;
 
 /**
- * Database script service.
+ * Debug logging.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database {
+public interface DebugLogging {
 
-    Database setBindAddress(InetSocketAddress address);
+    /**
+     * Returns the modules for which the logging is active.
+     */
+    Map<String, DebugModule> getModules();
 
-    InetSocketAddress getBindAddress();
+    /**
+     * Adds the specified logging module.
+     */
+    DebugLogging putModule(DebugModule module);
 
-    Database setAdminUser(UserPassword userPassword);
+    /**
+     * Removes the specified logging module.
+     */
+    DebugLogging removeModule(String name);
 
-    UserPassword getAdminUser();
-
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
 }

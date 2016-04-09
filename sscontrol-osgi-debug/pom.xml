@@ -13,11 +13,11 @@
 	</parent>
 
 	<properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.database</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.debug</project.custom.bundle.namespace>
 	</properties>
 
-	<artifactId>sscontrol-osgi-database</artifactId>
-	<name>sscontrol-osgi - database</name>
+	<artifactId>sscontrol-osgi-debug</artifactId>
+	<name>sscontrol-osgi - debug</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -55,10 +55,6 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
@@ -82,12 +78,6 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<type>bundle</type>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-debug</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
 
 	</dependencies>
 

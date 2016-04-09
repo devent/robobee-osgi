@@ -28,4 +28,8 @@ public interface DatabaseDb {
      */
     String getName();
 
+    String getCharset();
+
+    String getCollate();
+
 }

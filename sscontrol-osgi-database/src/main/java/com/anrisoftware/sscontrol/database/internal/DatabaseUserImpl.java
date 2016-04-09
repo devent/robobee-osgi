@@ -15,36 +15,34 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
-import static org.apache.commons.lang3.Validate.notNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.database.external.DatabaseAccess;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseAccessImplFactory;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
-import com.google.inject.assistedinject.Assisted;
 
 public class DatabaseUserImpl implements DatabaseUser {
 
     public interface DatabaseUserImplFactory {
 
-        DatabaseUserImpl create(Map<String, Object> args);
+        DatabaseUserImpl create();
 
     }
 
     private final List<DatabaseAccess> accesses;
-
-    private final UserPassword userPassword;
 
     @Inject
     private DatabaseUserImplLogger log;
@@ -53,33 +51,37 @@ public class DatabaseUserImpl implements DatabaseUser {
     private DatabaseAccessImplFactory accessFactory;
 
     @Inject
-    DatabaseUserImpl(@Assisted Map<String, Object> args,
-            UserPasswordService userPasswordService, DatabaseUserImplLogger log) {
+    private UserPasswordService userPasswordService;
+
+    @Inject
+    private ToStringService toString;
+
+    private UserPassword user;
+
+    @Inject
+    DatabaseUserImpl() {
         this.accesses = new ArrayList<DatabaseAccess>();
-        this.userPassword = toUserPassword(args, userPasswordService, log);
     }
 
-    @SuppressWarnings("deprecation")
-    private UserPassword toUserPassword(Map<String, Object> args,
-            UserPasswordService userPasswordService, DatabaseUserImplLogger log) {
-        notNull(args.get("name"), "name=null");
-        notNull(args.get("password"), "password=null");
-        String name = ObjectUtils.toString(args.get("name"));
-        String password = ObjectUtils.toString(args.get("password"));
-        UserPassword userPassword = userPasswordService.create(name, password);
-        log.userPasswordSet(this, userPassword);
-        return userPassword;
+    public DatabaseUser user(Map<String, Object> args) throws AppException {
+        String name = toString.toString(args, "name");
+        String password = toString.toString(args, "password");
+        this.user = userPasswordService.create(name, password);
+        log.userPasswordSet(this, user);
+        return this;
     }
 
     public void access(Map<String, Object> args) {
-        DatabaseAccess access = accessFactory.create(args);
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        DatabaseAccess access = accessFactory.create();
+        InvokerHelper.invokeMethodSafe(access, "access", a);
         log.accessAdded(this, access);
         accesses.add(access);
     }
 
     @Override
     public UserPassword getUser() {
-        return userPassword;
+        return user;
     }
 
     @Override
@@ -89,7 +91,6 @@ public class DatabaseUserImpl implements DatabaseUser {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("user", userPassword)
-                .toString();
+        return new ToStringBuilder(this).append("user", user).toString();
     }
 }
