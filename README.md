@@ -1,61 +1,202 @@
-# Apache Karaf Tutorial Part 9 - Annotation based blueprint and JPA
+RoboBee - Simple Server Control
+===============================
 
-A small application to manage a list of tasks to do like in tutorial 1. Uses JEE annotations to avoid handwritten xml.
+# Introduction
 
-The blueprint-maven-plugin allows to use subset of the JEE annotations in source code and creates standard blueprint xml from it. This allows to build an example with JPA persistence, Transactions and a Servlet UI using zero hand written blueprint xml.
+![RoboBee overview.](https://anrisoftware.com/projects/projects/sscontrol-osgi-docu/repository/revisions/master/raw/images/sscontrol-overview_en.svg)
 
-Shows how to:
+## Idea
 
-* Create DataSources using pax-jdbc
-* Create bundles using maven and the maven bundle plugin
-* Wire bundles using CDI annotations and OSGi services
-* Write JPA DAO classes like in JEE using @PersistenceContext and @Transactional
-* Use the whiteboard pattern and the pax-web whiteboard extender to publish Servlets
-* Interface with modern UI frameworks like Angular JS
+The idea to create a new server configuration tool was born out of a simple concideration,
+the configuration of each new server is always the same for the same stack, and the stack
+is always similar, i.e. web server, database server, email server, DNS server.
+So, I asked myself, what if I could just tell the computer to install and configure me the stack
+on the server, without for me to actually have any knowledge how to configure it.
+The user should be able to tell the computer to just install and setup, for example, a web-server
+without to have the actual knowledge how to do it. All the knowledge how to 
+install and configure the server should be contained in the application that is 
+installing and configures the server.
 
-# Structure
+## Expert Knowledge
 
-* model - Service interface and model classes shared between persistence and ui
-* persistence - Full persistence implementation using JPA and hibernate
-* ui - Servlet based UI. Uses TaskService and publishes a servlet 
-* angular-ui - Angular/Bootstrap based UI
+RoboBee will contain expert knowledge to install and configure the server
+with the needed services and applications. The expert knowledge will contain 
+best practices in regards to security and it will updated regularly to
+fix bugs and to react to new security issues.
+To ensure a constant flow of updated expert knowledge, the [OSGi technology](https://www.osgi.org)
+will be used for RoboBee. OSGi container allows for seamlessly updates of
+the modules that contain the expert knowledge from a central repository.
 
-# Build
+## OSGi Container
 
-mvn clean install
+There are multiple OSGi container implementations (Apache Felix, Equinox OSGi, Knopflerfish, etc.)
+and RoboBee will be able
+to run on those, but also it will provide its own container, [Karaf](http://karaf.apache.org).
+Based on the Karaf container, RoboBee can be installed on a GNU/Linux server
+just as any other application and run as a service in the background.
+The communication between RoboBee and the user is done via a SSH connection and the
+OSGi console.
 
-# Installation
+## Domain Specific Language
 
-Download and start Karaf 4.0.3 
+The user is expected to write simple scripts in a domain specific language (DSL)
+based on Groovy that communicate the wishes of the user to RoboBee. A syntax
+must be followed that groups the server services into categories, like web server,
+DNS server, mail server, etc. and also have application categories like Wordpress,
+Drupal, Postfix, MySQL, etc. The user is assumed to have only very basic knowledge 
+of those services and applications, for example, the user should know that the MySQL database
+server have an administration user, provides databases and have users that have
+permissions to create tables in those databases. But this kind of knowledge
+is not expert knowledge and is expected from the user to have. Expert knowledge in this
+case would be how to install the MySQL server, configure the server, create
+databases and users on the server and grant the users permissions to those databases.
 
-Start karaf and execute the commands below
+# Vision of the Solution
 
-```Shell
-cat https://raw.githubusercontent.com/cschneider/Karaf-Tutorial/master/tasklist-blueprint-cdi/org.ops4j.datasource-tasklist.cfg | tac -f etc/org.ops4j.datasource-tasklist.cfg
-feature:repo-add mvn:net.lr.tasklist.blueprint.cdi/features/1.0.0-SNAPSHOT/xml
-feature:install example-tasklist-cdi-persistence example-tasklist-cdi-ui example-tasklist-cdi-service
-```
+## Vision Statement
 
-# Test
+The RoboBee (aka Simple Server Control) is about to fully configure a 
+server by defined profiles and script files using a domain specific language
+(DSL). The goal of the project is to follow high level user specifications
+to install and configure specific services on the server. RoboBee
+will follow the ["Ask, don't tell"](https://pragprog.com/articles/tell-dont-ask), 
+the ["Convention over configuration"](https://en.wikipedia.org/wiki/Convention_over_configuration)
+and the ["Principle of least knowledge"](https://en.wikipedia.org/wiki/Law_of_Demeter) 
+philosophies and principles.
 
-Open the UI in your browser <http://localhost:8181/tasklist> and work with the tasks.
+**"Ask, don't tell",**
 
-Alternatively use the REST endpoint <http://localhost:8181/cxf/tasklistRest>
+the user is expected to ask the different RoboBee services to install and 
+configure the server. The services will install and 
+configure the server according to the wishes of the user and will not expect
+from the user to know how to do it. 
 
-Create Task2 using the rest service
+**"Convention over configuration",**
 
-	curl -i -X POST -H "Content-Type: application/json" -d '{task:{"id":2,"title":"Task2"}}'  http://localhost:8181/cxf/tasklistRest
+the user is expected to follow the convention set from RoboBee to reduce
+the amount of needed configuration. Basically, to follow configuration
+file name conventions, and to follow protected configuration of the server.
 
-Retrieve Task2
+**"Principle of least knowledge",**
 
-	curl -i http://localhost:8181/cxf/tasklistRest/2
+the user is not expected to have any expert knowledge of how to install or 
+configure the server, all expoert knowledge is contained in RoboBee.
 
-# Import the source in eclipse
+## Major Features
 
-	Import... 
-	-> Existing maven projects 
-	-> Browse to tasklist-ds folder 
-	-> Select all projects 
-	Change option Advanced -> Name template to _[groupId].[artifactId]_. This will make sure we can also import other examples.
-	-> Finish
- 
+### F1-a. Install Server Services,
+
+installs server services on the server. Server services are usually
+DNS server to resolve DNS names (Bind, MaraDns), Httpd server to serve websites (Apache, Tomcat),
+proxy server for caching (Nginx, Squid), firewall to block harmful packages, MTA (Postfix, Exim, qmail),
+MDA (Dovecot, Courier), etc.
+
+### F1-b. Configures Server Services,
+
+configures server services on the server according to the whishes to the user.
+The manually edited configuration will be preserved as far as possible.
+
+### F2-a. Installs Applications,
+
+installs server applications that are run on the server. Applications 
+are usually run on already installed and configured server services like Apache or Tomcat.
+Those are, for example, Wordpress, Drupal, Squirrelmail, Roundcube, Redmine, JIRA, etc.
+
+### F2-b. Installs Applications,
+
+configures the applications on the server according to the whishes to the user.
+The manually edited configuration will be preserved as far as possible.
+
+### F3. Profiles,
+
+the system dependent configuration is stored in profiles and can be selected
+without the need to modify the script files. Different systems have different
+commands to configure the server (SysVInit, upstart, systemd, etc.) and have different
+paths of the commands and configuration files.
+
+## Dependencies
+
+### D1. Java,
+
+the underlying technology of the project.
+
+### D2. OSGi,
+
+the underlying technology of the project. RoboBee is seperate the different
+services in bundles that can be started and updated at run-time.
+
+### D3. Groovy,
+
+the framework to parse the domain specific language of the script files.
+
+### D4. StringTemplate,
+
+the framework to create service configuration files.
+
+## Related Projects
+
+### Puppet,
+
+is a configuration management for systems automation and 
+uses Json data structures in manifests files, but also uses 
+a declarative domain specific language (DSL) based on Ruby. It is developed
+by [Puppet Labs](https://puppetlabs.com)
+
+### Chef,
+
+> "[is a] configuration management tool written in Ruby and Erlang. It uses a 
+pure-Ruby, domain-specific language (DSL) for writing system configuration 
+"recipes". Chef is used to streamline the task of configuring and maintaining a 
+company's servers, and can integrate with cloud-based platforms such as 
+Internap, Amazon EC2, Google Cloud Platform, OpenStack, SoftLayer, Microsoft 
+Azure and Rackspace to automatically provision and configure new machines. Chef 
+contains solutions for both small and large scale systems, with features and 
+pricing for the respective ranges."
+
+https://en.wikipedia.org/wiki/Chef_(software)
+
+
+### CFEngine,
+
+> "is an open source configuration management system, written by Mark 
+Burgess. Its primary function is to provide automated configuration and 
+maintenance of large-scale computer systems, including the unified management of 
+servers, desktops, consumer and industrial devices, embedded networked devices, 
+mobile smartphones, and tablet computers."
+
+https://en.wikipedia.org/wiki/CFEngine
+
+
+### Salt,
+
+> "SaltStack platform or Salt is a Python-based open source configuration 
+management software and remote execution engine. Supporting the "Infrastructure 
+as Code" approach to deployment and cloud management."
+
+https://en.wikipedia.org/wiki/Salt_(software)
+
+### Ansible,
+
+> "a free-software platform for configuring and managing computers, combines 
+multi-node software deployment, ad hoc task execution, and configuration 
+management. It manages nodes (which must have Python 2.4 or later installed 
+on them) over SSH or over PowerShell. Modules work over JSON and standard 
+output and can be written in any programming language. The system uses YAML to 
+express reusable descriptions of systems."
+
+https://en.wikipedia.org/wiki/Ansible_(software)
+
+## License
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
