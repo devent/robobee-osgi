@@ -19,6 +19,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 import com.anrisoftware.sscontrol.debug.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.Script;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 
 /**
@@ -27,7 +28,7 @@ import com.anrisoftware.sscontrol.types.external.UserPassword;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database {
+public interface Database extends Script {
 
     Database setBindAddress(InetSocketAddress address);
 

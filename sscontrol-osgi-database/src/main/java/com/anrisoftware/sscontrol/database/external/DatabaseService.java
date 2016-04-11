@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
-
 /**
  * Creates the database.
  *
