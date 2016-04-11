@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.dhclient.external;
 
-@SuppressWarnings("serial")
-public class ArgumentNullException extends AppException {
-
-    public ArgumentNullException(String name) {
-        super("Argument null");
-        addContextValue("argument", name);
-    }
+/**
+ * Option, send, request, prepend, declare statements.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+public interface Statement {
 
 }

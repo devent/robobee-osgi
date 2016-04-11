@@ -35,15 +35,20 @@ import com.anrisoftware.sscontrol.types.external.ToStringService;
 @Service(ToStringService.class)
 public class ToStringServiceImpl implements ToStringService {
 
+    @Override
+    public String toString(Map<String, Object> args, String name)
+            throws AppException {
+        Object value = args.get(name);
+        return toString(value, name);
+    }
+
     @SuppressWarnings("deprecation")
     @Override
-    public String toString(Map<String, Object> args, String arg)
-            throws AppException {
-        Object value = args.get(arg);
-        if (value == null) {
-            throw new ArgumentNullException(args, arg);
+    public String toString(Object arg, String name) throws AppException {
+        if (arg == null) {
+            throw new ArgumentNullException(name);
         }
-        return ObjectUtils.toString(value);
+        return ObjectUtils.toString(arg);
     }
 
 }

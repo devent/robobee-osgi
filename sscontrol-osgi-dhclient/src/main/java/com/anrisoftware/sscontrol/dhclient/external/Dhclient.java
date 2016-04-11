@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.dhclient.external;
 
-@SuppressWarnings("serial")
-public class ArgumentNullException extends AppException {
+import java.util.List;
 
-    public ArgumentNullException(String name) {
-        super("Argument null");
-        addContextValue("argument", name);
-    }
+/**
+ * Dhclient script service.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+public interface Dhclient {
+
+    /**
+     * Returns the dhclient statements.
+     */
+    List<Statement> getStatements();
 
 }

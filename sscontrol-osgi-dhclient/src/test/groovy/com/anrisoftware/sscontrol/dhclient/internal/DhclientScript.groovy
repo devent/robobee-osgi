@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.dhclient.internal
 
-@SuppressWarnings("serial")
-public class ArgumentNullException extends AppException {
-
-    public ArgumentNullException(String name) {
-        super("Argument null");
-        addContextValue("argument", name);
+dhclient.with {
+    option 'rfc3442-classless-static-routes code 121 = array of unsigned integer 8'
+    send 'host-name', 'andare.fugue.com';
+    send 'host-name = gethostname()'
+    request '!domain-name-servers'
+    prepend 'domain-name-servers', '127.0.0.1'
+    declare 'interface', 'eth0' with {
+        // interface eth0
     }
-
+    declare 'alias' with {
+        // alias
+    }
+    declare 'lease' with {
+        // lease
+    }
 }

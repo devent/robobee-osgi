@@ -13,14 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.dhclient.external;
 
-@SuppressWarnings("serial")
-public class ArgumentNullException extends AppException {
+import java.util.List;
 
-    public ArgumentNullException(String name) {
-        super("Argument null");
-        addContextValue("argument", name);
-    }
+/**
+ * Collection of requests.
+ *
+ * @author Erwin Mueller, erwin.mueller@deventm.org
+ * @since 1.0
+ */
+public interface RequestsStatement extends Statement {
+
+    /**
+     * Adds new request option.
+     */
+    RequestsStatement add(OptionDeclaration option);
+
+    /**
+     * Removes the request option.
+     */
+    RequestsStatement remove(OptionDeclaration option);
+
+    /**
+     * Returns the request options.
+     */
+    List<OptionDeclaration> getRequests();
 
 }
