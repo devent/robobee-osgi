@@ -35,6 +35,7 @@
 		<module>../sscontrol-osgi-features</module>
 		<module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-types</module>
+        <module>../sscontrol-osgi-command-parse</module>
 	</modules>
 
 	<dependencies>

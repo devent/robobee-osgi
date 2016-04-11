@@ -21,7 +21,6 @@
 	xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
 	<feature name="sscontrol-osgi" version="${project.version}">
-	    <feature>sscontrol-osgi-log-dependencies</feature>
         <feature>sscontrol-osgi-guice-dependencies</feature>
 	    <feature>sscontrol-osgi-other-dependencies</feature>
 	</feature>
@@ -37,6 +36,12 @@
         <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/${project.custom.bundles.log.version}</bundle>
         <bundle>mvn:${project.groupId}/sscontrol-osgi-types/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/sscontrol-osgi-dhclient/${project.version}</bundle>
+    </feature>
+
+    <feature name="sscontrol-osgi-command-parse" version="${project.version}">
+        <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/${project.custom.bundles.log.version}</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-types/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-command-parse/${project.version}</bundle>
     </feature>
 
     <feature name="sscontrol-osgi-guice-dependencies" version="${project.version}">
