@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
-import static org.fest.util.Arrays.array;
-
 import javax.inject.Inject;
 
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -65,7 +63,7 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
 
     public DeclareStatement declare(String name, String value) {
         DeclareStatementImpl s = declareFactory.create();
-        InvokerHelper.invokeMethod(s, "declare", array(name, value));
+        InvokerHelper.invokeMethod(s, "declare", new Object[] { name, value });
         addStatement(s);
         return s;
     }
