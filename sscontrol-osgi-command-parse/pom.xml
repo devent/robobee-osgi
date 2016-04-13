@@ -17,6 +17,23 @@
 	<description>Provides the OSGi sscontrol commands</description>
 
 	<dependencies>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- own modules -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-osgi-parser</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>bundle</type>
+		</dependency>
+
+		<!-- compile dependencies -->
 		<dependency>
 			<groupId>org.apache.karaf.shell</groupId>
 			<artifactId>org.apache.karaf.shell.core</artifactId>
@@ -30,11 +47,6 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

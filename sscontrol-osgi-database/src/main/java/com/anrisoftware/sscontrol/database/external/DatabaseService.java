@@ -15,14 +15,14 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
+import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+
 /**
- * Creates the database.
+ * Database script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DatabaseService {
-
-    Database create();
+public interface DatabaseService extends SscontrolScriptService {
 
 }

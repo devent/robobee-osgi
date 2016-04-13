@@ -24,7 +24,6 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory
 import com.anrisoftware.sscontrol.types.internal.TypesModule
@@ -79,7 +78,6 @@ dhclient
         toStringStyle
         Guice.createInjector(
                 new DhclientModule(),
-                new DebugLoggingModule(),
                 new TypesModule()).injectMembers(this)
     }
 }

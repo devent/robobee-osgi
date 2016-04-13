@@ -39,10 +39,16 @@
     </feature>
 
     <feature name="sscontrol-osgi-command-parse" version="${project.version}">
-        <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/${project.custom.bundles.log.version}</bundle>
-        <bundle>mvn:${project.groupId}/sscontrol-osgi-types/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/sscontrol-osgi-command-parse/${project.version}</bundle>
     </feature>
+
+    <feature name="sscontrol-osgi-groovy-parser" version="${project.version}">
+        <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/${project.custom.bundles.log.version}</bundle>
+        <bundle>mvn:commons-io/commons-io/2.4</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-types/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-parser/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-groovy-parser/${project.version}</bundle>
+        </feature>
 
     <feature name="sscontrol-osgi-guice-dependencies" version="${project.version}">
         <bundle>mvn:com.google.guava/guava/19.0</bundle>

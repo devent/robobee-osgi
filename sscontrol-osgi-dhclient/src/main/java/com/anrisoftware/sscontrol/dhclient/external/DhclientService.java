@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.external;
 
+import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
 
 /**
  * Creates the database.
@@ -22,8 +23,7 @@ package com.anrisoftware.sscontrol.dhclient.external;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DhclientService {
+public interface DhclientService extends SscontrolScriptService {
 
-    Dhclient create();
 
 }

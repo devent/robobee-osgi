@@ -39,7 +39,7 @@ import com.google.inject.Guice;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component(immediate = true)
+@Component
 @Service(DatabaseService.class)
 public class DatabaseServiceImpl implements DatabaseService {
 

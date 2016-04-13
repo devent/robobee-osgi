@@ -34,12 +34,14 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.ops4j.pax.exam.Option
 import org.ops4j.pax.exam.junit.PaxExam
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy
 import org.ops4j.pax.exam.spi.reactors.PerClass
+import org.ops4j.pax.exam.util.PathUtils
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -49,12 +51,21 @@ class ParseCommandTest extends AbstractBundleTest {
 
     List<Option> createConfig() {
         def options = super.createConfig()
+        options << features(repo, 'sscontrol-osgi-groovy-parser')
         options << features(repo, 'sscontrol-osgi-command-parse')
+        options << features(repo, 'sscontrol-osgi-dhclient')
     }
 
     @Test
-    void "parse command"() {
-        def result = executeCommand.executeCommand 'sscontrol:parse'
+    void "parse command dhclient"() {
+        def result = executeCommand.executeCommand "sscontrol:parse '${dhclientScript}'"
         log.info 'Result: {}', result
+    }
+
+    static final URI dhclientScript = new File("${PathUtils.baseDir}/../../../../test/DhclientScript.groovy").toURI()
+
+    @BeforeClass
+    static void loadResources() {
+        assert new File(dhclientScript).isFile()
     }
 }

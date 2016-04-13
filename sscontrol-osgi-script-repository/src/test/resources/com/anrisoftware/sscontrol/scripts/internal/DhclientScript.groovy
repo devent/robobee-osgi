@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.scripts.internal
 
-/**
- * Marker for script.
- *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
- */
-public interface Script {
-
+dhclient.with {
+    option 'rfc3442-classless-static-routes code 121 = array of unsigned integer 8'
+    send 'host-name', 'andare.fugue.com';
+    send 'host-name = gethostname()'
+    request '!domain-name-servers'
+    prepend 'domain-name-servers', '127.0.0.1'
+    declare 'interface', 'eth0' with {
+        // interface eth0
+    }
+    declare 'alias' with {
+        // alias
+    }
+    declare 'lease' with {
+        // lease
+    }
 }

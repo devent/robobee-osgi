@@ -17,7 +17,7 @@ package com.anrisoftware.sscontrol.dhclient.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.types.external.Script;
+import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 /**
  * Dhclient script service.
@@ -25,7 +25,7 @@ import com.anrisoftware.sscontrol.types.external.Script;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Dhclient extends Script {
+public interface Dhclient extends SscontrolScript {
 
     /**
      * Returns the dhclient statements.

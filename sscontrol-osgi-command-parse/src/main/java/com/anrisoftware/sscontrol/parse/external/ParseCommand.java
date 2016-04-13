@@ -16,27 +16,37 @@
 
 package com.anrisoftware.sscontrol.parse.external;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
-import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
+
+import com.anrisoftware.sscontrol.parser.external.Parser;
+import com.anrisoftware.sscontrol.parser.external.ParserService;
+import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 @Command(scope = "sscontrol", name = "parse", description = "Parses the specified resource and checks for eventual errors.")
 @Service
 public class ParseCommand implements Action {
 
-    @Option(name = "-o", aliases = { "--option" }, description = "An option to the command", required = false, multiValued = false)
-    private String option;
+    @Argument(name = "resource", description = "The resource URI to be parsed.", required = true, multiValued = false)
+    private String resource;
 
-    @Argument(name = "argument", description = "Argument to the command", required = false, multiValued = false)
-    private String argument;
+    @Reference
+    private ParserService parseService;
 
     @Override
     public Object execute() throws Exception {
-         System.out.println("Executing command parse");
-         System.out.println("Option: " + option);
-         System.out.println("Argument: " + argument);
-         return null;
+        Parser parser = parseService.create();
+        SscontrolScript script = parser.parse(toUri(resource));
+        return script;
+    }
+
+    private URI toUri(String resource) throws URISyntaxException {
+        return new URI(resource);
     }
 }
