@@ -16,6 +16,8 @@
 
 package com.anrisoftware.sscontrol.parse.external;
 
+import static java.lang.String.format;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -27,6 +29,8 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
+import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.scripts.external.ScriptsRepositoryService;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 @Command(scope = "sscontrol", name = "parse", description = "Parses the specified resource and checks for eventual errors.")
@@ -39,11 +43,20 @@ public class ParseCommand implements Action {
     @Reference
     private ParserService parseService;
 
+    @Reference
+    private ScriptsRepositoryService scriptsRepositoryService;
+
+    private ScriptsRepository scriptsRepository;
+
     @Override
     public Object execute() throws Exception {
         Parser parser = parseService.create();
         SscontrolScript script = parser.parse(toUri(resource));
-        return script;
+        if (scriptsRepository == null) {
+            this.scriptsRepository = scriptsRepositoryService.create();
+        }
+        scriptsRepository.putScript(script.getClass().getName(), script);
+        return format("%s added.", script.getClass().getName());
     }
 
     private URI toUri(String resource) throws URISyntaxException {

@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.scripts.internal;
 
+import static java.util.Collections.synchronizedMap;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,17 +46,28 @@ public class ScriptsRepositoryImpl implements ScriptsRepository {
 
     @AssistedInject
     ScriptsRepositoryImpl() {
-        this.scripts = new HashMap<String, SscontrolScript>();
+        this.scripts = synchronizedMap(new HashMap<String, SscontrolScript>());
     }
 
     @AssistedInject
     ScriptsRepositoryImpl(@Assisted ScriptsRepository scripts) {
-        this.scripts = new HashMap<String, SscontrolScript>(scripts.getScripts());
+        this.scripts = synchronizedMap(new HashMap<String, SscontrolScript>(
+                scripts.getScripts()));
     }
 
     @Override
     public Map<String, SscontrolScript> getScripts() {
         return Collections.unmodifiableMap(scripts);
+    }
+
+    @Override
+    public void putScript(String name, SscontrolScript script) {
+        scripts.put(name, script);
+    }
+
+    @Override
+    public void removeScript(String name) {
+        scripts.remove(name);
     }
 
 }

@@ -40,7 +40,8 @@
 
     <feature name="sscontrol-osgi-command-parse" version="${project.version}">
         <bundle>mvn:${project.groupId}/sscontrol-osgi-command-parse/${project.version}</bundle>
-    </feature>
+        <bundle>mvn:${project.groupId}/sscontrol-osgi-script-repository/${project.version}</bundle>
+        </feature>
 
     <feature name="sscontrol-osgi-groovy-parser" version="${project.version}">
         <bundle>mvn:com.anrisoftware.globalpom/globalpom-log/${project.custom.bundles.log.version}</bundle>

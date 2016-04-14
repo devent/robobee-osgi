@@ -32,4 +32,8 @@ public interface ScriptsRepository {
      */
     Map<String, SscontrolScript> getScripts();
 
+    void putScript(String name, SscontrolScript script);
+
+    void removeScript(String name);
+
 }
