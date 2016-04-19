@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.types.internal;
 
+import static com.anrisoftware.sscontrol.types.external.ArgumentInvalidException.checkNullArg;
+
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,7 +24,6 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.ArgumentNullException;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 
 /**
@@ -45,9 +46,7 @@ public class ToStringServiceImpl implements ToStringService {
     @SuppressWarnings("deprecation")
     @Override
     public String toString(Object arg, String name) throws AppException {
-        if (arg == null) {
-            throw new ArgumentNullException(name);
-        }
+        checkNullArg(arg, "arg");
         return ObjectUtils.toString(arg);
     }
 

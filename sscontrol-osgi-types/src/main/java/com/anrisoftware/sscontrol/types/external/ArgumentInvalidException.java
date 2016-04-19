@@ -15,11 +15,29 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-@SuppressWarnings("serial")
-public class ArgumentNullException extends AppException {
+import static java.lang.String.format;
 
-    public ArgumentNullException(String name) {
-        super("Argument null");
+import org.apache.commons.lang3.StringUtils;
+
+@SuppressWarnings("serial")
+public class ArgumentInvalidException extends AppException {
+
+    public static void checkNullArg(Object arg, String name)
+            throws ArgumentInvalidException {
+        if (arg == null) {
+            throw new ArgumentInvalidException(name, "null");
+        }
+    }
+
+    public static void checkBlankArg(String arg, String name)
+            throws ArgumentInvalidException {
+        if (StringUtils.isBlank(arg)) {
+            throw new ArgumentInvalidException(name, "blank");
+        }
+    }
+
+    public ArgumentInvalidException(String name, String descr) {
+        super(format("Argument %s", descr));
         addContextValue("argument", name);
     }
 

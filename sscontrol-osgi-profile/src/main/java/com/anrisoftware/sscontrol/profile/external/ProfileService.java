@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.profile.external;
 
-import java.util.Map;
+import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
 
 /**
- * Converts an argument to a String.
+ * Creates the service profile.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ToStringService {
+public interface ProfileService extends SscontrolScriptService {
 
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Map<String, Object> args, String name)
-            throws AppException;
-
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Object arg, String name) throws AppException;
 }

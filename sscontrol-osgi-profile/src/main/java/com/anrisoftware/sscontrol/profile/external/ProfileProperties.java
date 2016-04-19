@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.profile.external;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
- * Converts an argument to a String.
+ * Contains needed parameters of the system like, for example, paths of
+ * directories, files and commands.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ToStringService {
+public interface ProfileProperties {
 
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Map<String, Object> args, String name)
-            throws AppException;
+    String getName();
 
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Object arg, String name) throws AppException;
+    <T> T getProperty(String name);
+
+    <T> T getProperty(String name, T defaultValue);
+
+    Set<String> getPropertyNames();
+
 }
