@@ -33,11 +33,12 @@
 		<module>../sscontrol-osgi-database</module>
 		<module>../sscontrol-osgi-debug</module>
 		<module>../sscontrol-osgi-dhclient</module>
+		<module>../sscontrol-osgi-groovy-parser</module>
 		<module>../sscontrol-osgi-features</module>
+		<module>../sscontrol-osgi-hostname-linux</module>
 		<module>../sscontrol-osgi-itests-karaf</module>
 		<module>../sscontrol-osgi-parser</module>
-        <module>../sscontrol-osgi-profile</module>
-        <module>../sscontrol-osgi-groovy-parser</module>
+		<module>../sscontrol-osgi-profile</module>
 		<module>../sscontrol-osgi-script-repository</module>
 		<module>../sscontrol-osgi-types</module>
 	</modules>
