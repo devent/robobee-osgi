@@ -28,9 +28,9 @@ public interface ProfileProperties {
 
     String getName();
 
-    <T> T getProperty(String name);
+    String getProperty(String name);
 
-    <T> T getProperty(String name, T defaultValue);
+    String getProperty(String name, String defaultValue);
 
     Set<String> getPropertyNames();
 

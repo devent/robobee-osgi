@@ -122,6 +122,7 @@ public class ProfileImpl extends GroovyObjectSupport implements Profile {
         return name;
     }
 
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", name)

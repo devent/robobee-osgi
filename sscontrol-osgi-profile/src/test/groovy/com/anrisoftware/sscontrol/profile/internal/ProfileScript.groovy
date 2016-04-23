@@ -16,9 +16,9 @@
 package com.anrisoftware.sscontrol.profile.internal
 
 profile.with {
-    services << hostname
-    services << hosts
-    services << remote.with { service = 'openssh' }
+    hostname
+    hosts
+    remote.with { service = 'openssh' }
     mail with {
         service = 'postfix'
         storage = 'mysql'

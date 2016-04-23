@@ -13,8 +13,9 @@
 	</parent>
 
 	<artifactId>sscontrol-osgi-groovy-parser</artifactId>
-	<name>sscontrol-osgi - groovy-parser</name>
+    <name>sscontrol-osgi - Groovy - Parser</name>
 	<packaging>bundle</packaging>
+    <description>Parses scripts that are using the Groovy syntax.</description>
 
 	<properties>
 		<project.custom.bundle.namespace>com.anrisoftware.sscontrol.groovy-parser</project.custom.bundle.namespace>

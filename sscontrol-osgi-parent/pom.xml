@@ -6,8 +6,8 @@
 
 	<parent>
 		<groupId>com.anrisoftware.globalpom</groupId>
-		<artifactId>globalpom-groovy</artifactId>
-		<version>2.1-SNAPSHOT</version>
+		<artifactId>globalpom-groovy-osgi</artifactId>
+		<version>2.2-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
@@ -22,8 +22,9 @@
 		<project.custom.year>${project.inceptionYear}</project.custom.year>
 		<project.custom.source.source>1.7</project.custom.source.source>
 		<project.custom.source.target>1.7</project.custom.source.target>
-		<project.custom.bundle.namespace>com.anrisoftware.sscontrol</project.custom.bundle.namespace>
 		<project.custom.bundles.log.version>2.1-SNAPSHOT</project.custom.bundles.log.version>
+		<project.custom.bundles.resources.version>2.1-SNAPSHOT</project.custom.bundles.resources.version>
+		<project.custom.bundles.globalpomutils.version>3.1-SNAPSHOT</project.custom.bundles.globalpomutils.version>
 		<org.osgi.service.http.port>8080</org.osgi.service.http.port>
 		<org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
 	</properties>
@@ -34,6 +35,7 @@
 		<module>../sscontrol-osgi-debug</module>
 		<module>../sscontrol-osgi-dhclient</module>
 		<module>../sscontrol-osgi-groovy-parser</module>
+        <module>../sscontrol-osgi-groovy-script</module>
 		<module>../sscontrol-osgi-features</module>
 		<module>../sscontrol-osgi-hostname-linux</module>
 		<module>../sscontrol-osgi-itests-karaf</module>
@@ -70,6 +72,8 @@
 
 	<dependencyManagement>
 		<dependencies>
+
+			<!-- globalpom -->
 			<dependency>
 				<groupId>com.anrisoftware.globalpom</groupId>
 				<artifactId>globalpom-groovytestutils</artifactId>
@@ -80,74 +84,41 @@
 				<artifactId>globalpom-log</artifactId>
 				<version>${project.custom.bundles.log.version}</version>
 			</dependency>
+
+			<!-- resources -->
 			<dependency>
-				<groupId>org.apache.sling</groupId>
-				<artifactId>org.apache.sling.testing.osgi-mock</artifactId>
-				<version>2.0.2</version>
+				<groupId>com.anrisoftware.resources</groupId>
+				<artifactId>resources-templates</artifactId>
+				<version>${project.custom.bundles.resources.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.resources</groupId>
+				<artifactId>resources-st</artifactId>
+				<version>${project.custom.bundles.resources.version}</version>
+			</dependency>
+
+			<!-- globalpomutils -->
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpomutils-core</artifactId>
+				<version>${project.custom.bundles.globalpomutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.anrisoftware.globalpom</groupId>
+				<artifactId>globalpomutils-exec</artifactId>
+				<version>${project.custom.bundles.globalpomutils.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.felix</groupId>
-										<artifactId>maven-scr-plugin</artifactId>
-										<versionRange>[1.7.4,)</versionRange>
-										<goals>
-											<goal>scr</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>true</runOnIncremental>
-											<runOnConfiguration>true</runOnConfiguration>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<Export-Package>!${project.custom.bundle.namespace}.internal.*,${project.custom.bundle.namespace}.*;version="${project.version}"</Export-Package>
-					<Private-Package>${project.custom.bundle.namespace}.internal.*</Private-Package>
-					<instructions>
-						<_include>osgi.bnd</_include>
-					</instructions>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-scr-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>generate-scr-scrdescriptor</id>
-						<goals>
-							<goal>scr</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 </project>
