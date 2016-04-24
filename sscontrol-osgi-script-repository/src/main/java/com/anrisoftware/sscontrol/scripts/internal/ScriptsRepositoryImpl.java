@@ -17,9 +17,9 @@ package com.anrisoftware.sscontrol.scripts.internal;
 
 import static java.util.Collections.synchronizedMap;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
@@ -38,7 +38,7 @@ public class ScriptsRepositoryImpl implements ScriptsRepository {
 
         ScriptsRepositoryImpl create();
 
-        ScriptsRepositoryImpl create(@Assisted ScriptsRepository scripts);
+        ScriptsRepositoryImpl create(@Assisted ScriptsRepository repository);
 
     }
 
@@ -50,14 +50,20 @@ public class ScriptsRepositoryImpl implements ScriptsRepository {
     }
 
     @AssistedInject
-    ScriptsRepositoryImpl(@Assisted ScriptsRepository scripts) {
-        this.scripts = synchronizedMap(new HashMap<String, SscontrolScript>(
-                scripts.getScripts()));
+    ScriptsRepositoryImpl(@Assisted ScriptsRepository repository) {
+        this.scripts = synchronizedMap(new HashMap<String, SscontrolScript>());
+        copyScripts(this.scripts, repository);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends SscontrolScript> T getScript(String name) {
+        return (T) scripts.get(name);
     }
 
     @Override
-    public Map<String, SscontrolScript> getScripts() {
-        return Collections.unmodifiableMap(scripts);
+    public Set<String> getScriptNames() {
+        return scripts.keySet();
     }
 
     @Override
@@ -68,6 +74,13 @@ public class ScriptsRepositoryImpl implements ScriptsRepository {
     @Override
     public void removeScript(String name) {
         scripts.remove(name);
+    }
+
+    private void copyScripts(Map<String, SscontrolScript> scripts,
+            ScriptsRepository repository) {
+        for (String name : repository.getScriptNames()) {
+            scripts.put(name, repository.getScript(name));
+        }
     }
 
 }

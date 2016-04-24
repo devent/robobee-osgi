@@ -15,19 +15,15 @@
  */
 package com.anrisoftware.sscontrol.scripts.internal;
 
-import static com.google.inject.util.Providers.of;
-
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.scripts.external.ScriptsRepositoryService;
 import com.anrisoftware.sscontrol.scripts.internal.ScriptsRepositoryImpl.ScriptsRepositoryImplFactory;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -42,14 +38,16 @@ import com.google.inject.Guice;
 public class ScriptsRepositoryServiceImpl implements ScriptsRepositoryService {
 
     @Inject
-    private ScriptsRepositoryImplFactory scriptsFactory;
+    private ScriptsRepositoryImplFactory repositoryFactory;
 
-    @Reference
-    private ToStringService toStringService;
+    private ScriptsRepository scriptsRepository;
 
     @Override
-    public ScriptsRepository create() {
-        return scriptsFactory.create();
+    public synchronized ScriptsRepository create() {
+        if (scriptsRepository == null) {
+            this.scriptsRepository = repositoryFactory.create();
+        }
+        return scriptsRepository;
     }
 
     @Activate
@@ -59,8 +57,6 @@ public class ScriptsRepositoryServiceImpl implements ScriptsRepositoryService {
 
                     @Override
                     protected void configure() {
-                        bind(ToStringService.class).toProvider(
-                                of(toStringService));
                     }
                 }).injectMembers(this);
     }

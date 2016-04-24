@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.scripts.external;
 
-import java.util.Map;
+import java.util.Set;
 
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
@@ -27,10 +27,9 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScript;
  */
 public interface ScriptsRepository {
 
-    /**
-     * Returns the scripts.
-     */
-    Map<String, SscontrolScript> getScripts();
+    <T extends SscontrolScript> T getScript(String name);
+
+    Set<String> getScriptNames();
 
     void putScript(String name, SscontrolScript script);
 

@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.dhclient.internal;
 
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
+import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.OptionDeclarationImpl.OptionDeclarationImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.OptionStatementImpl.OptionStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.PrependStatementImpl.PrependStatementImplFactory;
@@ -31,6 +32,9 @@ public class DhclientModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder().implement(DhclientImpl.class,
                 DhclientImpl.class).build(DhclientImplFactory.class));
+        install(new FactoryModuleBuilder().implement(
+                DhclientPreScriptImpl.class, DhclientPreScriptImpl.class)
+                .build(DhclientPreScriptImplFactory.class));
         install(new FactoryModuleBuilder().implement(OptionStatementImpl.class,
                 OptionStatementImpl.class).build(
                 OptionStatementImplFactory.class));

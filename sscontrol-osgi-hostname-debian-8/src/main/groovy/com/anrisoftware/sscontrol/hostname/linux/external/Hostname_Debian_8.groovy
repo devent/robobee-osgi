@@ -13,15 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.external;
+package com.anrisoftware.sscontrol.hostname.linux.external
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import groovy.util.logging.Slf4j
+
+import javax.inject.Inject
+
+import com.anrisoftware.propertiesutils.ContextProperties
 
 /**
- * <i>dhclient</i> service.
+ * <i>Debian 8 hostname</i> service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DhclientService extends SscontrolScriptService {
+@Slf4j
+class Hostname_Debian_8 extends HostnameLinux {
+
+    @Inject
+    DebianPropertiesProvider ubuntuProperties
+
+    //@Inject
+    //InstallPackagesFactory installPackagesFactory
+
+    @Override
+    void distributionSpecificConfiguration() {
+        installPackages()
+    }
+
+    /**
+     * Installs the <i>hostname</i> packages.
+     */
+    void installPackages() {
+    }
+
+    @Override
+    ContextProperties getDefaultProperties() {
+        ubuntuProperties.get()
+    }
 }

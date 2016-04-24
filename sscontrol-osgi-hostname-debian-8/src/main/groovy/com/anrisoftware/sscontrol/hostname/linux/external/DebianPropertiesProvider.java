@@ -13,15 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.external;
+package com.anrisoftware.sscontrol.hostname.linux.external;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import java.net.URL;
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * <i>dhclient</i> service.
+ * <i>Hostname Debian 8</i> properties provider from
+ * {@code "/hostname_debian_8.properties"}.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface DhclientService extends SscontrolScriptService {
+@SuppressWarnings("serial")
+public class DebianPropertiesProvider extends
+        AbstractContextPropertiesProvider {
+
+    private static final URL RESOURCE = DebianPropertiesProvider.class
+            .getResource("/hostname_debian_8.properties");
+
+    DebianPropertiesProvider() {
+        super(DebianPropertiesProvider.class, RESOURCE);
+    }
+
 }

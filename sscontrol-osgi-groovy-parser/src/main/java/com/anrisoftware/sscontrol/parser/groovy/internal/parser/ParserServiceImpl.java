@@ -13,52 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.internal;
+package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
 
 import static com.google.inject.util.Providers.of;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.osgi.framework.BundleContext;
 
-import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
-import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
+import com.anrisoftware.sscontrol.parser.external.Parser;
+import com.anrisoftware.sscontrol.parser.external.ParserService;
+import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
 /**
- * <i>dhclient</i> service.
+ * Groovy script parser service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service(DhclientService.class)
-public class DhclientServiceImpl implements DhclientService {
+@Service(ParserService.class)
+public class ParserServiceImpl implements ParserService {
 
     @Inject
-    private DhclientImplFactory dhclientFactory;
-
-    @Reference
-    private ToStringService toStringService;
+    private ParserImplFactory scriptsFactory;
 
     @Override
-    public Dhclient create() {
-        return dhclientFactory.create();
+    public Parser create() {
+        Map<String, Object> variables = new HashMap<String, Object>();
+        return scriptsFactory.create(variables);
+    }
+
+    @Override
+    public Parser create(Map<String, Object> variables) {
+        return scriptsFactory.create(variables);
     }
 
     @Activate
-    protected void start() {
-        Guice.createInjector(new DhclientModule(), new AbstractModule() {
+    protected void start(final BundleContext bundleContext) {
+        Guice.createInjector(new ParserModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(ToStringService.class).toProvider(of(toStringService));
+                bind(BundleContext.class).toProvider(of(bundleContext));
             }
         }).injectMembers(this);
     }

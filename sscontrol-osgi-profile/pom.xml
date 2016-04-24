@@ -16,9 +16,9 @@
 	<name>sscontrol-osgi - profile</name>
 	<packaging>bundle</packaging>
 
-    <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.profile</project.custom.bundle.namespace>
-    </properties>
+	<properties>
+		<project.custom.bundle.namespace>com.anrisoftware.sscontrol.profile</project.custom.bundle.namespace>
+	</properties>
 
 	<dependencies>
 		<!-- test dependencies -->
@@ -36,6 +36,20 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- own bundles dependencies -->
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-osgi-types</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>bundle</type>
+		</dependency>
+		<dependency>
+			<groupId>com.anrisoftware.sscontrol</groupId>
+			<artifactId>sscontrol-osgi-debug</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>bundle</type>
 		</dependency>
 
 		<!-- compile dependencies -->
@@ -59,12 +73,16 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.propertiesutils</groupId>
-            <artifactId>propertiesutils-contextproperties</artifactId>
-            <version>2.1-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
+		<dependency>
+			<groupId>com.anrisoftware.propertiesutils</groupId>
+			<artifactId>propertiesutils-contextproperties</artifactId>
+			<version>2.1-SNAPSHOT</version>
+			<type>bundle</type>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
@@ -79,20 +97,6 @@
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.asm</artifactId>
 			<scope>provided</scope>
-		</dependency>
-
-		<!-- own bundles dependencies -->
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-types</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>bundle</type>
-		</dependency>
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-debug</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>bundle</type>
 		</dependency>
 
 	</dependencies>

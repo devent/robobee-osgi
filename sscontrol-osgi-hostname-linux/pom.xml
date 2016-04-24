@@ -12,14 +12,14 @@
 		<relativePath>../sscontrol-osgi-parent</relativePath>
 	</parent>
 
-	<properties>
-		<project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname-linux</project.custom.bundle.namespace>
-	</properties>
-
 	<artifactId>sscontrol-osgi-hostname-linux</artifactId>
 	<packaging>bundle</packaging>
 	<name>sscontrol-osgi - Hostname - Linux</name>
 	<description>Configures the Hostname service for GNU/Linux systems.</description>
+
+    <properties>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname-linux</project.custom.bundle.namespace>
+    </properties>
 
 	<dependencies>
 

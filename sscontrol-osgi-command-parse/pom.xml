@@ -13,8 +13,8 @@
 
 	<artifactId>sscontrol-osgi-command-parse</artifactId>
 	<packaging>bundle</packaging>
-	<name>Apache Karaf :: Shell sscontrol/parse Commands</name>
-	<description>Provides the OSGi sscontrol commands</description>
+	<name>sscontrol-osgi - sscontrol:parse</name>
+	<description>Apache Karaf shell sscontrol/parse command.</description>
 
 	<dependencies>
 

@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.external;
+package com.anrisoftware.sscontrol.dhclient.internal;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 
 /**
- * <i>dhclient</i> service.
+ * <i>Dhclient</i> pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DhclientService extends SscontrolScriptService {
+public class DhclientPreScriptImpl implements SscontrolPreScript {
+
+    public interface DhclientPreScriptImplFactory {
+
+        DhclientPreScriptImpl create();
+
+    }
+
+    @Override
+    public void configureCompiler(Object compiler) throws AppException {
+    }
+
 }

@@ -20,7 +20,7 @@ import java.util.List;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 /**
- * Dhclient script service.
+ * <i>dhclient</i> script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -28,7 +28,7 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 public interface Dhclient extends SscontrolScript {
 
     /**
-     * Returns the dhclient statements.
+     * Returns the statements.
      */
     List<Statement> getStatements();
 

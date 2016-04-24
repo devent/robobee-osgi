@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal;
+package com.anrisoftware.sscontrol.parser.external;
 
-import groovy.lang.Script;
+import java.util.Map;
 
-public abstract class ParsedScript extends Script {
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
+import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
+/**
+ * Executes the script.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
+public interface RunScript {
+
+    SscontrolScript run(String scriptName, String profileName,
+            Map<String, Object> variables, SscontrolPreScript prescript)
+            throws AppException;
 }

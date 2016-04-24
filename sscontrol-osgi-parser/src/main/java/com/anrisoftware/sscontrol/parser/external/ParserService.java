@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
+import java.util.Map;
+
 /**
  * Script parser service.
  *
@@ -22,6 +24,8 @@ package com.anrisoftware.sscontrol.parser.external;
  * @since 1.0
  */
 public interface ParserService {
+
+    Parser create(Map<String, Object> variables);
 
     Parser create();
 

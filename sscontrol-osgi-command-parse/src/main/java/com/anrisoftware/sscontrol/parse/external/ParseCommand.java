@@ -33,6 +33,12 @@ import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.scripts.external.ScriptsRepositoryService;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
+/**
+ * Karaf {@code sscontrol:parse} command.
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 @Command(scope = "sscontrol", name = "parse", description = "Parses the specified resource and checks for eventual errors.")
 @Service
 public class ParseCommand implements Action {
@@ -46,15 +52,11 @@ public class ParseCommand implements Action {
     @Reference
     private ScriptsRepositoryService scriptsRepositoryService;
 
-    private ScriptsRepository scriptsRepository;
-
     @Override
     public Object execute() throws Exception {
         Parser parser = parseService.create();
         SscontrolScript script = parser.parse(toUri(resource));
-        if (scriptsRepository == null) {
-            this.scriptsRepository = scriptsRepositoryService.create();
-        }
+        ScriptsRepository scriptsRepository = scriptsRepositoryService.create();
         scriptsRepository.putScript(script.getClass().getName(), script);
         return format("%s added.", script.getClass().getName());
     }

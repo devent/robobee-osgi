@@ -15,50 +15,42 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
-import static com.google.inject.util.Providers.of;
-
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
-import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
+import com.anrisoftware.sscontrol.dhclient.external.DhclientPreScriptService;
+import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
 /**
- * <i>dhclient</i> service.
+ * <i>dhclient</i> pre-script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service(DhclientService.class)
-public class DhclientServiceImpl implements DhclientService {
+@Service(DhclientPreScriptService.class)
+public class DhclientPreScriptServiceImpl implements DhclientPreScriptService {
 
     @Inject
-    private DhclientImplFactory dhclientFactory;
-
-    @Reference
-    private ToStringService toStringService;
+    private DhclientPreScriptImplFactory dhclientPreScriptFactory;
 
     @Override
-    public Dhclient create() {
-        return dhclientFactory.create();
+    public SscontrolPreScript create() {
+        return dhclientPreScriptFactory.create();
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new DhclientModule(), new AbstractModule() {
+        Guice.createInjector(new DhclientPreModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(ToStringService.class).toProvider(of(toStringService));
             }
         }).injectMembers(this);
     }

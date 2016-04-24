@@ -13,55 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal;
+package com.anrisoftware.sscontrol.parser.groovy.internal.runner;
 
-import static com.google.inject.util.Providers.of;
+import static com.google.inject.Guice.createInjector;
 
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.osgi.framework.BundleContext;
 
-import com.anrisoftware.sscontrol.parser.external.Parser;
-import com.anrisoftware.sscontrol.parser.external.ParserService;
-import com.anrisoftware.sscontrol.parser.groovy.internal.ParserImpl.ParserImplFactory;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
+import com.anrisoftware.sscontrol.parser.external.RunScript;
+import com.anrisoftware.sscontrol.parser.external.RunScriptService;
+import com.anrisoftware.sscontrol.parser.groovy.internal.runner.RunScriptImpl.RunScriptImplFactory;
+import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
- * Groovy script parser service.
+ * Script runner service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service(ParserService.class)
-public class ParserServiceImpl implements ParserService {
+@Service(RunScriptService.class)
+public class RunScriptServiceImpl implements RunScriptService {
 
     @Inject
-    private ParserImplFactory scriptsFactory;
-
-    @Reference
-    private ToStringService toStringService;
+    private RunScriptImplFactory runScriptFactory;
 
     @Override
-    public Parser create() {
-        return scriptsFactory.create();
+    public RunScript create(ScriptsRepository repository) {
+        return runScriptFactory.create(repository);
     }
 
     @Activate
-    protected void start(final BundleContext bundleContext) {
-        Guice.createInjector(new ParserModule(), new AbstractModule() {
+    protected void start() {
+        createInjector(new SscontrolParserModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(BundleContext.class).toProvider(of(bundleContext));
-                bind(ToStringService.class).toProvider(of(toStringService));
             }
         }).injectMembers(this);
     }
+
 }

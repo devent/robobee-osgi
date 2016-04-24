@@ -15,6 +15,9 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
+
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 
@@ -34,6 +37,10 @@ public class DatabasePreScriptImpl implements SscontrolPreScript {
 
     @Override
     public void configureCompiler(Object compiler) throws AppException {
+        CompilerConfiguration cc = (CompilerConfiguration) compiler;
+        ImportCustomizer imports = new ImportCustomizer();
+        imports.addStaticStars("com.anrisoftware.sscontrol.types.external.BindingAddress");
+        cc.addCompilationCustomizers(imports);
     }
 
 }

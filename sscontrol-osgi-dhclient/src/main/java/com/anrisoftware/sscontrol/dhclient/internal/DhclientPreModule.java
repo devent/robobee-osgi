@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.external;
+package com.anrisoftware.sscontrol.dhclient.internal;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * <i>dhclient</i> service.
+ * <i>Dhclient</i> pre-script module.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DhclientService extends SscontrolScriptService {
+public class DhclientPreModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(
+                DhclientPreScriptImpl.class, DhclientPreScriptImpl.class)
+                .build(DhclientPreScriptImplFactory.class));
+    }
+
 }

@@ -47,7 +47,7 @@ public class DatabasePreScriptServiceImpl implements DatabasePreScriptService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new DatabaseModule(), new AbstractModule() {
+        Guice.createInjector(new DatabasePreModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

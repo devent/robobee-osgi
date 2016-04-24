@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.parser.groovy.internal;
+package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 /**
@@ -54,5 +56,11 @@ final class ParserImplLogger extends AbstractLogger {
 
     void parsedScript(ParserImpl parser, SscontrolScript parsedScript) {
         debug(parsedScript, parsedScript, parser);
+    }
+
+    AppException errorConfigureCompiler(Exception e,
+            SscontrolPreScript prescript) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

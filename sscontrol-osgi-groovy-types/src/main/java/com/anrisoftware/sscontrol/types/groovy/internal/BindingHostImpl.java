@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.BindingAddress;
@@ -108,4 +109,9 @@ public class BindingHostImpl implements BindingHost {
         return Collections.unmodifiableList(removedHosts);
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("add", addedHosts)
+                .append("remove", removedHosts).toString();
+    }
 }

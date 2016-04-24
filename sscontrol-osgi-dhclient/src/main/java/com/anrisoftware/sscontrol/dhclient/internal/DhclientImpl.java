@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * Database script service.
+ * <i>dhclient</i> script service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

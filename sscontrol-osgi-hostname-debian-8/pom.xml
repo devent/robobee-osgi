@@ -12,27 +12,21 @@
 		<relativePath>../sscontrol-osgi-parent</relativePath>
 	</parent>
 
-	<artifactId>sscontrol-osgi-groovy-script</artifactId>
-	<name>sscontrol-osgi - Groovy - Script</name>
+	<artifactId>sscontrol-osgi-hostname-debian-8</artifactId>
 	<packaging>bundle</packaging>
-	<description>Base of all scripts that are using the Groovy syntax and compiler.</description>
+	<name>sscontrol-osgi - Hostname - Debian 8 Jessie</name>
+	<description>Configures the Hostname service for GNU/Linux systems.</description>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-groovy-script</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname-debian-8</project.custom.bundle.namespace>
     </properties>
 
 	<dependencies>
 
 		<!-- own bundles -->
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-types</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
 		<dependency>
 			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-profile</artifactId>
+			<artifactId>sscontrol-osgi-hostname-linux</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<type>bundle</type>
 		</dependency>
@@ -41,10 +35,6 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>

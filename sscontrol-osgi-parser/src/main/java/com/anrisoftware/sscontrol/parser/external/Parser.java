@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.parser.external;
 
 import java.net.URI;
 
+import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 /**
@@ -27,5 +28,5 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScript;
  */
 public interface Parser {
 
-    SscontrolScript parse(URI resource) throws LoadScriptException;
+    SscontrolScript parse(URI resource) throws AppException;
 }
