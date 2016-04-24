@@ -13,34 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.external;
-
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.BindingHost;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Database script service.
+ * Binding host and port service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database extends SscontrolScript {
+public interface BindingHostService {
 
-    Database setBinding(BindingHost binding);
+    BindingHost create();
 
-    BindingHost getBinding();
-
-    Database setAdminUser(UserPassword userPassword);
-
-    UserPassword getAdminUser();
-
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
+    BindingHost create(BindingHost binding);
 }

@@ -38,6 +38,26 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- own bundles dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-groovy-types</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-debug</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+
 		<!-- compile dependencies -->
 		<dependency>
 			<groupId>com.anrisoftware.globalpom</groupId>
@@ -74,20 +94,6 @@
 			<artifactId>org.apache.servicemix.bundles.asm</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- own bundles dependencies -->
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-types</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>bundle</type>
-		</dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-debug</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-        </dependency>
 
 	</dependencies>
 

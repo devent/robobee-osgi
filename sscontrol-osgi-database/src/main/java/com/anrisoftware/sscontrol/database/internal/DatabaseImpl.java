@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.database.internal;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +36,10 @@ import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUse
 import com.anrisoftware.sscontrol.debug.external.DebugLogging;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
+import com.anrisoftware.sscontrol.types.external.BindingAddress;
+import com.anrisoftware.sscontrol.types.external.BindingHost;
+import com.anrisoftware.sscontrol.types.external.BindingHostService;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
@@ -81,23 +84,25 @@ public class DatabaseImpl implements Database {
     @Inject
     private ToStringService toStringService;
 
-    private InetSocketAddress bindAddress;
+    private BindingHost binding;
 
     private UserPassword adminUser;
 
     private DebugLogging debug;
 
     @AssistedInject
-    DatabaseImpl() {
+    DatabaseImpl(BindingHostService bindingHostService) {
         this.dbs = new ArrayList<DatabaseDb>();
         this.users = new ArrayList<DatabaseUser>();
+        this.binding = bindingHostService.create();
     }
 
     @AssistedInject
-    DatabaseImpl(@Assisted Database database) {
+    DatabaseImpl(@Assisted Database database,
+            BindingHostService bindingHostService) {
         this.dbs = new ArrayList<DatabaseDb>(database.getDatabases());
         this.users = new ArrayList<DatabaseUser>(database.getUsers());
-        this.bindAddress = database.getBindAddress();
+        this.binding = bindingHostService.create(database.getBinding());
         this.adminUser = database.getAdminUser();
     }
 
@@ -106,23 +111,24 @@ public class DatabaseImpl implements Database {
         this.debug = debugService.create();
     }
 
-    public void bind(Map<String, Object> args, String host) throws AppException {
-        args.put("host", host);
-        bind(args);
+    public void binding(Map<String, Object> args, BindingAddress address)
+            throws ArgumentInvalidException {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put("host", address.getAddress());
+        binding(a);
     }
 
-    /**
-     * Sets the binding host.
-     * <ul>
-     * <li>{@code "host"} the host address.
-     * <li>{@code "port"} the host port.
-     * </ul>
-     */
-    public void bind(Map<String, Object> args) throws AppException {
-        String host = toStringService.toString(args, "host");
-        Integer port = (Integer) args.get("port");
-        this.bindAddress = new InetSocketAddress(host, port);
-        log.bindSet(this, bindAddress);
+    public void binding(Map<String, Object> args, String host)
+            throws ArgumentInvalidException {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put("host", host);
+        binding(a);
+    }
+
+    public void binding(Map<String, Object> args)
+            throws ArgumentInvalidException {
+        ArgumentInvalidException.checkNullArg(args, "binding");
+        InvokerHelper.invokeMethod(binding, "binding", args);
     }
 
     public void admin(Map<String, Object> args) throws AppException {
@@ -182,15 +188,15 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Database setBindAddress(InetSocketAddress address) {
+    public Database setBinding(BindingHost binding) {
         DatabaseImpl database = databaseFactory.create(this);
-        database.bindAddress = address;
+        database.binding = binding;
         return database;
     }
 
     @Override
-    public InetSocketAddress getBindAddress() {
-        return bindAddress;
+    public BindingHost getBinding() {
+        return binding;
     }
 
     @Override
@@ -222,7 +228,7 @@ public class DatabaseImpl implements Database {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("bind", bindAddress)
+        return new ToStringBuilder(this).append("bind", binding)
                 .append("admin", adminUser).append("dbs", dbs)
                 .append("users", users).toString();
     }

@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
-import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseAccessImplFactory;
@@ -25,11 +24,16 @@ import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUse
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ *
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
+ */
 public class DatabaseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Database.class).to(DatabaseImpl.class);
         install(new FactoryModuleBuilder().implement(DatabaseImpl.class,
                 DatabaseImpl.class).build(DatabaseImplFactory.class));
         install(new FactoryModuleBuilder().implement(DatabaseDb.class,

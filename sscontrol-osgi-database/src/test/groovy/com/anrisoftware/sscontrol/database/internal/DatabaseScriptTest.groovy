@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.database.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.google.inject.util.Providers.of
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -30,7 +31,12 @@ import com.anrisoftware.sscontrol.database.external.DatabaseDb
 import com.anrisoftware.sscontrol.database.external.DatabaseUser
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.types.external.BindingHostService
+import com.anrisoftware.sscontrol.types.external.BindingHost.Host
+import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostServiceImpl
+import com.anrisoftware.sscontrol.types.groovy.internal.GroovyTypesModule
 import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 @Slf4j
@@ -46,7 +52,36 @@ class DatabaseScriptTest {
             [
                 input: """
 database.with {
-    bind 'localhost', port: 3306
+    binding 'localhost', port: 3306
+}
+database
+""",
+                expected: { Database database ->
+                    assert database.binding.addedHosts.size() == 1
+                    Host host = database.binding.addedHosts[0]
+                    assert host.host == 'localhost'
+                    assert host.port == 3306
+                },
+            ],
+            [
+                input: """
+import static com.anrisoftware.sscontrol.types.external.BindingAddress.*
+database.with {
+    binding local, port: 3306
+}
+database
+""",
+                expected: { Database database ->
+                    assert database.binding.addedHosts.size() == 1
+                    Host host = database.binding.addedHosts[0]
+                    assert host.host == '127.0.0.1'
+                    assert host.port == 3306
+                },
+            ],
+            [
+                input: """
+database.with {
+    binding 'localhost', port: 3306
     admin user: 'root', password: 'somepass'
     db 'phpmyadmin'
     user 'phpmyadmin', password: '1234' with {
@@ -56,8 +91,10 @@ database.with {
 database
 """,
                 expected: { Database database ->
-                    assert database.bindAddress.hostName == 'localhost'
-                    assert database.bindAddress.port == 3306
+                    assert database.binding.addedHosts.size() == 1
+                    Host host = database.binding.addedHosts[0]
+                    assert host.host == 'localhost'
+                    assert host.port == 3306
                     assert database.adminUser.name == 'root'
                     assert database.adminUser.password == 'somepass'
                     assert database.databases.size() == 1
@@ -75,12 +112,12 @@ database
             [
                 input: """
 databasemap = [
-    bind: [host: '127.0.0.1', port: 3306],
+    binding: [host: '127.0.0.1', port: 3306],
     admin: [user: 'root', password: 'somepass'],
     phpmyadmin: [user: [name: 'phpmyadmin', password: '1234'], db: [name: 'phpmyadmindb']],
 ]
 database.with {
-    bind databasemap.bind
+    binding databasemap.binding
     admin databasemap.admin
     db databasemap.phpmyadmin.db
     user databasemap.phpmyadmin.user with {
@@ -90,8 +127,10 @@ database.with {
 database
 """,
                 expected: { Database database ->
-                    assert database.bindAddress.hostName == 'localhost'
-                    assert database.bindAddress.port == 3306
+                    assert database.binding.addedHosts.size() == 1
+                    Host host = database.binding.addedHosts[0]
+                    assert host.host == '127.0.0.1'
+                    assert host.port == 3306
                     assert database.adminUser.name == 'root'
                     assert database.adminUser.password == 'somepass'
                     assert database.databases.size() == 1
@@ -171,6 +210,13 @@ database
         Guice.createInjector(
                 new DatabaseModule(),
                 new DebugLoggingModule(),
-                new TypesModule()).injectMembers(this)
+                new TypesModule(),
+                new GroovyTypesModule(), new AbstractModule() {
+
+                    @Override
+                    protected void configure() {
+                        bind BindingHostService to BindingHostServiceImpl
+                    }
+                }).injectMembers(this)
     }
 }

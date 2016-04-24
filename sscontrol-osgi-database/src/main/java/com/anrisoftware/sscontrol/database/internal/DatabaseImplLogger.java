@@ -16,11 +16,8 @@
 package com.anrisoftware.sscontrol.database.internal;
 
 import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.adminSet;
-import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.bindSet;
 import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.dbAdded;
 import static com.anrisoftware.sscontrol.database.internal.DatabaseImplLogger._.userAdded;
-
-import java.net.InetSocketAddress;
 
 import javax.inject.Singleton;
 
@@ -45,9 +42,7 @@ final class DatabaseImplLogger extends AbstractLogger {
 
         adminSet("Admin user {} set to {}"),
 
-        userAdded("User {} added to {}"),
-
-        bindSet("Bind address {} set to {}");
+        userAdded("User {} added to {}");
 
         private String name;
 
@@ -80,7 +75,4 @@ final class DatabaseImplLogger extends AbstractLogger {
         debug(userAdded, user, database);
     }
 
-    void bindSet(DatabaseImpl database, InetSocketAddress bindAddress) {
-        debug(bindSet, bindAddress, database);
-    }
 }

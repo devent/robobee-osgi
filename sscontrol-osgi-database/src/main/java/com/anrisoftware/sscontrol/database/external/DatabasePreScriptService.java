@@ -15,32 +15,14 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.BindingHost;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScriptService;
 
 /**
- * Database script service.
+ * Database pre-script service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface Database extends SscontrolScript {
+public interface DatabasePreScriptService extends SscontrolPreScriptService {
 
-    Database setBinding(BindingHost binding);
-
-    BindingHost getBinding();
-
-    Database setAdminUser(UserPassword userPassword);
-
-    UserPassword getAdminUser();
-
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
 }

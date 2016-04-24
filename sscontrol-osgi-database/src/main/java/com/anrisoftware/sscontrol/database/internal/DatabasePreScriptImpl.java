@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.external;
+package com.anrisoftware.sscontrol.database.internal;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.BindingHost;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 
 /**
- * Database script service.
+ * <i>database</i> pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database extends SscontrolScript {
+public class DatabasePreScriptImpl implements SscontrolPreScript {
 
-    Database setBinding(BindingHost binding);
+    public interface DatabasePreScriptImplFactory {
 
-    BindingHost getBinding();
+        DatabasePreScriptImpl create();
 
-    Database setAdminUser(UserPassword userPassword);
+    }
 
-    UserPassword getAdminUser();
+    @Override
+    public void configureCompiler(Object compiler) throws AppException {
+    }
 
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
 }

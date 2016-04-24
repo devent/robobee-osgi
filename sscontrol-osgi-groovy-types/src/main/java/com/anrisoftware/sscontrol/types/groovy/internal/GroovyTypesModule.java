@@ -13,34 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.database.external;
+package com.anrisoftware.sscontrol.types.groovy.internal;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.BindingHost;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
-import com.anrisoftware.sscontrol.types.external.UserPassword;
+import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImpl.BindingHostImplFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Database script service.
+ *
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Database extends SscontrolScript {
+public class GroovyTypesModule extends AbstractModule {
 
-    Database setBinding(BindingHost binding);
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(BindingHostImpl.class,
+                BindingHostImpl.class).build(BindingHostImplFactory.class));
+    }
 
-    BindingHost getBinding();
-
-    Database setAdminUser(UserPassword userPassword);
-
-    UserPassword getAdminUser();
-
-    List<DatabaseDb> getDatabases();
-
-    List<DatabaseUser> getUsers();
-
-    DebugLogging getDebug();
 }
