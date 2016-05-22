@@ -19,7 +19,11 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.felix.scr.annotations.Component
+import org.apache.felix.scr.annotations.Service
+
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.groovy.script.external.LinuxScript
 
 /**
  * <i>Debian 8 hostname</i> service.
@@ -28,6 +32,8 @@ import com.anrisoftware.propertiesutils.ContextProperties
  * @since 1.0
  */
 @Slf4j
+@Component
+@Service(Hostname_Debian_8.class)
 class Hostname_Debian_8 extends HostnameLinux {
 
     @Inject

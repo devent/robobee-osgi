@@ -1,0 +1,11 @@
+unixChmod(args) ::= <<
+<args.files:unixChmodFile(args);separator="\n">
+>>
+
+unixChmodFile(file, args) ::= <<
+<args.command> <unixChmodRecursive(args)> <args.mod> <file>
+>>
+
+unixChmodRecursive(args) ::= <%
+<if(args.recursive)>-R<endif>
+%>

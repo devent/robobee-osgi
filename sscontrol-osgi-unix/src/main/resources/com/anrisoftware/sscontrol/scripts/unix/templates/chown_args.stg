@@ -1,0 +1,6 @@
+unixChown() ::= <<
+files = java.util.List:true:the list of files.
+owner = java.lang.String:true:the user name of the owner, for example "foo".
+ownerGroup = java.lang.String:true:the group name of the owner, for example "foo".
+recursive = java.lang.Boolean:false:optionally, set to "true" to change files recursive.
+>>

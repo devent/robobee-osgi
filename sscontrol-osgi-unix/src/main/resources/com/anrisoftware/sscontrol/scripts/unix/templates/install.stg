@@ -1,0 +1,8 @@
+ubuntuInstall(args) ::= <<
+<debianInstall(args)>
+>>
+
+debianInstall(args) ::= <<
+export DEBIAN_FRONTEND=noninteractive
+<args.command> -q -y install <args.packages;separator=" ">
+>>

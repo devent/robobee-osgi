@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.anrisoftware.sscontrol</groupId>
-		<artifactId>sscontrol-osgi-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../sscontrol-osgi-parent</relativePath>
-	</parent>
+    <parent>
+        <groupId>com.anrisoftware.sscontrol</groupId>
+        <artifactId>sscontrol-osgi-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../sscontrol-osgi-parent</relativePath>
+    </parent>
 
-	<artifactId>sscontrol-osgi-hostname-linux</artifactId>
-	<packaging>bundle</packaging>
-	<name>sscontrol-osgi - Hostname - Linux</name>
-	<description>Configures the Hostname service for GNU/Linux systems.</description>
+    <artifactId>sscontrol-osgi-hostname-linux</artifactId>
+    <packaging>bundle</packaging>
+    <name>sscontrol-osgi - Hostname - Linux</name>
+    <description>Configures the Hostname service for GNU/Linux systems.</description>
 
     <properties>
         <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname-linux</project.custom.bundle.namespace>
     </properties>
 
-	<dependencies>
+    <dependencies>
 
-		<!-- own bundles -->
-		<dependency>
-			<groupId>com.anrisoftware.sscontrol</groupId>
-			<artifactId>sscontrol-osgi-groovy-script</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<type>bundle</type>
-		</dependency>
+        <!-- own bundles -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-groovy-script</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
 
-		<!-- compile dependencies -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-assistedinject</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
-	</dependencies>
+        <!-- compile dependencies -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
