@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.groovy.script.external
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.propertiesutils.ContextProperties
 import com.anrisoftware.sscontrol.profile.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
@@ -43,6 +44,11 @@ abstract class LinuxScript extends Script {
      * The {@link SscontrolService} of the script.
      */
     SscontrolScript service
+
+    /**
+     * The {@link Threads} pool to run the scripts on.
+     */
+    Threads threads
 
     /**
      * Returns the default properties for the service, as in example:

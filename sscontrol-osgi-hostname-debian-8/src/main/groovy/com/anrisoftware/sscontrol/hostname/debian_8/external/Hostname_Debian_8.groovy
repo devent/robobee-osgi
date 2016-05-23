@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.linux.external
+package com.anrisoftware.sscontrol.hostname.debian_8.external
 
+import static com.google.inject.Guice.createInjector
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.felix.scr.annotations.Activate
 import org.apache.felix.scr.annotations.Component
+import org.apache.felix.scr.annotations.Reference
 import org.apache.felix.scr.annotations.Service
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.groovy.script.external.LinuxScript
+import com.anrisoftware.sscontrol.hostname.linux.external.HostnameLinux;
+import com.anrisoftware.sscontrol.unix.external.core.Cmd
 
 /**
  * <i>Debian 8 hostname</i> service.
@@ -37,10 +41,10 @@ import com.anrisoftware.sscontrol.groovy.script.external.LinuxScript
 class Hostname_Debian_8 extends HostnameLinux {
 
     @Inject
-    DebianPropertiesProvider ubuntuProperties
+    DebianPropertiesProvider debianProperties
 
-    //@Inject
-    //InstallPackagesFactory installPackagesFactory
+    @Reference
+    Cmd cmd
 
     @Override
     void distributionSpecificConfiguration() {
@@ -51,10 +55,16 @@ class Hostname_Debian_8 extends HostnameLinux {
      * Installs the <i>hostname</i> packages.
      */
     void installPackages() {
+        cmd 'install', this, threads, defaultProperties, log: log, packages: [], system: 'debian'
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        ubuntuProperties.get()
+        debianProperties.get()
+    }
+
+    @Activate
+    void start() {
+        createInjector().injectMembers(this);
     }
 }
