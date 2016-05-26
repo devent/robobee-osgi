@@ -15,12 +15,13 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
+import java.util.concurrent.ExecutorService
+
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.profile.external.ProfileProperties
+import com.anrisoftware.sscontrol.types.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
+import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
 
 /**
  * Base of all scripts that are using the Groovy syntax and compiler.
@@ -28,7 +29,7 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScript
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-abstract class LinuxScript extends Script {
+abstract class LinuxScript extends Script implements SscontrolServiceScript {
 
     /**
      * The {@link String} name of the script.
@@ -46,35 +47,13 @@ abstract class LinuxScript extends Script {
     SscontrolScript service
 
     /**
-     * The {@link Threads} pool to run the scripts on.
+     * The {@link ExecutorService} pool to run the scripts on.
      */
-    Threads threads
+    ExecutorService threads
 
-    /**
-     * Returns the default properties for the service, as in example:
-     *
-     * <pre>
-     * ---
-     * &#64;Inject
-     * &#64;Named("my-properties")
-     * ContextProperties myProperties
-     *
-     * &#64;Override
-     * ContextProperties getDefaultProperties() {
-     *     myProperties
-     * }
-     * ---
-     * </pre>
-     */
-    abstract ContextProperties getDefaultProperties()
-
-    /**
-     * Returns the service of the script.
-     *
-     * @return the {@link SscontrolScript}.
-     */
-    SscontrolScript getService() {
-        service
+    @Override
+    public <T extends ExecutorService> T getThreads() {
+        threads
     }
 
     /**

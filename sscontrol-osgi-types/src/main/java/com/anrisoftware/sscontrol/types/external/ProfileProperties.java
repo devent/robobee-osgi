@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.external;
+package com.anrisoftware.sscontrol.types.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import java.util.Set;
 
 /**
- * Ordered service profile entries.
+ * Contains needed parameters of the system like, for example, paths of
+ * directories, files and commands.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Profile extends SscontrolScript {
+public interface ProfileProperties {
 
     String getName();
 
-    ProfileProperties getEntry(String name);
+    String getProperty(String name);
 
-    List<String> getEntryNames();
+    String getProperty(String name, String defaultValue);
+
+    Set<String> getPropertyNames();
 
 }

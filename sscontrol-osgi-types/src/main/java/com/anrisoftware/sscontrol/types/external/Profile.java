@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.external;
+package com.anrisoftware.sscontrol.types.external;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import java.util.List;
 
 /**
- * Creates the service profile.
+ * Ordered service profile entries.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ProfileService extends SscontrolScriptService {
+public interface Profile extends SscontrolScript {
+
+    String getName();
+
+    ProfileProperties getEntry(String name);
+
+    List<String> getEntryNames();
 
 }

@@ -30,11 +30,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.profile.external.Profile;
-import com.anrisoftware.sscontrol.profile.external.ProfileProperties;
 import com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImpl.ProfilePropertiesImplFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
+import com.anrisoftware.sscontrol.types.external.Profile;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

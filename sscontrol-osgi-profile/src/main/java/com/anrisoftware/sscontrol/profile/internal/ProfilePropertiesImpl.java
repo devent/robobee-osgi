@@ -43,9 +43,9 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.StringToType;
 import com.anrisoftware.propertiesutils.TypedAllProperties;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
-import com.anrisoftware.sscontrol.profile.external.ProfileProperties;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

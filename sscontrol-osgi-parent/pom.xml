@@ -110,6 +110,11 @@
                 <artifactId>globalpomutils-exec</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.anrisoftware.globalpom</groupId>
+                <artifactId>globalpomutils-threads</artifactId>
+                <version>${project.custom.bundles.globalpomutils.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

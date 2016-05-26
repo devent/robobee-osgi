@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.profile.internal.ProfileImplLogger._.pr
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.profile.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
 
 /**
  * Logging for {@link ProfileImpl}.

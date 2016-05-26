@@ -45,7 +45,6 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapSer
 import com.anrisoftware.resources.templates.internal.templates.TemplatesServiceImpl
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesServiceImpl
 import com.anrisoftware.resources.templates.internal.worker.STTemplateWorkerServiceImpl
-import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8;
 import com.anrisoftware.sscontrol.unix.internal.core.CmdImpl
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -62,7 +61,7 @@ class Hostname_Debian_8Test {
     @Test
     void "hostname service"() {
         def hostname = context.getService Hostname_Debian_8
-        hostname.threads = threads
+        hostname.setThreads threads
         hostname.run()
         println hostname
     }

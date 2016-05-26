@@ -26,7 +26,7 @@ import org.apache.felix.scr.annotations.Reference
 import org.apache.felix.scr.annotations.Service
 
 import com.anrisoftware.propertiesutils.ContextProperties
-import com.anrisoftware.sscontrol.hostname.linux.external.HostnameLinux;
+import com.anrisoftware.sscontrol.hostname.linux.external.HostnameLinux
 import com.anrisoftware.sscontrol.unix.external.core.Cmd
 
 /**
@@ -46,6 +46,10 @@ class Hostname_Debian_8 extends HostnameLinux {
     @Reference
     Cmd cmd
 
+    Object getLog() {
+        log
+    }
+
     @Override
     void distributionSpecificConfiguration() {
         installPackages()
@@ -55,7 +59,7 @@ class Hostname_Debian_8 extends HostnameLinux {
      * Installs the <i>hostname</i> packages.
      */
     void installPackages() {
-        cmd 'install', this, threads, defaultProperties, log: log, packages: [], system: 'debian'
+        cmd 'install', this, packages: [], system: 'debian'
     }
 
     @Override

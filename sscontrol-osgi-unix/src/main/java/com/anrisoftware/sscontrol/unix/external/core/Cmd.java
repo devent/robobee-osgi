@@ -1,12 +1,11 @@
 package com.anrisoftware.sscontrol.unix.external.core;
 
 import java.util.Map;
-import java.util.Properties;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
-import com.anrisoftware.globalpom.threads.external.core.Threads;
+import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
 
 /**
  * Runs the specified command.
@@ -35,17 +34,11 @@ public interface Cmd {
      *            the {@link String} command.
      *
      * @param parent
-     *            the {@link Object} parent script.
+     *            the {@link SscontrolServiceScript} parent script.
      *
-     * @param threads
-     *            the {@link Threads} pool.
-     * 
-     * @param properties
-     *            the {@link Properties} of the environment.
-     * 
      * @return the {@link ProcessTask}.
      *
      */
-    ProcessTask call(Map<String, Object> args, String command, Object parent,
-            Threads threads, Properties properties) throws CommandExecException;
+    ProcessTask call(Map<String, Object> args, String command,
+            SscontrolServiceScript parent) throws CommandExecException;
 }

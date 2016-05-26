@@ -24,9 +24,9 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.profile.external.Profile
-import com.anrisoftware.sscontrol.profile.external.ProfileProperties
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory
+import com.anrisoftware.sscontrol.types.external.Profile;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 

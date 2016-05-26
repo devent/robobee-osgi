@@ -34,6 +34,7 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapSer
 import com.anrisoftware.resources.templates.internal.templates.TemplatesServiceImpl
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesServiceImpl
 import com.anrisoftware.resources.templates.internal.worker.STTemplateWorkerServiceImpl
+import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
 import com.anrisoftware.sscontrol.unix.external.core.Cmd
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -55,7 +56,7 @@ class CmdImplTest {
         def properties = cmdProperties.get()
         properties.put "${command}_command", echo
         def cmd = context.getService Cmd
-        cmd 'chmod', this, threads, properties, log: log, files: [], mod: '+w'
+        cmd 'chmod', [getLog: { log }, getThreads: { threads }, getDefaultProperties: { properties }] as SscontrolServiceScript, files: [], mod: '+w'
     }
 
     @Test
@@ -64,31 +65,37 @@ class CmdImplTest {
             [
                 name: 'chmod file',
                 command: 'chmod',
-                args: [log: log, files: ['a.txt'], mod: '+w'],
+                args: [files: ['a.txt'], mod: '+w'],
                 expected: [output: 'chmod_out_expected.txt'],
             ],
             [
                 name: 'chmod file recursive',
                 command: 'chmod',
-                args: [log: log, files: ['a.txt'], mod: '+w', recursive: true],
+                args: [files: ['a.txt'], mod: '+w', recursive: true],
                 expected: [output: 'chmod_recursive_out_expected.txt'],
+            ],
+            [
+                name: 'chmod file ssh',
+                command: 'chmod',
+                args: [files: ['a.txt'], mod: '+w', useSsh: true],
+                expected: [output: 'chmod_out_expected.txt'],
             ],
             [
                 name: 'chown file',
                 command: 'chown',
-                args: [log: log, files: ['a.txt'], owner: 'foo', ownerGroup: 'foo'],
+                args: [files: ['a.txt'], owner: 'foo', ownerGroup: 'foo'],
                 expected: [output: 'chown_out_expected.txt'],
             ],
             [
                 name: 'chown file recursive',
                 command: 'chown',
-                args: [log: log, files: ['a.txt'], owner: 'foo', ownerGroup: 'foo', recursive: true],
+                args: [files: ['a.txt'], owner: 'foo', ownerGroup: 'foo', recursive: true],
                 expected: [output: 'chown_recursive_out_expected.txt'],
             ],
             [
                 name: 'install package',
                 command: 'install',
-                args: [log: log, system: 'ubuntu', packages: ['aaa']],
+                args: [system: 'ubuntu', packages: ['aaa']],
                 expected: [output: 'install_out_expected.txt'],
             ],
         ]
@@ -101,7 +108,7 @@ class CmdImplTest {
             def properties = cmdProperties.get()
             properties.put "${command}_command", echo
             def args = test.args as Map<String, Object>
-            cmd args, command, this, threads, properties
+            cmd args, command, [getLog: { log }, getThreads: { threads }, getDefaultProperties: { properties }] as SscontrolServiceScript
             Map testExpected = test.expected
             assertStringContent fileToString(new File(dir, "${command}.out")), resourceToString(CmdImplTest.class.getResource(testExpected.output as String))
         }

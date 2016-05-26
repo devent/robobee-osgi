@@ -2,10 +2,14 @@ unixChmod(args) ::= <<
 <args.files:unixChmodFile(args);separator="\n">
 >>
 
-unixChmodFile(file, args) ::= <<
-<args.command> <unixChmodRecursive(args)> <args.mod> <file>
->>
+unixChmodFile(file, args) ::= <%
+<unixSsh(args)><args.command> <unixChmodRecursive(args)> <args.mod> <file>
+%>
 
 unixChmodRecursive(args) ::= <%
 <if(args.recursive)>-R<endif>
+%>
+
+unixSsh(args) ::= <%
+<if(args.useSsh)><args.sshCommand> <args.sshArgs;separator=" "> <args.sshHost><endif>
 %>
