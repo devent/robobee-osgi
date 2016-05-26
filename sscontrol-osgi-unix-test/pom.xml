@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.anrisoftware.sscontrol</groupId>
+        <artifactId>sscontrol-osgi-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../sscontrol-osgi-parent</relativePath>
+    </parent>
+
+    <artifactId>sscontrol-osgi-unix-test</artifactId>
+    <name>sscontrol-osgi-test - Linux/Unix Scripts Test Utils</name>
+    <description>Linux/Unix test utilities.</description>
+    <packaging>bundle</packaging>
+
+    <dependencies>
+
+        <!-- compile dependencies -->
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpom-groovytestutils</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

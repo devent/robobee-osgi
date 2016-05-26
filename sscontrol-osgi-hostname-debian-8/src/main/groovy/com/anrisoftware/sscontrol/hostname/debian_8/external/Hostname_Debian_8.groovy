@@ -41,7 +41,7 @@ import com.anrisoftware.sscontrol.unix.external.core.Cmd
 class Hostname_Debian_8 extends HostnameLinux {
 
     @Inject
-    DebianPropertiesProvider debianProperties
+    DebianPropertiesProvider debianPropertiesProvider
 
     @Reference
     Cmd cmd
@@ -59,12 +59,16 @@ class Hostname_Debian_8 extends HostnameLinux {
      * Installs the <i>hostname</i> packages.
      */
     void installPackages() {
-        cmd 'install', this, packages: [], system: 'debian'
+        cmd 'install', this, packages: [packages], system: 'debian'
     }
 
     @Override
     ContextProperties getDefaultProperties() {
-        debianProperties.get()
+        debianPropertiesProvider.get()
+    }
+
+    List getPackages() {
+        defaultProperties.getListProperty 'packages'
     }
 
     @Activate
