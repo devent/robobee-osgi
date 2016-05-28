@@ -191,7 +191,20 @@ database.with {
 database
 """,
                 expected: { Database database ->
-                    assert database.debug.modules.size() == 2
+                    assert database.debugLogging.modules.size() == 2
+                },
+            ],
+            [
+                input: """
+database.with {
+    debug << [name: "error", level: 1]
+    debug << [name: "slow-queries", level: 1]
+    debug << [name: "general", level: 1, file: "/var/log/mysql/mysql.log"]
+}
+database
+""",
+                expected: { Database database ->
+                    assert database.debugLogging.modules.size() == 3
                 },
             ],
         ]

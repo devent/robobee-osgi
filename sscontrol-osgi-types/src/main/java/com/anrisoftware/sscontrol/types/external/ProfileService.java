@@ -23,4 +23,6 @@ package com.anrisoftware.sscontrol.types.external;
  */
 public interface ProfileService extends SscontrolScriptService {
 
+    @Override
+    Profile create();
 }

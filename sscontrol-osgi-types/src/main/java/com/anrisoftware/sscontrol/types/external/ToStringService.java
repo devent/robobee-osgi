@@ -31,8 +31,7 @@ public interface ToStringService {
      * @throws ArgumentInvalidException
      *             if the argument is {@code null}.
      */
-    String toString(Map<String, Object> args, String name)
-            throws AppException;
+    String toString(Map<String, Object> args, String name);
 
     /**
      * Converts the specified argument to a {@link String}.
@@ -40,5 +39,5 @@ public interface ToStringService {
      * @throws ArgumentInvalidException
      *             if the argument is {@code null}.
      */
-    String toString(Object arg, String name) throws AppException;
+    String toString(Object arg, String name);
 }

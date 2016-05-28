@@ -23,7 +23,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ToStringService;
 
 /**
@@ -37,15 +36,14 @@ import com.anrisoftware.sscontrol.types.external.ToStringService;
 public class ToStringServiceImpl implements ToStringService {
 
     @Override
-    public String toString(Map<String, Object> args, String name)
-            throws AppException {
+    public String toString(Map<String, Object> args, String name) {
         Object value = args.get(name);
         return toString(value, name);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public String toString(Object arg, String name) throws AppException {
+    public String toString(Object arg, String name) {
         checkNullArg(arg, "arg");
         return ObjectUtils.toString(arg);
     }

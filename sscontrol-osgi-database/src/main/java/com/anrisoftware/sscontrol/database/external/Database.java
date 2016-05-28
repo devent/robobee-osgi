@@ -42,5 +42,5 @@ public interface Database extends SscontrolScript {
 
     List<DatabaseUser> getUsers();
 
-    DebugLogging getDebug();
+    DebugLogging getDebugLogging();
 }

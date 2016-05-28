@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.database.internal;
 
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +27,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
@@ -128,7 +128,7 @@ public class DatabaseImpl implements Database {
     public void binding(Map<String, Object> args)
             throws ArgumentInvalidException {
         ArgumentInvalidException.checkNullArg(args, "binding");
-        InvokerHelper.invokeMethod(binding, "binding", args);
+        invokeMethod(binding, "binding", args);
     }
 
     public void admin(Map<String, Object> args) throws AppException {
@@ -155,7 +155,7 @@ public class DatabaseImpl implements Database {
     public DatabaseDb db(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<String, Object>(args);
         DatabaseDb db = dbFactory.create();
-        InvokerHelper.invokeMethod(db, "db", a);
+        invokeMethod(db, "db", a);
         dbs.add(db);
         log.dbAdded(this, db);
         return db;
@@ -170,7 +170,7 @@ public class DatabaseImpl implements Database {
     public DatabaseUser user(Map<String, Object> args) {
         Map<String, Object> a = new HashMap<String, Object>(args);
         DatabaseUser user = userFactory.create();
-        InvokerHelper.invokeMethod(user, "user", a);
+        invokeMethod(user, "user", a);
         users.add(user);
         log.userAdded(this, user);
         return user;
@@ -179,12 +179,17 @@ public class DatabaseImpl implements Database {
     public void debug(Map<String, Object> args, String name) {
         Map<String, Object> arguments = new HashMap<String, Object>(args);
         arguments.put("name", name);
-        InvokerHelper.invokeMethod(debug, "debug", arguments);
+        invokeMethod(debug, "debug", arguments);
     }
 
     public void debug(Map<String, Object> args) {
         Map<String, Object> arguments = new HashMap<String, Object>(args);
-        InvokerHelper.invokeMethod(debug, "debug", arguments);
+        invokeMethod(debug, "debug", arguments);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Object> getDebug() {
+        return (List<Object>) invokeMethod(debug, "getDebug", null);
     }
 
     @Override
@@ -222,7 +227,7 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public DebugLogging getDebug() {
+    public DebugLogging getDebugLogging() {
         return debug;
     }
 

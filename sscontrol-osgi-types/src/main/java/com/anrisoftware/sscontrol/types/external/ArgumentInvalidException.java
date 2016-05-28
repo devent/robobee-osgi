@@ -18,9 +18,10 @@ package com.anrisoftware.sscontrol.types.external;
 import static java.lang.String.format;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
 @SuppressWarnings("serial")
-public class ArgumentInvalidException extends AppException {
+public class ArgumentInvalidException extends ContextedRuntimeException {
 
     public static void checkNullArg(Object arg, String name)
             throws ArgumentInvalidException {

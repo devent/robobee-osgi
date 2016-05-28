@@ -15,8 +15,10 @@
  */
 package com.anrisoftware.sscontrol.debug.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -67,8 +69,7 @@ public class DebugLoggingImpl implements DebugLogging {
         this.modules = new HashMap<String, DebugModule>(debug.getModules());
     }
 
-    public void debug(Map<String, Object> args, String name)
-            throws AppException {
+    public void debug(Map<String, Object> args, String name) {
         DebugModuleImpl module = moduleFactory.create();
         module.debug(args, name);
         modules.put(name, module);
@@ -78,6 +79,23 @@ public class DebugLoggingImpl implements DebugLogging {
         DebugModuleImpl module = moduleFactory.create();
         module.debug(args);
         modules.put(module.getName(), module);
+    }
+
+    @SuppressWarnings("serial")
+    public List<Object> getDebug() {
+        return new ArrayList<Object>() {
+            @Override
+            public boolean add(Object e) {
+                if (e instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> args = (Map<String, Object>) e;
+                    DebugModuleImpl module = moduleFactory.create();
+                    module.debug(args);
+                    modules.put(module.getName(), module);
+                }
+                return super.add(e);
+            }
+        };
     }
 
     @Override

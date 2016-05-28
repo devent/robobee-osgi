@@ -24,6 +24,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.debug.external.DebugLogging
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
@@ -45,7 +46,11 @@ debugParent.with {
     debug "error", level: 1
     debug "slow-queries", level: 1
 }
+debugParent
 """,
+                expected: [
+                    modulesSize: 3,
+                ]
             ],
             [
                 input: """
@@ -54,12 +59,31 @@ debugLogs << [name: "error", level: 1]
 debugLogs << [name: "slow-queries", level: 1]
 debugLogs << [name: "general", level: 1, file: "/var/log/mysql/mysql.log"]
 debugLogs.each { debugParent.debug it }
+debugParent
 """,
+                expected: [
+                    modulesSize: 3,
+                ]
+            ],
+            [
+                input: """
+debugParent.with {
+    debug << [name: "error", level: 1]
+    debug << [name: "slow-queries", level: 1]
+    debug << [name: "general", level: 1, file: "/var/log/mysql/mysql.log"]
+}
+debugParent
+""",
+                expected: [
+                    modulesSize: 3,
+                ]
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            Eval.me 'debugParent', debugFactory.create(), test.input as String
+            DebugLogging logging = Eval.me('debugParent', debugFactory.create(), test.input as String) as DebugLogging
+            Map expected = test.expected
+            assert logging.modules.size() == expected.modulesSize
         }
     }
 

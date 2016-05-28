@@ -18,7 +18,29 @@ package com.anrisoftware.sscontrol.debug.external;
 import java.util.Map;
 
 /**
+ * <p>
  * Debug logging.
+ * </p>
+ * <h2>Usage Example</h2>
+ * 
+ * <pre>
+ * public void debug(Map<String, Object> args, String name) {
+ *     Map<String, Object> arguments = new HashMap<String, Object>(args);
+ *     arguments.put("name", name);
+ *     invokeMethod(debug, "debug", arguments);
+ * }
+ * 
+ * public void debug(Map<String, Object> args) {
+ *     Map<String, Object> arguments = new HashMap<String, Object>(args);
+ *     invokeMethod(debug, "debug", arguments);
+ * }
+ * 
+ * &#64;SuppressWarnings("unchecked")
+ * public List<Object> getDebug() {
+ *     return (List<Object>) invokeMethod(debug, "getDebug", null);
+ * }
+ * 
+ * </pre>
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
