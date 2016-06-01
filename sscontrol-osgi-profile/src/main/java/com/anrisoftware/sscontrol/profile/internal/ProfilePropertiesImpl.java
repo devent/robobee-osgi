@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.profile.internal;
 
 import static com.anrisoftware.sscontrol.types.external.ArgumentInvalidException.checkBlankArg;
-import groovy.lang.GroovyObjectSupport;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -42,6 +41,7 @@ import org.joda.time.format.PeriodFormatter;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.StringToType;
 import com.anrisoftware.propertiesutils.TypedAllProperties;
+import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
@@ -49,14 +49,16 @@ import com.anrisoftware.sscontrol.types.external.ProfileProperties;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
+import groovy.lang.GroovyObjectSupport;
+
 /**
  * Implements service profile.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class ProfilePropertiesImpl extends GroovyObjectSupport implements
-        ProfileProperties {
+public class ProfilePropertiesImpl extends GroovyObjectSupport
+        implements ProfileProperties {
 
     public interface ProfilePropertiesImplFactory {
 
@@ -68,7 +70,7 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
 
     private final Properties properties;
 
-    private final TypedAllPropertiesService typedService;
+    private final TypedAllPropertiesFactory typedAllPropertiesFactory;
 
     private final TypedAllProperties typedProperties;
 
@@ -78,10 +80,10 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
     private String name;
 
     @AssistedInject
-    ProfilePropertiesImpl(TypedAllPropertiesService typedPropertiesService) {
+    ProfilePropertiesImpl(TypedAllPropertiesFactory propertiesFactory) {
         this.properties = new Properties();
-        this.typedService = typedPropertiesService;
-        this.typedProperties = typedPropertiesService.create(properties);
+        this.typedAllPropertiesFactory = propertiesFactory;
+        this.typedProperties = propertiesFactory.create(properties);
     }
 
     @AssistedInject
@@ -89,7 +91,7 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
             TypedAllPropertiesService typedPropertiesService) {
         this.name = profileProperties.getName();
         this.properties = new Properties();
-        this.typedService = typedPropertiesService;
+        this.typedAllPropertiesFactory = typedPropertiesService;
         this.typedProperties = typedPropertiesService.create(properties);
         copyProperties(this.properties, properties);
     }
@@ -147,7 +149,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getPeriodProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getPeriodProperty(key);
         }
     }
 
@@ -157,16 +160,19 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getPeriodProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getPeriodProperty(key);
         }
     }
 
-    public Duration getDurationProperty(String key, ContextProperties defaults) {
+    public Duration getDurationProperty(String key,
+            ContextProperties defaults) {
         Duration value = typedProperties.getDurationProperty(key);
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getDurationProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getDurationProperty(key);
         }
     }
 
@@ -176,8 +182,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getDurationProperty(key,
-                    formatter);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getDurationProperty(key, formatter);
         }
     }
 
@@ -186,7 +192,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getBooleanProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getBooleanProperty(key);
         }
     }
 
@@ -195,7 +202,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getNumberProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getNumberProperty(key);
         }
     }
 
@@ -204,7 +212,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getCharProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getCharProperty(key);
         }
     }
 
@@ -213,7 +222,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getCharsetProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getCharsetProperty(key);
         }
     }
 
@@ -223,7 +233,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getURLProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getURLProperty(key);
         }
     }
 
@@ -233,7 +244,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getURIProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getURIProperty(key);
         }
     }
 
@@ -242,7 +254,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getFileProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getFileProperty(key);
         }
     }
 
@@ -283,7 +296,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getTypedProperty(key, format);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getTypedProperty(key, format);
         }
     }
 
@@ -293,33 +307,33 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getTypedListProperty(key,
-                    format);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getTypedListProperty(key, format);
         }
     }
 
     public <T> List<T> getTypedListProperty(String key, Format format,
             String separatorChars, ContextProperties defaults)
-            throws ParseException {
+                    throws ParseException {
         List<T> value = typedProperties.getTypedListProperty(key, format,
                 separatorChars);
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getTypedListProperty(key,
-                    format, separatorChars);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getTypedListProperty(key, format, separatorChars);
         }
     }
 
     public <T> List<T> getTypedListProperty(String key,
             StringToType<T> stringToType, ContextProperties defaults)
-            throws ParseException {
+                    throws ParseException {
         List<T> value = typedProperties.getTypedListProperty(key, stringToType);
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getTypedListProperty(key,
-                    stringToType);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getTypedListProperty(key, stringToType);
         }
     }
 
@@ -331,17 +345,19 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getTypedListProperty(key,
-                    stringToType, separatorChars);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getTypedListProperty(key, stringToType, separatorChars);
         }
     }
 
-    public List<String> getListProperty(String key, ContextProperties defaults) {
+    public List<String> getListProperty(String key,
+            ContextProperties defaults) {
         List<String> value = typedProperties.getListProperty(key);
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getListProperty(key);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getListProperty(key);
         }
     }
 
@@ -352,8 +368,8 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport implements
         if (value != null) {
             return value;
         } else {
-            return typedService.create(defaults).getListProperty(key,
-                    separatorChars);
+            return typedAllPropertiesFactory.create(defaults)
+                    .getListProperty(key, separatorChars);
         }
     }
 

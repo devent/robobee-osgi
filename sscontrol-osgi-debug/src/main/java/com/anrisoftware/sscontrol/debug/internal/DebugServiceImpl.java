@@ -24,10 +24,10 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
+import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.debug.external.DebugLogging;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

@@ -25,6 +25,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.database.external.Database
 import com.anrisoftware.sscontrol.database.external.DatabaseAccess
 import com.anrisoftware.sscontrol.database.external.DatabaseDb
@@ -224,6 +225,7 @@ database
                 new DatabaseModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
+                new StringsModule(),
                 new GroovyTypesModule(), new AbstractModule() {
 
                     @Override

@@ -26,11 +26,10 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.database.external.DatabaseAccess;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseAccessImplFactory;
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 
@@ -63,7 +62,7 @@ public class DatabaseUserImpl implements DatabaseUser {
         this.accesses = new ArrayList<DatabaseAccess>();
     }
 
-    public DatabaseUser user(Map<String, Object> args) throws AppException {
+    public DatabaseUser user(Map<String, Object> args) {
         String name = toString.toString(args, "name");
         String password = toString.toString(args, "password");
         this.user = userPasswordService.create(name, password);

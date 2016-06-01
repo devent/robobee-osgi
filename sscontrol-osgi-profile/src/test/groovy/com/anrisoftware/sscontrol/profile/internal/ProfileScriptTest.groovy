@@ -24,9 +24,10 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory
-import com.anrisoftware.sscontrol.types.external.Profile;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.Profile
+import com.anrisoftware.sscontrol.types.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 
@@ -101,6 +102,7 @@ profile
         toStringStyle
         Guice.createInjector(
                 new ProfileModule(),
-                new TypesModule()).injectMembers(this)
+                new TypesModule(),
+                new PropertiesUtilsModule()).injectMembers(this)
     }
 }

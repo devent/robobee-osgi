@@ -24,6 +24,7 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.ToStringServiceImpl;
 import com.anrisoftware.sscontrol.database.external.Database
 import com.anrisoftware.sscontrol.database.internal.DatabasePreScriptServiceImpl
 import com.anrisoftware.sscontrol.database.internal.DatabaseServiceImpl
@@ -34,7 +35,6 @@ import com.anrisoftware.sscontrol.dhclient.internal.DhclientServiceImpl
 import com.anrisoftware.sscontrol.parser.external.ParserService
 import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserServiceImpl
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostServiceImpl
-import com.anrisoftware.sscontrol.types.internal.ToStringServiceImpl
 import com.anrisoftware.sscontrol.types.internal.UserPasswordServiceImpl
 
 /**

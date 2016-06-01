@@ -44,6 +44,10 @@
             <artifactId>globalpom-log</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>

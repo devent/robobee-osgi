@@ -13,31 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.types.external;
+package com.anrisoftware.sscontrol.ssh.internal;
 
-import java.util.Map;
+import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 
 /**
- * Converts an argument to a String.
+ * <i>Ssh</i> pre-script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ToStringService {
+public class SshPreScriptImpl implements SscontrolPreScript {
 
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Map<String, Object> args, String name);
+    public interface SshPreScriptImplFactory {
 
-    /**
-     * Converts the specified argument to a {@link String}.
-     *
-     * @throws ArgumentInvalidException
-     *             if the argument is {@code null}.
-     */
-    String toString(Object arg, String name);
+        SshPreScriptImpl create();
+
+    }
+
+    @Override
+    public void configureCompiler(Object compiler) throws AppException {
+    }
+
 }

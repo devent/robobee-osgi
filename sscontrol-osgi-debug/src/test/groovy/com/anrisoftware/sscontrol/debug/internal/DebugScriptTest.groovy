@@ -24,6 +24,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.debug.external.DebugLogging
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory
 import com.anrisoftware.sscontrol.types.internal.TypesModule
@@ -90,6 +91,10 @@ debugParent
     @Before
     void setupTest() {
         toStringStyle
-        Guice.createInjector(new DebugLoggingModule(), new TypesModule()).injectMembers(this)
+        Guice.createInjector(
+                new DebugLoggingModule(),
+                new TypesModule(),
+                new StringsModule()
+                ).injectMembers(this)
     }
 }

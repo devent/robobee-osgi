@@ -22,6 +22,7 @@ import groovy.util.logging.Slf4j
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.dhclient.external.DhclientService
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientModule
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientServiceImpl
@@ -48,6 +49,7 @@ class ScriptsRepositoryTest {
                 new ScriptsRepositoryModule(),
                 new DhclientModule(),
                 new TypesModule(),
+                new StringsModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

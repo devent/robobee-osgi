@@ -26,10 +26,10 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.BindingAddress;
 import com.anrisoftware.sscontrol.types.external.BindingHost;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

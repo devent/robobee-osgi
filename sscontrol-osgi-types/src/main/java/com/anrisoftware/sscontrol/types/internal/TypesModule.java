@@ -15,7 +15,6 @@
  */
 package com.anrisoftware.sscontrol.types.internal;
 
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.AbstractModule;
@@ -24,7 +23,6 @@ public class TypesModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ToStringService.class).to(ToStringServiceImpl.class);
         bind(UserPassword.class).to(UserPasswordImpl.class);
         bind(UserPasswordService.class).to(UserPasswordServiceImpl.class);
     }

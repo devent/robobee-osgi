@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
@@ -40,7 +41,6 @@ import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.external.BindingAddress;
 import com.anrisoftware.sscontrol.types.external.BindingHost;
 import com.anrisoftware.sscontrol.types.external.BindingHostService;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.assistedinject.Assisted;

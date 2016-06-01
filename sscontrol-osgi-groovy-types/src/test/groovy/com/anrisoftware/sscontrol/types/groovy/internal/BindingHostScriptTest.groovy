@@ -24,6 +24,7 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.types.external.BindingHost
 import com.anrisoftware.sscontrol.types.external.BindingHost.Host
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostImpl.BindingHostImplFactory
@@ -95,6 +96,7 @@ bindingParent
         toStringStyle
         Guice.createInjector(
                 new TypesModule(),
+                new StringsModule(),
                 new GroovyTypesModule()).injectMembers(this)
     }
 }

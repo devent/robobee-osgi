@@ -21,9 +21,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.ToStringService;
 
 /**
  * Database.
