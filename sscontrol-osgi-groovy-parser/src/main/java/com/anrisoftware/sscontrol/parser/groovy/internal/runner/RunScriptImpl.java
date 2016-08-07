@@ -22,9 +22,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.parser.external.RunScript;
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.Profile;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 import com.google.inject.assistedinject.Assisted;

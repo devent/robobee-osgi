@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
 
 /**
  * Script runner service.

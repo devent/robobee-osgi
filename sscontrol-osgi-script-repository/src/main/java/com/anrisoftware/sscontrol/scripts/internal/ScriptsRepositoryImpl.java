@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;

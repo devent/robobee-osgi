@@ -15,16 +15,22 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.Set;
+
 /**
- * Profile properties service.
+ * Scripts repository.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface ProfilePropertiesService {
+public interface ScriptsRepository {
 
-    ProfileProperties create(ProfileProperties entry);
+    <T extends SscontrolScript> T getScript(String name);
 
-    ProfileProperties create(String name);
+    Set<String> getScriptNames();
+
+    void putScript(String name, SscontrolScript script);
+
+    void removeScript(String name);
 
 }

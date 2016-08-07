@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.scripts.external;
+package com.anrisoftware.sscontrol.profile.internal;
 
-import java.util.Set;
-
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImpl.ProfilePropertiesImplFactory;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Scripts repository.
+ * @see ProfilePropertiesImpl
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ScriptsRepository {
+public class ProfilePropertiesModule extends AbstractModule {
 
-    <T extends SscontrolScript> T getScript(String name);
-
-    Set<String> getScriptNames();
-
-    void putScript(String name, SscontrolScript script);
-
-    void removeScript(String name);
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(ProfileProperties.class, ProfilePropertiesImpl.class)
+                .build(ProfilePropertiesImplFactory.class));
+    }
 
 }

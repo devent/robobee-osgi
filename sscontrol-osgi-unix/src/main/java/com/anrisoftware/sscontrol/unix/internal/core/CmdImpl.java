@@ -37,13 +37,11 @@ import com.anrisoftware.globalpom.exec.external.runcommands.RunCommandsFactory;
 import com.anrisoftware.globalpom.exec.external.runcommands.RunCommandsService;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecService;
-import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.propertiesutils.ContextPropertiesService;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.resources.templates.external.TemplatesService;
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
 import com.anrisoftware.sscontrol.unix.external.core.Cmd;
-import com.anrisoftware.sscontrol.unix.internal.core.CmdRun.CmdRunFactory;
 import com.google.inject.AbstractModule;
 
 /**
@@ -57,7 +55,7 @@ import com.google.inject.AbstractModule;
 public class CmdImpl implements Cmd {
 
     @Inject
-    private CmdRunFactory cmdRunFactory;
+    private CmdRunCaller cmdRunCaller;
 
     @Reference
     private ScriptExecService scriptEx;
@@ -74,10 +72,7 @@ public class CmdImpl implements Cmd {
     @Override
     public ProcessTask call(Map<String, Object> args, String command,
             SscontrolServiceScript parent) throws CommandExecException {
-        return cmdRunFactory
-                .create(command, parent, (Threads) parent.getThreads(),
-                        parent.getDefaultProperties(), parent.getLog(), args)
-                .call();
+        return cmdRunCaller.call(args, command, parent);
     }
 
     @Activate

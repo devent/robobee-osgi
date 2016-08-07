@@ -30,7 +30,21 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-profile</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-unix-test</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-ssh</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
@@ -67,6 +81,13 @@
             <groupId>org.antlr</groupId>
             <artifactId>ST4</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-script-repository</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

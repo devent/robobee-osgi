@@ -21,9 +21,9 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepositoryService;
 import com.anrisoftware.sscontrol.scripts.internal.ScriptsRepositoryImpl.ScriptsRepositoryImplFactory;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepositoryService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 

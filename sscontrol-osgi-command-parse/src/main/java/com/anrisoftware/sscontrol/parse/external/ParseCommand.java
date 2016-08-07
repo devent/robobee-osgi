@@ -29,8 +29,8 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepository;
-import com.anrisoftware.sscontrol.scripts.external.ScriptsRepositoryService;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.ScriptsRepositoryService;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 
 /**

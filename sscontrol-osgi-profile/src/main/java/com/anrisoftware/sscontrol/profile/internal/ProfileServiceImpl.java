@@ -27,12 +27,13 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory;
 import com.anrisoftware.sscontrol.types.external.Profile;
+import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
 import com.anrisoftware.sscontrol.types.external.ProfileService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
 /**
- * Creates the dhclient.
+ * Profile service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -42,14 +43,17 @@ import com.google.inject.Guice;
 public class ProfileServiceImpl implements ProfileService {
 
     @Inject
-    private ProfileImplFactory dhclientFactory;
+    private ProfileImplFactory profileFactory;
 
     @Reference
     private ToStringService toStringService;
 
+    @Reference
+    private ProfilePropertiesService profilePropertiesService;
+
     @Override
     public Profile create() {
-        return dhclientFactory.create();
+        return profileFactory.create();
     }
 
     @Activate
@@ -58,6 +62,8 @@ public class ProfileServiceImpl implements ProfileService {
 
             @Override
             protected void configure() {
+                bind(ProfilePropertiesService.class)
+                        .toProvider(of(profilePropertiesService));
                 bind(ToStringService.class).toProvider(of(toStringService));
             }
         }).injectMembers(this);

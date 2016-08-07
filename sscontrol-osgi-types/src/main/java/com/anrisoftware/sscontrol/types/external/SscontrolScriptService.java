@@ -15,6 +15,12 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+/**
+ * Returns the service script.
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 public interface SscontrolScriptService {
 
     SscontrolScript create();

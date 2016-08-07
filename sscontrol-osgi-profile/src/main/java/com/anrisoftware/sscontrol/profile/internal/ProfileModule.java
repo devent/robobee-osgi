@@ -16,13 +16,11 @@
 package com.anrisoftware.sscontrol.profile.internal;
 
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory;
-import com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImpl.ProfilePropertiesImplFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * @see ProfileImplFactory
- * @see ProfilePropertiesImpl
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -31,11 +29,9 @@ public class ProfileModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(ProfileImpl.class,
-                ProfileImpl.class).build(ProfileImplFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                ProfilePropertiesImpl.class, ProfilePropertiesImpl.class)
-                .build(ProfilePropertiesImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(ProfileImpl.class, ProfileImpl.class)
+                .build(ProfileImplFactory.class));
     }
 
 }

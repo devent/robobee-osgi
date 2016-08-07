@@ -56,4 +56,8 @@ public interface SscontrolServiceScript {
      */
     SscontrolScript getService();
 
+    /**
+     * Returns the {@link SscontrolServiceScript} scripts.
+     */
+    ScriptsRepository getScriptsRepository();
 }

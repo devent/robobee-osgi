@@ -49,19 +49,25 @@ public class ProfilePropertiesServiceImpl implements ProfilePropertiesService {
     private TypedAllPropertiesService typedAllPropertiesService;
 
     @Override
-    public ProfileProperties create() {
-        return factory.create();
+    public ProfileProperties create(String name) {
+        return factory.create(name);
+    }
+
+    @Override
+    public ProfileProperties create(ProfileProperties entry) {
+        return factory.create(entry);
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ProfileModule(), new AbstractModule() {
+        Guice.createInjector(new ProfilePropertiesModule(),
+                new AbstractModule() {
 
-            @Override
-            protected void configure() {
-                bind(TypedAllPropertiesFactory.class)
-                        .toProvider(of(typedAllPropertiesService));
-            }
-        }).injectMembers(this);
+                    @Override
+                    protected void configure() {
+                        bind(TypedAllPropertiesFactory.class)
+                                .toProvider(of(typedAllPropertiesService));
+                    }
+                }).injectMembers(this);
     }
 }

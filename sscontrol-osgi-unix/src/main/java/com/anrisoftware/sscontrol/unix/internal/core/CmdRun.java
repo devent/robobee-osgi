@@ -17,6 +17,8 @@ import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
 import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
+import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
 import com.anrisoftware.sscontrol.unix.internal.core.ArgumentParser.ArgumentParserFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -35,6 +37,7 @@ public class CmdRun {
                 @Assisted("parent") SscontrolServiceScript parent,
                 @Assisted("threads") Threads threads,
                 @Assisted("properties") Properties properties,
+                @Assisted("profile") ProfileProperties profile,
                 @Assisted("scriptLog") Object scriptLog,
                 @Assisted("args") Map<String, Object> args);
 
@@ -68,14 +71,25 @@ public class CmdRun {
             @Assisted("parent") SscontrolServiceScript parent,
             @Assisted("threads") Threads threads,
             @Assisted("properties") Properties properties,
+            @Assisted("profile") ProfileProperties profile,
             @Assisted("scriptLog") Object scriptLog,
             @Assisted("args") Map<String, Object> args) {
         this.args = new HashMap<String, Object>(args);
         this.args.put("log", scriptLog);
         this.args.put("command", getCommand(command, properties));
+        this.args.put("useSsh", profile.getProperty("ssh_command"));
+        this.args.put("sshHosts", getSshHosts(parent));
+        this.args.put("sshArgs", profile.getProperty("ssh_arguments"));
+        this.args.put("sshCommand", properties.getProperty("ssh_command"));
         this.parent = parent;
         this.command = command;
         this.threads = threads;
+    }
+
+    private Object getSshHosts(SscontrolServiceScript parent) {
+        SscontrolScript script = parent.getScriptsRepository().getScript("ssh");
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public ProcessTask call() throws CommandExecException {

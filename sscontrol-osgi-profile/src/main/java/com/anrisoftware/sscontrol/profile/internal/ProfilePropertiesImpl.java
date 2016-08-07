@@ -46,6 +46,7 @@ import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -60,11 +61,8 @@ import groovy.lang.GroovyObjectSupport;
 public class ProfilePropertiesImpl extends GroovyObjectSupport
         implements ProfileProperties {
 
-    public interface ProfilePropertiesImplFactory {
-
-        ProfilePropertiesImpl create();
-
-        ProfilePropertiesImpl create(@Assisted ProfileProperties properties);
+    public interface ProfilePropertiesImplFactory
+            extends ProfilePropertiesService {
 
     }
 
@@ -74,13 +72,16 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
 
     private final TypedAllProperties typedProperties;
 
+    private final String name;
+
     @Inject
     private ProfilePropertiesImplLogger log;
 
-    private String name;
-
     @AssistedInject
-    ProfilePropertiesImpl(TypedAllPropertiesFactory propertiesFactory) {
+    ProfilePropertiesImpl(@Assisted String name,
+            TypedAllPropertiesFactory propertiesFactory) {
+        checkBlankArg(name, "name");
+        this.name = name;
         this.properties = new Properties();
         this.typedAllPropertiesFactory = propertiesFactory;
         this.typedProperties = propertiesFactory.create(properties);
@@ -98,11 +99,6 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
 
     public void propertyMissing(String name, Object value) throws AppException {
         putProperty(name, value);
-    }
-
-    public void setName(String name) throws ArgumentInvalidException {
-        checkBlankArg(name, "name");
-        this.name = name;
     }
 
     @Override
@@ -314,7 +310,7 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
 
     public <T> List<T> getTypedListProperty(String key, Format format,
             String separatorChars, ContextProperties defaults)
-                    throws ParseException {
+            throws ParseException {
         List<T> value = typedProperties.getTypedListProperty(key, format,
                 separatorChars);
         if (value != null) {
@@ -327,7 +323,7 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
 
     public <T> List<T> getTypedListProperty(String key,
             StringToType<T> stringToType, ContextProperties defaults)
-                    throws ParseException {
+            throws ParseException {
         List<T> value = typedProperties.getTypedListProperty(key, stringToType);
         if (value != null) {
             return value;
