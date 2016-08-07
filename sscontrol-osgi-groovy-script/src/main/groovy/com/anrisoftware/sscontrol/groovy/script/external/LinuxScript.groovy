@@ -15,11 +15,14 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
+import groovy.util.logging.Slf4j
+
 import java.util.concurrent.ExecutorService
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.sscontrol.types.external.ProfileProperties
+import com.anrisoftware.sscontrol.types.external.ScriptsRepository
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
 
@@ -29,6 +32,7 @@ import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
+@Slf4j
 abstract class LinuxScript extends Script implements SscontrolServiceScript {
 
     /**
@@ -50,6 +54,11 @@ abstract class LinuxScript extends Script implements SscontrolServiceScript {
      * The {@link ExecutorService} pool to run the scripts on.
      */
     ExecutorService threads
+
+    /**
+     * The {@link ScriptsRepository} containing the scripts.
+     */
+    ScriptsRepository scriptsRepository
 
     @Override
     public <T extends ExecutorService> T getThreads() {
@@ -94,6 +103,23 @@ abstract class LinuxScript extends Script implements SscontrolServiceScript {
      */
     String getRepositoryString() {
         profile.getProperty "repository_string", defaultProperties
+    }
+
+    /**
+     * Returns the needed packages of the service.
+     *
+     * <ul>
+     * <li>profile property {@code packages}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    List getPackages() {
+        profile.getListProperty "packages", defaultProperties
+    }
+
+    def getLog() {
+        log
     }
 
     @Override
