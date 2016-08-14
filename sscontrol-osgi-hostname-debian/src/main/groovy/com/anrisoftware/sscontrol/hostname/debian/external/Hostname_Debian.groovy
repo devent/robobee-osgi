@@ -34,11 +34,9 @@ abstract class Hostname_Debian extends Hostname_Systemd {
         super.run()
     }
 
-    /**
-     * Installs the <i>hostname</i> packages.
-     */
     void installPackages() {
-        shell "apt-get install $packages.join(' ')" with { env << "DEBIAN_FRONTEND=noninteractive" }
+        log.info 'Installing packages.'
+        shell privileged: true, "apt-get install $packages.join(' ')" with { env << "DEBIAN_FRONTEND=noninteractive" }
     }
 
     @Override

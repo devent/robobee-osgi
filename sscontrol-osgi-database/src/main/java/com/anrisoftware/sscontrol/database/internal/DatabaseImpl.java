@@ -47,7 +47,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * Database script service.
+ * Database service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0

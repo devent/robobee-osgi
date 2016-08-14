@@ -86,6 +86,7 @@
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpom-log</artifactId>
                 <version>${project.custom.bundles.log.version}</version>
+                <type>bundle</type>
             </dependency>
 
             <!-- resources -->
@@ -93,11 +94,13 @@
                 <groupId>com.anrisoftware.resources</groupId>
                 <artifactId>resources-templates</artifactId>
                 <version>${project.custom.bundles.resources.version}</version>
+                <type>bundle</type>
             </dependency>
             <dependency>
                 <groupId>com.anrisoftware.resources</groupId>
                 <artifactId>resources-st</artifactId>
                 <version>${project.custom.bundles.resources.version}</version>
+                <type>bundle</type>
             </dependency>
 
             <!-- globalpomutils -->
@@ -105,16 +108,19 @@
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-core</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
+                <type>bundle</type>
             </dependency>
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-exec</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
+                <type>bundle</type>
             </dependency>
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpomutils-threads</artifactId>
                 <version>${project.custom.bundles.globalpomutils.version}</version>
+                <type>bundle</type>
             </dependency>
 
         </dependencies>

@@ -17,7 +17,8 @@ package com.anrisoftware.sscontrol.hostname.systemd.external
 
 import groovy.util.logging.Slf4j
 
-import com.anrisoftware.sscontrol.groovy.script.external.LinuxScript
+import com.anrisoftware.sscontrol.groovy.script.external.ScriptBase
+import com.anrisoftware.sscontrol.hostname.external.Hostname
 
 /**
  * Configures the <i>hostname</i> service systems that use systemd.
@@ -26,11 +27,17 @@ import com.anrisoftware.sscontrol.groovy.script.external.LinuxScript
  * @since 1.0
  */
 @Slf4j
-abstract class Hostname_Systemd extends LinuxScript {
+abstract class Hostname_Systemd extends ScriptBase {
 
     @Override
     def run() {
+        log.info 'Restarting hostname service..'
         shell privileged: true, "hostnamectl set-hostname $service.hostname"
+    }
+
+    @Override
+    Hostname getService() {
+        super.getService();
     }
 
     @Override

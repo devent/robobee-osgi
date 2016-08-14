@@ -40,8 +40,8 @@ import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecService;
 import com.anrisoftware.propertiesutils.ContextPropertiesService;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.resources.templates.external.TemplatesService;
+import com.anrisoftware.sscontrol.cmd.external.Cmd;
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
-import com.anrisoftware.sscontrol.unix.external.core.Cmd;
 import com.google.inject.AbstractModule;
 
 /**

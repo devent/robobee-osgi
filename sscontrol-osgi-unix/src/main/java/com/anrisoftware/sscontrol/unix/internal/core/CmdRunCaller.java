@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
+import com.anrisoftware.sscontrol.cmd.external.Cmd;
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
-import com.anrisoftware.sscontrol.unix.external.core.Cmd;
 import com.anrisoftware.sscontrol.unix.internal.core.CmdRun.CmdRunFactory;
 
 /**

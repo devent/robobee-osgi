@@ -1,5 +1,0 @@
-unixChmod() ::= <<
-files = java.util.List:true:the list of files.
-mod = java.lang.String:true:the mode of the file, for example "+w".
-recursive = java.lang.Boolean:false:optionally, set to "true" to change files recursive.
->>

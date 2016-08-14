@@ -21,19 +21,21 @@ import java.util.concurrent.ExecutorService
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask
+import com.anrisoftware.sscontrol.cmd.external.Cmd
 import com.anrisoftware.sscontrol.types.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.external.ScriptsRepository
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
 
 /**
- * Base of all scripts that are using the Groovy syntax and compiler.
+ * Base of all scripts that provides utilities functions and basic properties.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Slf4j
-abstract class LinuxScript extends Script implements SscontrolServiceScript {
+abstract class ScriptBase extends Script implements SscontrolServiceScript {
 
     /**
      * The {@link String} name of the script.
@@ -60,9 +62,28 @@ abstract class LinuxScript extends Script implements SscontrolServiceScript {
      */
     ScriptsRepository scriptsRepository
 
+    /**
+     * The command service to execute scripts.
+     */
+    Cmd cmd
+
     @Override
     public <T extends ExecutorService> T getThreads() {
         threads
+    }
+
+    /**
+     * Executes the command.
+     * 
+     * @param args the arguments.
+     * 
+     * @param command the command to execute, can be multi-line.
+     * 
+     * @return
+     * the process task of the executed command.
+     */
+    ProcessTask shell(Map args, String command) {
+        cmd args, command, this
     }
 
     /**

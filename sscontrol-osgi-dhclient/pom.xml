@@ -42,10 +42,12 @@
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpom-log</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpomutils-core</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
