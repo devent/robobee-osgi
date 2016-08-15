@@ -8,7 +8,7 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
 import com.anrisoftware.globalpom.exec.internal.scriptprocess.AbstractProcessExec;
-import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
+import com.anrisoftware.globalpom.threads.external.core.Threads;
 
 /**
  * Runs the specified command.
@@ -31,6 +31,27 @@ public interface Cmd {
      * 
      *            <li>{@code privileged} optionally, set to {@code true} to run
      *            the code with privileged rights.
+     *
+     *            <li>{@code shell} sets the shell that is used to execute the
+     *            command on the host. The shell must be installed on the host
+     *            system. For example, {@code /bin/bash}.
+     * 
+     *            <li>{@code sshShell} optionally, sets the shell that is used
+     *            to call ssh. The shell is normally platform dependent, for
+     *            example, on GNU/Linux systems the bash shell is the most used.
+     *            The shell must be installed on the client system.
+     * 
+     *            <li>{@code sshUser} optionally, sets the ssh user to connect
+     *            to the host system. The user must be available on the host and
+     *            the client must be allowed to login. Normally, that means that
+     *            public key must be added to the host user's
+     *            {@code authorized_keys} file. Per default the current user is
+     *            used.
+     * 
+     *            <li>{@code sshHost} sets the remote host.
+     * 
+     *            <li>{@code sshArgs} optionally, sets the ssh arguments and
+     *            options.
      *
      *            <li>{@code outString} optionally, set to {@code true} to save
      *            the output in a {@link String} for later parsing, see
@@ -61,11 +82,11 @@ public interface Cmd {
      *            the {@link String} command.
      *
      * @param parent
-     *            the {@link SscontrolServiceScript} parent script.
+     *            the parent script.
      *
      * @return the {@link ProcessTask}.
      *
      */
-    ProcessTask call(Map<String, Object> args, String command,
-            SscontrolServiceScript parent) throws CommandExecException;
+    ProcessTask call(Object parent, Threads threads, String command,
+            Map<String, Object> args) throws CommandExecException;
 }

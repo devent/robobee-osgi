@@ -8,7 +8,6 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.cmd.external.Cmd;
-import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
 import com.anrisoftware.sscontrol.unix.internal.core.CmdRun.CmdRunFactory;
 
 /**
@@ -23,11 +22,9 @@ public class CmdRunCaller implements Cmd {
     private CmdRunFactory cmdRunFactory;
 
     @Override
-    public ProcessTask call(Map<String, Object> args, String command,
-            SscontrolServiceScript parent) throws CommandExecException {
-        return cmdRunFactory.create(command, parent,
-                (Threads) parent.getThreads(), parent.getDefaultProperties(),
-                parent.getProfile(), parent.getLog(), args).call();
+    public ProcessTask call(Object parent, Threads threads, String command,
+            Map<String, Object> args) throws CommandExecException {
+        return cmdRunFactory.create(parent, threads, command, args).call();
     }
 
 }

@@ -37,11 +37,11 @@ import com.anrisoftware.globalpom.exec.external.runcommands.RunCommandsFactory;
 import com.anrisoftware.globalpom.exec.external.runcommands.RunCommandsService;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecService;
+import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.propertiesutils.ContextPropertiesService;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 import com.anrisoftware.resources.templates.external.TemplatesService;
 import com.anrisoftware.sscontrol.cmd.external.Cmd;
-import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript;
 import com.google.inject.AbstractModule;
 
 /**
@@ -70,9 +70,9 @@ public class CmdImpl implements Cmd {
     private ContextPropertiesService contextProperties;
 
     @Override
-    public ProcessTask call(Map<String, Object> args, String command,
-            SscontrolServiceScript parent) throws CommandExecException {
-        return cmdRunCaller.call(args, command, parent);
+    public ProcessTask call(Object parent, Threads threads, String command,
+            Map<String, Object> args) throws CommandExecException {
+        return cmdRunCaller.call(parent, threads, command, args);
     }
 
     @Activate
