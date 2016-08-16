@@ -3,6 +3,7 @@ package com.anrisoftware.sscontrol.cmd.internal.core;
 import static java.lang.String.format;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.external.TemplateResource;
+import com.anrisoftware.sscontrol.cmd.external.core.ControlPathCreateDirErrorException;
 import com.anrisoftware.sscontrol.cmd.external.core.ParsePropertiesErrorException;
 import com.google.inject.assistedinject.Assisted;
 
@@ -84,9 +86,23 @@ public class CmdRun {
         setupSshDefaultArgs(args);
         String sshshell = getShellName(args);
         String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
+        createSocketDir(args);
         RunCommands runCommands = runCommandsArg.runCommands(args, parent);
         TemplateResource res = templates.get().getResource(template);
         return runCommand(runCommands, res, args);
+    }
+
+    private void createSocketDir(Map<String, Object> args) {
+        if (args.containsKey(SSH_CONTROL_PATH)) {
+            String path = args.get(SSH_CONTROL_PATH).toString();
+            File dir = new File(path).getParentFile();
+            if (!dir.isDirectory()) {
+                boolean created = dir.mkdirs();
+                if (!created) {
+                    throw new ControlPathCreateDirErrorException(dir);
+                }
+            }
+        }
     }
 
     private String getShellName(Map<String, Object> args) {
@@ -113,14 +129,14 @@ public class CmdRun {
 
     private void setupDefaults0(Map<String, Object> args) {
         Object arg = args.get(SHELL);
-        ContextProperties p = propertiesProvider.get();
+        ContextProperties p = propertiesProvider.get().withSystemReplacements();
         if (arg == null) {
             String shell = p.getProperty("default_shell");
             args.put(SHELL, shell);
         }
         arg = args.get(SSH_USER);
         if (arg == null) {
-            args.put(SSH_USER, System.getProperty("user.name"));
+            args.put(SSH_USER, p.getProperty("default_ssh_user"));
         }
         arg = args.get(SSH_PORT);
         if (arg == null) {

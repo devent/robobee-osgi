@@ -3,10 +3,10 @@ sshCmd(args) ::= <<
 ssh <sshArgs(args, args.sshDefaultArgs)> <sshArgs(args, args.sshArgs)> <args.sshUser>@<args.sshHost> "<args.shell>" \<\< \eof1
 <if(args.privileged)>
 sudo "<args.shell>" \<\< \eof2
-<args.command>
+<theCommand(args)>
 eof2
 <else>
-<args.command>
+<theCommand(args)>
 <endif>
 eof1
 >>
@@ -14,3 +14,9 @@ eof1
 sshArgs(args, sshArgs) ::= <%
 <first(sshArgs):{it|-o }><sshArgs;separator=" -o ">
 %>
+
+theCommand(args) ::= <<
+<if(args.chdir)>cd "<args.chdir>"<endif>
+<args.env.keys:{k | export <k>="<args.env.(k)>"};separator="\n">
+<args.command>
+>>

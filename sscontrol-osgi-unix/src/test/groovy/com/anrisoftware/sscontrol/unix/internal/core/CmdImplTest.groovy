@@ -49,22 +49,33 @@ class CmdImplTest {
         def testCases = [
             [
                 name: 'chmod files',
-                args: [log: log, sshHost: 'localhost'],
-                command: 'chmod a.txt',
+                args: [log: log, sshHost: 'localhost', env: [PATH: './']],
+                command: 'chmod +w a.txt',
                 commands: ['chmod'],
-                expected: [chmod: 'chmod_files_out_expected.txt'],
+                expected: [chmod: 'chmod_file_out_expected.txt'],
+            ],
+            [
+                name: 'chmod files',
+                args: [log: log, sshHost: 'localhost', env: [PATH: './']],
+                command: '''
+touch a.txt
+chmod +w a.txt
+''',
+                commands: ['touch', 'chmod'],
+                expected: [touch: 'touch_file_out_expected.txt', chmod: 'chmod_file_out_expected.txt'],
             ],
         ]
         def cmd = cmdRunCaller
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: "{}": {}', k, test.name, test
             String command = test.command as String
-            def dir = folder.newFolder String.format('%03d_%s', k, command)
+            def dir = folder.newFolder String.format('%03d_%s', k, test.name)
+            test.args.chdir = dir
             createEchoCommands dir, test.commands
             cmd test.args, this, threads, command
             Map testExpected = test.expected
             test.commands.each { String it ->
-                assertStringContent fileToString(new File(dir, "${it}_out.txt")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
+                assertStringContent fileToString(new File(dir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
             }
         }
     }

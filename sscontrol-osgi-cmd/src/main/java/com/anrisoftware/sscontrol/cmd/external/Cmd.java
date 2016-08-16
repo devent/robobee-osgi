@@ -36,6 +36,13 @@ public interface Cmd {
      *            execute the command on the host. The shell must be installed
      *            on the host system. For example, {@code bash -s}.
      * 
+     *            <li>{@code chdir} optionally, sets the work directory of the
+     *            command. If not set, the working directory is the user home
+     *            directory of the ssh user.
+     * 
+     *            <li>{@code env} optionally, sets the {@link Map} of
+     *            environment variables to set for the command.
+     * 
      *            <li>{@code sshUser} optionally, sets the ssh user to connect
      *            to the host system. The user must be available on the host and
      *            the client must be allowed to login. Normally, that means that
