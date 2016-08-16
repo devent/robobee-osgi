@@ -32,14 +32,9 @@ public interface Cmd {
      *            <li>{@code privileged} optionally, set to {@code true} to run
      *            the code with privileged rights.
      *
-     *            <li>{@code shell} sets the shell that is used to execute the
-     *            command on the host. The shell must be installed on the host
-     *            system. For example, {@code /bin/bash}.
-     * 
-     *            <li>{@code sshShell} optionally, sets the shell that is used
-     *            to call ssh. The shell is normally platform dependent, for
-     *            example, on GNU/Linux systems the bash shell is the most used.
-     *            The shell must be installed on the client system.
+     *            <li>{@code shell} optionally, sets the shell that is used to
+     *            execute the command on the host. The shell must be installed
+     *            on the host system. For example, {@code bash -s}.
      * 
      *            <li>{@code sshUser} optionally, sets the ssh user to connect
      *            to the host system. The user must be available on the host and
@@ -50,6 +45,24 @@ public interface Cmd {
      * 
      *            <li>{@code sshHost} sets the remote host.
      * 
+     *            <li>{@code sshPort} optionally, sets the {@link Integer} port
+     *            number of the ssh server.
+     * 
+     *            <li>{@code sshArgs} optionally, sets the ssh arguments and
+     *            options.
+     *
+     *            <li>{@code sshControlMaster} optionally, sets if to use a ssh
+     *            control master. Must be a valid ssh option.
+     *
+     *            <li>{@code sshControlPersistDuration} optionally, set the
+     *            {@link Duration} how long the master persists.
+     *
+     *            <li>{@code sshControlPath} optionally, set the {@link String}
+     *            of the control master socket path.
+     *
+     *            <li>{@code sshConnectionTimeout} optionally, sets the
+     *            {@link Duration} for the ssh connection timeout.
+     *
      *            <li>{@code sshArgs} optionally, sets the ssh arguments and
      *            options.
      *
@@ -78,15 +91,18 @@ public interface Cmd {
      *            the process;
      *            </ul>
      * 
-     * @param command
-     *            the {@link String} command.
-     *
      * @param parent
      *            the parent script.
+     *
+     * @param threads
+     *            the {@link Threads} threads pool to execute the command on.
+     *
+     * @param command
+     *            the {@link String} command.
      *
      * @return the {@link ProcessTask}.
      *
      */
-    ProcessTask call(Object parent, Threads threads, String command,
-            Map<String, Object> args) throws CommandExecException;
+    ProcessTask call(Map<String, Object> args, Object parent, Threads threads,
+            String command) throws CommandExecException;
 }

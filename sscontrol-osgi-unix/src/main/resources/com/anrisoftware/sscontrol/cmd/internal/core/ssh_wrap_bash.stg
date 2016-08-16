@@ -1,0 +1,16 @@
+sshCmd(args) ::= <<
+#!/bin/bash
+ssh <sshArgs(args, args.sshDefaultArgs)> <sshArgs(args, args.sshArgs)> <args.sshUser>@<args.sshHost> "<args.shell>" \<\< \eof1
+<if(args.privileged)>
+sudo "<args.shell>" \<\< \eof2
+<args.command>
+eof2
+<else>
+<args.command>
+<endif>
+eof1
+>>
+
+sshArgs(args, sshArgs) ::= <%
+<first(sshArgs):{it|-o }><sshArgs;separator=" -o ">
+%>

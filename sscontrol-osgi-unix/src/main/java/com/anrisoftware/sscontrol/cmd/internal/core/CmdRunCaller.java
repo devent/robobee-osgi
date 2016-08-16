@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.unix.internal.core;
+package com.anrisoftware.sscontrol.cmd.internal.core;
 
 import java.util.Map;
 
@@ -8,7 +8,7 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.cmd.external.Cmd;
-import com.anrisoftware.sscontrol.unix.internal.core.CmdRun.CmdRunFactory;
+import com.anrisoftware.sscontrol.cmd.internal.core.CmdRun.CmdRunFactory;
 
 /**
  * Wrapper around command call method.
@@ -22,9 +22,9 @@ public class CmdRunCaller implements Cmd {
     private CmdRunFactory cmdRunFactory;
 
     @Override
-    public ProcessTask call(Object parent, Threads threads, String command,
-            Map<String, Object> args) throws CommandExecException {
-        return cmdRunFactory.create(parent, threads, command, args).call();
+    public ProcessTask call(Map<String, Object> args, Object parent,
+            Threads threads, String command) throws CommandExecException {
+        return cmdRunFactory.create(args, parent, threads, command).call();
     }
 
 }

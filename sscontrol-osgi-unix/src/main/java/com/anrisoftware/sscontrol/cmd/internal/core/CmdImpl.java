@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.unix.internal.core;
+package com.anrisoftware.sscontrol.cmd.internal.core;
 
 import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
@@ -70,9 +70,9 @@ public class CmdImpl implements Cmd {
     private ContextPropertiesService contextProperties;
 
     @Override
-    public ProcessTask call(Object parent, Threads threads, String command,
-            Map<String, Object> args) throws CommandExecException {
-        return cmdRunCaller.call(parent, threads, command, args);
+    public ProcessTask call(Map<String, Object> args, Object parent,
+            Threads threads, String command) throws CommandExecException {
+        return cmdRunCaller.call(args, parent, threads, command);
     }
 
     @Activate

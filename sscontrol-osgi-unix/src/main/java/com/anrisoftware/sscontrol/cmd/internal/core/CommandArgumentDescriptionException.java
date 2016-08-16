@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.unix.internal.core;
+package com.anrisoftware.sscontrol.cmd.internal.core;
 
 import java.io.IOException;
 

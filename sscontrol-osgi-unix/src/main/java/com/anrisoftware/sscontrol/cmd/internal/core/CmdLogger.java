@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-scripts-unix. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.unix.internal.core;
+package com.anrisoftware.sscontrol.cmd.internal.core;
 
-import static com.anrisoftware.sscontrol.unix.internal.core.CmdLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.unix.internal.core.CmdLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.unix.internal.core.CmdLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.cmd.internal.core.CmdLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.cmd.internal.core.CmdLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.cmd.internal.core.CmdLogger._.command_finished_trace;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
-package com.anrisoftware.sscontrol.unix.internal.core;
+package com.anrisoftware.sscontrol.cmd.internal.core;
 
-import com.anrisoftware.sscontrol.unix.internal.core.CmdRun.CmdRunFactory;
+import com.anrisoftware.sscontrol.cmd.internal.core.CmdRun.CmdRunFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

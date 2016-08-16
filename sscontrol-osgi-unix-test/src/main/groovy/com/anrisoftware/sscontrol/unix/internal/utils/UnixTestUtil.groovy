@@ -15,6 +15,10 @@ import org.apache.commons.io.IOUtils
 @CompileStatic
 class UnixTestUtil {
 
+    static void createEchoCommands(File dir, List<String> names) {
+        names.each { createEchoCommand dir, it }
+    }
+
     static String createEchoCommand(File dir, String name) {
         def file = new File(dir, name)
         def stream = new FileOutputStream(file)
