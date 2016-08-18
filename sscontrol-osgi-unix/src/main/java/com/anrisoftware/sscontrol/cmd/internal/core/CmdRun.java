@@ -1,5 +1,13 @@
 package com.anrisoftware.sscontrol.cmd.internal.core;
 
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SHELL;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_ARGS;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_CONNECTION_TIMEOUT;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_CONTROL_MASTER;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_CONTROL_PATH;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_CONTROL_PERSIST_DURATION;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_PORT;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_USER;
 import static java.lang.String.format;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
@@ -13,8 +21,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
 
 import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
@@ -27,6 +33,7 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.cmd.external.core.ControlPathCreateDirErrorException;
 import com.anrisoftware.sscontrol.cmd.external.core.ParsePropertiesErrorException;
+import com.anrisoftware.sscontrol.cmd.internal.core.SshOptions.SshOptionsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -70,7 +77,7 @@ public class CmdRun {
     private DurationFormatFactory durationFormatFactory;
 
     @Inject
-    private DurationAttributeFormat durationAttributeFormat;
+    private SshOptionsFactory sshOptionsFactory;
 
     @Inject
     CmdRun(@Assisted Map<String, Object> args, @Assisted Object parent,
@@ -96,12 +103,16 @@ public class CmdRun {
         if (args.containsKey(SSH_CONTROL_PATH)) {
             String path = args.get(SSH_CONTROL_PATH).toString();
             File dir = new File(path).getParentFile();
+            if (dir == null) {
+                return;
+            }
             if (!dir.isDirectory()) {
                 boolean created = dir.mkdirs();
                 if (!created) {
                     throw new ControlPathCreateDirErrorException(dir);
                 }
             }
+            dir.setWritable(true, true);
         }
     }
 
@@ -143,6 +154,10 @@ public class CmdRun {
             args.put(SSH_PORT,
                     p.getNumberProperty("default_ssh_port").intValue());
         }
+        arg = args.get(SSH_ARGS);
+        if (arg == null) {
+            args.put(SSH_ARGS, p.getListProperty("default_ssh_args", ";"));
+        }
         arg = args.get(SSH_CONTROL_MASTER);
         if (arg == null) {
             args.put(SSH_CONTROL_MASTER,
@@ -167,25 +182,17 @@ public class CmdRun {
 
     private void setupSshDefaultArgs(Map<String, Object> args) {
         List<String> options = new ArrayList<String>();
-        args.put("sshDefaultArgs", options);
-        ContextProperties p = propertiesProvider.get();
-        options.addAll(p.getListProperty("default_ssh_options", ";"));
-        STGroup group = new STGroup();
-        group.registerRenderer(durationAttributeFormat.getAttributeType(),
-                durationAttributeFormat);
-        String master = parseTemplate(args, group,
-                p.getProperty("ssh_control_master_option"));
-        options.add(master);
-        String persist = parseTemplate(args, group,
-                p.getProperty("ssh_control_persist_option"));
-        options.add(persist);
-        String path = parseOption(args, group,
-                p.getProperty("ssh_control_path_option"));
-        path = parseTemplate(args, group, path);
-        options.add(path);
-        String timeout = parseTemplate(args, group,
-                p.getProperty("ssh_connection_timeout_option"));
-        options.add(timeout);
+        args.put("sshDefaultOptions", options);
+        SshOptions sshOptions = sshOptionsFactory.create(args, options);
+        sshOptions.addDefaultOptions();
+        sshOptions.addDebug();
+        sshOptions.addStringOption(SSH_CONTROL_MASTER,
+                "ssh_control_master_option");
+        sshOptions.addOption(SSH_CONTROL_PERSIST_DURATION,
+                "ssh_control_persist_option");
+        sshOptions.addOption(SSH_CONNECTION_TIMEOUT,
+                "ssh_connection_timeout_option");
+        sshOptions.addPathOption(SSH_CONTROL_PATH, "ssh_control_path_option");
     }
 
     private Object getDefaultDuration(ContextProperties p, String property) {
@@ -196,35 +203,8 @@ public class CmdRun {
         }
     }
 
-    private String parseOption(Map<String, Object> args, STGroup group,
-            String property) {
-        String option = parseTemplate(args, group, property);
-        return parseTemplate(args, group, option);
-    }
-
-    private String parseTemplate(Map<String, Object> args, STGroup group,
-            String template) {
-        ST st = new ST(group, template);
-        st.add("args", args);
-        return st.render();
-    }
-
     private static final String COMMAND_NAME_FORMAT = "%s%s";
 
     private static final String COMMAND_KEY = "command";
-
-    private static final String SSH_CONNECTION_TIMEOUT = "sshConnectionTimeout";
-
-    private static final String SSH_CONTROL_PATH = "sshControlPath";
-
-    private static final String SSH_CONTROL_PERSIST_DURATION = "sshControlPersistDuration";
-
-    private static final String SSH_CONTROL_MASTER = "sshControlMaster";
-
-    private static final String SSH_USER = "sshUser";
-
-    private static final String SHELL = "shell";
-
-    private static final String SSH_PORT = "sshPort";
 
 }

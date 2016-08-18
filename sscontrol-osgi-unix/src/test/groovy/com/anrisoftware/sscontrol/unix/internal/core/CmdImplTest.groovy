@@ -7,6 +7,7 @@ import groovy.util.logging.Slf4j
 import javax.inject.Inject
 import javax.inject.Provider
 
+import org.joda.time.Duration
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Rule
@@ -46,17 +47,33 @@ class CmdImplTest {
 
     @Test
     void "test commands"() {
+        def defargs = [:]
+        defargs.log = log
+        defargs.timeout = Duration.standardSeconds(2)
+        defargs.sshHost = 'localhost'
+        defargs.env = [PATH: './']
+        defargs.sshControlPersistDuration = Duration.standardSeconds(4)
         def testCases = [
             [
-                name: 'chmod files',
-                args: [log: log, sshHost: 'localhost', env: [PATH: './']],
+                name: 'one command',
+                args: [debugLevel: 0],
                 command: 'chmod +w a.txt',
                 commands: ['chmod'],
                 expected: [chmod: 'chmod_file_out_expected.txt'],
             ],
             [
-                name: 'chmod files',
-                args: [log: log, sshHost: 'localhost', env: [PATH: './']],
+                name: 'multiple commands',
+                args: [debugLevel: 2],
+                command: '''
+touch a.txt
+chmod +w a.txt
+''',
+                commands: ['touch', 'chmod'],
+                expected: [touch: 'touch_file_out_expected.txt', chmod: 'chmod_file_out_expected.txt'],
+            ],
+            [
+                name: 'no control master',
+                args: [sshControlMaster: 'no', sshControlPath: '', debugLevel: 2],
                 command: '''
 touch a.txt
 chmod +w a.txt
@@ -69,13 +86,14 @@ chmod +w a.txt
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: "{}": {}', k, test.name, test
             String command = test.command as String
-            def dir = folder.newFolder String.format('%03d_%s', k, test.name)
-            test.args.chdir = dir
-            createEchoCommands dir, test.commands
-            cmd test.args, this, threads, command
+            Map args = test.args
+            args.putAll defargs
+            args.chdir = folder.newFolder String.format('%03d_%s', k, test.name)
+            createEchoCommands args.chdir, test.commands
+            cmd args, this, threads, command
             Map testExpected = test.expected
             test.commands.each { String it ->
-                assertStringContent fileToString(new File(dir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
+                assertStringContent fileToString(new File(args.chdir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
             }
         }
     }

@@ -18,6 +18,24 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
  */
 public interface Cmd {
 
+    static final String SSH_CONNECTION_TIMEOUT = "sshConnectionTimeout";
+
+    static final String SSH_CONTROL_PATH = "sshControlPath";
+
+    static final String SSH_CONTROL_PERSIST_DURATION = "sshControlPersistDuration";
+
+    static final String SSH_CONTROL_MASTER = "sshControlMaster";
+
+    static final String SSH_USER = "sshUser";
+
+    static final String SHELL = "shell";
+
+    static final String SSH_PORT = "sshPort";
+
+    static final String DEBUG_LEVEL = "debugLevel";
+
+    static final String SSH_ARGS = "sshArgs";
+
     /**
      * Runs the specified command.
      *
@@ -42,6 +60,9 @@ public interface Cmd {
      * 
      *            <li>{@code env} optionally, sets the {@link Map} of
      *            environment variables to set for the command.
+     * 
+     *            <li>{@code debugLevel} optionally, sets the {@link Integer} of
+     *            the debugging level.
      * 
      *            <li>{@code sshUser} optionally, sets the ssh user to connect
      *            to the host system. The user must be available on the host and
