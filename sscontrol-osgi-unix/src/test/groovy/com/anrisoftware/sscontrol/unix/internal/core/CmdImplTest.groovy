@@ -31,6 +31,7 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
+import com.anrisoftware.sscontrol.cmd.external.Cmd
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
 import com.google.inject.AbstractModule
@@ -46,17 +47,18 @@ import com.google.inject.Injector
 class CmdImplTest {
 
     @Test
-    void "test commands"() {
+    void "test commands with control master"() {
         def defargs = [:]
         defargs.log = log
-        defargs.timeout = Duration.standardSeconds(2)
+        defargs.timeout = Duration.standardSeconds(5)
         defargs.sshHost = 'localhost'
         defargs.env = [PATH: './']
-        defargs.sshControlPersistDuration = Duration.standardSeconds(4)
+        defargs.sshControlMaster = 'auto'
+        defargs.sshControlPersistDuration = Duration.standardSeconds(10)
         def testCases = [
             [
                 name: 'one command',
-                args: [debugLevel: 0],
+                args: [debugLevel: 2],
                 command: 'chmod +w a.txt',
                 commands: ['chmod'],
                 expected: [chmod: 'chmod_file_out_expected.txt'],
@@ -83,12 +85,56 @@ chmod +w a.txt
             ],
         ]
         def cmd = cmdRunCaller
+        (0..20).each { runTestCases testCases, defargs, cmd, it }
+    }
+
+    @Test
+    void "test commands"() {
+        def defargs = [:]
+        defargs.log = log
+        defargs.timeout = Duration.standardSeconds(8)
+        defargs.sshHost = 'localhost'
+        defargs.env = [PATH: './']
+        def testCases = [
+            [
+                name: 'one command',
+                args: [debugLevel: 2],
+                command: 'chmod +w a.txt',
+                commands: ['chmod'],
+                expected: [chmod: 'chmod_file_out_expected.txt'],
+            ],
+            [
+                name: 'multiple commands',
+                args: [debugLevel: 2],
+                command: '''
+touch a.txt
+chmod +w a.txt
+''',
+                commands: ['touch', 'chmod'],
+                expected: [touch: 'touch_file_out_expected.txt', chmod: 'chmod_file_out_expected.txt'],
+            ],
+            [
+                name: 'no control master',
+                args: [sshControlMaster: 'no', sshControlPath: '', debugLevel: 2],
+                command: '''
+touch a.txt
+chmod +w a.txt
+''',
+                commands: ['touch', 'chmod'],
+                expected: [touch: 'touch_file_out_expected.txt', chmod: 'chmod_file_out_expected.txt'],
+            ],
+        ]
+        def cmd = cmdRunCaller
+        runTestCases testCases, defargs, cmd
+    }
+
+    void runTestCases(List testCases, Map defargs, Cmd cmd, int i=0) {
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: "{}": {}', k, test.name, test
             String command = test.command as String
-            Map args = test.args
-            args.putAll defargs
-            args.chdir = folder.newFolder String.format('%03d_%s', k, test.name)
+            Map args = new HashMap(defargs)
+            args.putAll test.args
+            args.chdir = folder.newFolder String.format('%03d_%03d_%s', i, k, test.name)
             createEchoCommands args.chdir, test.commands
             cmd args, this, threads, command
             Map testExpected = test.expected

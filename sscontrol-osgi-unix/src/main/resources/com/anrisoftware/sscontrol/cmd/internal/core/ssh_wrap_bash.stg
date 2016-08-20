@@ -9,6 +9,8 @@ eof2
 <theCommand(args)>
 <endif>
 eof1
+date
+echo "finished"
 >>
 
 sshDebug(args) ::= <%

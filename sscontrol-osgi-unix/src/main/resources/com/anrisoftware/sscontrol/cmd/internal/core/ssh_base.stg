@@ -1,0 +1,17 @@
+sshDebug(args) ::= <%
+<args.debugLevel>
+%>
+
+sshArgs(args) ::= <%
+<args.sshArgs;separator=" ">
+%>
+
+sshOptions(args, options) ::= <%
+<first(options):{it|-o }><options;separator=" -o ">
+%>
+
+sshCommand(args) ::= <<
+<if(args.chdir)>cd "<args.chdir>"<endif>
+<args.env.keys:{k | export <k>="<args.env.(k)>"};separator="\n">
+<args.command>
+>>

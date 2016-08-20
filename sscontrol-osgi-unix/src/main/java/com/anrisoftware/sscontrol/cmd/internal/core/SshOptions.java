@@ -68,35 +68,39 @@ class SshOptions {
     }
 
     public void addOption(String name, String option) {
-        if (args.containsKey(name)) {
-            String o = parseTemplate(args, group, p.getProperty(option));
-            options.add(o);
+        if (!args.containsKey(name)) {
+            return;
         }
+        String o = parseTemplate(args, group, p.getProperty(option));
+        options.add(o);
     }
 
     public void addStringOption(String name, String option) {
-        if (args.containsKey(name)) {
-            String a = args.get(name).toString();
-            if (isBlank(a)) {
-                return;
-            }
-            String o = parseTemplate(args, group, p.getProperty(option));
-            options.add(o);
+        if (!args.containsKey(name)) {
+            return;
         }
+        String a = args.get(name).toString();
+        if (isBlank(a)) {
+            return;
+        }
+        String o = parseTemplate(args, group, p.getProperty(option));
+        options.add(o);
     }
 
     public void addPathOption(String name, String string) {
-        if (args.containsKey(name)) {
-            String path = args.get(name).toString();
-            if (!StringUtils.isBlank(path)) {
-                path = parseTemplate(args, group, path);
-                args.put(name, path);
-                String pathoption = parseOption(args, group,
-                        p.getProperty("ssh_control_path_option"));
-                pathoption = parseTemplate(args, group, pathoption);
-                options.add(pathoption);
-            }
+        if (!args.containsKey(name)) {
+            return;
         }
+        String path = args.get(name).toString();
+        if (StringUtils.isBlank(path)) {
+            return;
+        }
+        path = parseTemplate(args, group, path);
+        args.put(name, path);
+        String pathoption = parseOption(args, group,
+                p.getProperty("ssh_control_path_option"));
+        pathoption = parseTemplate(args, group, pathoption);
+        options.add(pathoption);
     }
 
     private String parseOption(Map<String, Object> args, STGroup group,
