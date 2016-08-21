@@ -26,9 +26,9 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.ssh.external.Ssh
-import com.anrisoftware.sscontrol.ssh.external.SshHost
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.types.external.Ssh;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 

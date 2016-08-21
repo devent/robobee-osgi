@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.globalpom.resources.StringToURI;
 import com.anrisoftware.globalpom.strings.ToStringService;
-import com.anrisoftware.sscontrol.ssh.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 
 /**
  * 

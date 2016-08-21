@@ -27,11 +27,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
 import com.anrisoftware.sscontrol.debug.external.DebugService;
-import com.anrisoftware.sscontrol.ssh.external.Ssh;
-import com.anrisoftware.sscontrol.ssh.external.SshHost;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.Ssh;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 

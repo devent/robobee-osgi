@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -46,7 +47,7 @@ import com.anrisoftware.resources.templates.internal.templates.TemplatesResource
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.cmd.external.Cmd
-import com.anrisoftware.sscontrol.cmd.external.shell.ShellFactory
+import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdImpl
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
@@ -67,22 +68,114 @@ class ScriptBaseTest {
 
                     @Override
                     Properties getDefaultProperties() {
-                        return null;
                     }
 
                     @Override
                     def run() {
-                        shell "chmod +x test.txt" call()
+                        shell "echo 'test shell'" call()
                     }
                 },
                 expected: [
-                    modulesSize: 3,
+                    :
+                ]
+            ],
+            [
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    @CompileDynamic
+                    def run() {
+                        shell "echo \"test shell \$STRING\"" with { //
+                            env "STRING=hello" } call()
+                    }
+                },
+                expected: [
+                    :
+                ]
+            ],
+            [
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    @CompileDynamic
+                    def run() {
+                        shell "echo \"test shell \$STRING\"" with { //
+                            env "STRING='hello'" } call()
+                    }
+                },
+                expected: [
+                    :
+                ]
+            ],
+            [
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    @CompileDynamic
+                    def run() {
+                        shell "echo \"test shell \$STRING\"" with { //
+                            env "STRING=\"hello \$HOSTNAME\"" } call()
+                    }
+                },
+                expected: [
+                    :
+                ]
+            ],
+            [
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    @CompileDynamic
+                    def run() {
+                        shell "echo \"test shell \$STRING\"" with {
+                            env name: "STRING", value: "hello world"
+                        } call()
+                    }
+                },
+                expected: [
+                    :
+                ]
+            ],
+            [
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    @CompileDynamic
+                    def run() {
+                        shell "echo \"test shell \$STRING\"" with {
+                            env name: "STRING", value: "hello \$HOSTNAME", literally: false
+                        } call()
+                    }
+                },
+                expected: [
+                    :
                 ]
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
             ScriptBase script = test.input
+            script.ssh = localhost
             script.shell = shell
             script.threads = threads
             script.run()
@@ -106,6 +199,9 @@ class ScriptBaseTest {
 
     @Inject
     CmdRunCaller cmdRunCaller
+
+    @Inject
+    Localhost localhost
 
     @Before
     void setupTest() {

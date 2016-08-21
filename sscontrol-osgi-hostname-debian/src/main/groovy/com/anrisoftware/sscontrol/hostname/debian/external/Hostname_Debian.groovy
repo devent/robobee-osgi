@@ -31,12 +31,13 @@ abstract class Hostname_Debian extends Hostname_Systemd {
     @Override
     def run() {
         installPackages()
-        super.run()
+        restartService()
     }
 
     void installPackages() {
         log.info 'Installing packages.'
-        shell privileged: true, "apt-get install $packages.join(' ')" with { env << "DEBIAN_FRONTEND=noninteractive" }
+        shell privileged: true, "apt-get -y install $packages.join(' ')" with { //
+            env "DEBIAN_FRONTEND=noninteractive" } call()
     }
 
     @Override

@@ -25,8 +25,8 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
-import com.anrisoftware.sscontrol.debug.external.DebugLogging
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingImpl.DebugLoggingImplFactory
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 

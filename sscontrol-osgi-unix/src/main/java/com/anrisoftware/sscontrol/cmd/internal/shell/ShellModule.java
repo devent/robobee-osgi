@@ -1,7 +1,7 @@
 package com.anrisoftware.sscontrol.cmd.internal.shell;
 
-import com.anrisoftware.sscontrol.cmd.external.shell.Shell;
-import com.anrisoftware.sscontrol.cmd.external.shell.ShellFactory;
+import com.anrisoftware.sscontrol.cmd.external.Shell;
+import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

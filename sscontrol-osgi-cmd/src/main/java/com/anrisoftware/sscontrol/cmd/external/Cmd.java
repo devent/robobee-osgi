@@ -28,6 +28,8 @@ public interface Cmd {
 
     static final String SSH_USER = "sshUser";
 
+    static final String SSH_HOST = "sshHost";
+
     static final String SHELL = "shell";
 
     static final String SSH_PORT = "sshPort";

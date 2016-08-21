@@ -1,5 +1,11 @@
 package com.anrisoftware.sscontrol.cmd.internal.shell;
 
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.ENV_ARGS;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_HOST;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_PORT;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_USER;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -8,7 +14,8 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.cmd.external.Cmd;
-import com.anrisoftware.sscontrol.cmd.external.shell.Shell;
+import com.anrisoftware.sscontrol.cmd.external.Shell;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -29,23 +36,57 @@ public class ShellImpl implements Shell {
 
     private final Object log;
 
+    private final SshHost ssh;
+
+    private final Map<String, String> env;
+
     @Inject
     private Cmd cmd;
 
     @Inject
-    ShellImpl(@Assisted Map<String, Object> args,
+    ShellImpl(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
             @Assisted("parent") Object parent, @Assisted Threads threads,
             @Assisted("log") Object log, @Assisted String command) {
-        this.args = args;
+        this.args = new HashMap<String, Object>(args);
         this.parent = parent;
         this.threads = threads;
         this.log = log;
         this.command = command;
+        this.ssh = ssh;
+        this.env = new HashMap<String, String>();
     }
 
     @Override
     public ProcessTask call() throws CommandExecException {
         args.put("log", log);
+        args.put(ENV_ARGS, env);
+        setupSsh();
         return cmd.call(args, parent, threads, command);
+    }
+
+    public Shell env(String string) {
+        int i = string.indexOf('=');
+        String key = string.substring(0, i);
+        String value = string.substring(i + 1);
+        env.put(key, value);
+        return this;
+    }
+
+    public Shell env(Map<String, Object> args) {
+        Boolean literally = (Boolean) args.get("literally");
+        String value = args.get("value").toString();
+        String quote = "\'";
+        if (literally != null && !literally) {
+            quote = "\"";
+        }
+        value = String.format("%s%s%s", quote, value, quote);
+        env.put(args.get("name").toString(), value);
+        return this;
+    }
+
+    private void setupSsh() {
+        args.put(SSH_USER, ssh.getUser());
+        args.put(SSH_HOST, ssh.getHost());
+        args.put(SSH_PORT, ssh.getPort());
     }
 }

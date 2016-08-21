@@ -17,8 +17,8 @@ package com.anrisoftware.sscontrol.database.external;
 
 import java.util.List;
 
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.BindingHost;
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.SscontrolScript;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 

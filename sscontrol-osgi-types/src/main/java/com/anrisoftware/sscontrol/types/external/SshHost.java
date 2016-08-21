@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.ssh.external;
+package com.anrisoftware.sscontrol.types.external;
 
-import java.util.List;
-
-import com.anrisoftware.sscontrol.debug.external.DebugLogging;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import java.net.URI;
 
 /**
- * <i>Ssh</i> script service.
+ * <i>Ssh</i> host.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface Ssh extends SscontrolScript {
+public interface SshHost {
 
-    /**
-     * Returns the debug logging.
-     */
-    DebugLogging getDebugLogging();
+    String getHost();
 
-    /**
-     * Returns the hosts.
-     */
-    List<SshHost> getHosts();
+    String getUser();
+
+    Integer getPort();
+
+    URI getKey();
 }

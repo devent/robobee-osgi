@@ -13,6 +13,6 @@ eof1
 
 theCommand(args) ::= <<
 <if(args.chdir)>cd "<args.chdir>"<endif>
-<args.env.keys:{k | export <k>="<args.env.(k)>"};separator="\n">
+<args.env.keys:{k | export <k>=<args.env.(k)>};separator="\n">
 <args.command>
 >>

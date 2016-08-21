@@ -21,12 +21,13 @@ import java.util.concurrent.ExecutorService
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import com.anrisoftware.sscontrol.cmd.external.shell.ShellFactory
-import com.anrisoftware.sscontrol.cmd.internal.shell.ShellImpl
+import com.anrisoftware.sscontrol.cmd.external.Shell
+import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.types.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.external.ScriptsRepository
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
 import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
+import com.anrisoftware.sscontrol.types.external.Ssh
 
 /**
  * Base of all scripts that provides utilities functions and basic properties.
@@ -67,6 +68,11 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      */
     ShellFactory shell
 
+    /**
+     * The hosts targets.
+     */
+    Ssh ssh
+
     @Override
     public <T extends ExecutorService> T getThreads() {
         threads
@@ -79,7 +85,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      *
      * @return the process task of the executed command.
      */
-    ShellImpl shell(String command) {
+    Shell shell(String command) {
         shell([:], command)
     }
 
@@ -92,8 +98,10 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      *
      * @return the process task of the executed command.
      */
-    ShellImpl shell(Map args, String command) {
-        shell.create(args, this, threads, log, command)
+    Shell shell(Map args, String command) {
+        if (ssh.hosts.size() == 1) {
+            shell.create(args, ssh.hosts[0], this, threads, log, command)
+        }
     }
 
     /**

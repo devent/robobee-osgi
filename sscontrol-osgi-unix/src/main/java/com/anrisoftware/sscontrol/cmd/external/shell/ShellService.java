@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.cmd.external.shell;
 
+import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory;
+
 /**
  * Shell command service.
  *

@@ -29,10 +29,9 @@ import com.anrisoftware.sscontrol.hostname.external.Hostname
 @Slf4j
 abstract class Hostname_Systemd extends ScriptBase {
 
-    @Override
-    def run() {
-        log.info 'Restarting hostname service..'
-        shell privileged: true, "hostnamectl set-hostname $service.hostname"
+    def restartService() {
+        log.info 'Restarting hostname service.'
+        shell privileged: true, "hostnamectl set-hostname $service.hostname" call()
     }
 
     @Override

@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.debug.external;
 
+import com.anrisoftware.sscontrol.types.external.DebugLogging;
+
 /**
  * Creates the debug logging.
  *
