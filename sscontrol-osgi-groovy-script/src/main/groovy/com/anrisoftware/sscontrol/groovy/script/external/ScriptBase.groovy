@@ -21,8 +21,8 @@ import java.util.concurrent.ExecutorService
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import com.anrisoftware.globalpom.exec.external.core.ProcessTask
-import com.anrisoftware.sscontrol.cmd.external.Cmd
+import com.anrisoftware.sscontrol.cmd.external.shell.ShellFactory
+import com.anrisoftware.sscontrol.cmd.internal.shell.ShellImpl
 import com.anrisoftware.sscontrol.types.external.ProfileProperties
 import com.anrisoftware.sscontrol.types.external.ScriptsRepository
 import com.anrisoftware.sscontrol.types.external.SscontrolScript
@@ -65,7 +65,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
     /**
      * The command service to execute scripts.
      */
-    Cmd cmd
+    ShellFactory shell
 
     @Override
     public <T extends ExecutorService> T getThreads() {
@@ -74,16 +74,26 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
 
     /**
      * Executes the command.
-     * 
-     * @param args the arguments.
-     * 
+     *
      * @param command the command to execute, can be multi-line.
-     * 
-     * @return
-     * the process task of the executed command.
+     *
+     * @return the process task of the executed command.
      */
-    ProcessTask shell(Map args, String command) {
-        cmd args, command, this
+    ShellImpl shell(String command) {
+        shell([:], command)
+    }
+
+    /**
+     * Executes the command.
+     *
+     * @param args the arguments.
+     *
+     * @param command the command to execute, can be multi-line.
+     *
+     * @return the process task of the executed command.
+     */
+    ShellImpl shell(Map args, String command) {
+        shell.create(args, this, threads, log, command)
     }
 
     /**

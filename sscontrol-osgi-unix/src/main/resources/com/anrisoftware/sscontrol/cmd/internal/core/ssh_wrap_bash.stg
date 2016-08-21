@@ -9,21 +9,7 @@ eof2
 <theCommand(args)>
 <endif>
 eof1
-date
-echo "finished"
 >>
-
-sshDebug(args) ::= <%
-<args.debugLevel>
-%>
-
-sshArgs(args) ::= <%
-<args.sshArgs;separator=" ">
-%>
-
-sshOptions(args, options) ::= <%
-<first(options):{it|-o }><options;separator=" -o ">
-%>
 
 theCommand(args) ::= <<
 <if(args.chdir)>cd "<args.chdir>"<endif>
