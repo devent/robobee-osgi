@@ -8,8 +8,6 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdArgs.CmdArgsFactory;
@@ -39,9 +37,6 @@ public class CmdRun extends AbstractCmdRun {
     private TemplatesProvider templates;
 
     @Inject
-    private RunCommandsArg runCommandsArg;
-
-    @Inject
     private SshMasterFactory sshMasterFactory;
 
     @Inject
@@ -59,9 +54,8 @@ public class CmdRun extends AbstractCmdRun {
         }
         String sshshell = getShellName(args);
         String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
-        RunCommands runCommands = runCommandsArg.runCommands(args, parent);
         TemplateResource res = templates.get().getResource(template);
-        return runCommand(runCommands, res, args);
+        return runCommand(res, args);
     }
 
     private static final String COMMAND_NAME_FORMAT = "%s%s";

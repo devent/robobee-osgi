@@ -111,4 +111,9 @@ class ArgsMap implements Map<String, Object> {
         return args.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return args.toString();
+    }
+
 }

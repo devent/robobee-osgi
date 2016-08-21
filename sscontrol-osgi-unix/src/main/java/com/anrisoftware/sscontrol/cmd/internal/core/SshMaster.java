@@ -8,8 +8,6 @@ import org.joda.time.Duration;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsArg;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.resources.templates.external.Templates;
@@ -31,9 +29,6 @@ public class SshMaster extends AbstractCmdRun {
     }
 
     @Inject
-    private RunCommandsArg runCommandsArg;
-
-    @Inject
     private TemplatesProvider templates;
 
     @Inject
@@ -45,10 +40,10 @@ public class SshMaster extends AbstractCmdRun {
     @Override
     public ProcessTask call() throws CommandExecException {
         createSocketDir(args);
+        args.put("command", "ssh master");
         args.put("timeout", Duration.standardDays(1));
-        RunCommands runCommands = runCommandsArg.runCommands(args, parent);
         Templates t = templates.get();
         TemplateResource sshmaster = t.getResource("ssh_master");
-        return runCommand(runCommands, sshmaster, args);
+        return runCommand(sshmaster, args);
     }
 }

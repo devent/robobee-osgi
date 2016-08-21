@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.cmd.internal.core;
 
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.DEBUG_LEVEL;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.ENV_ARGS;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SHELL;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_ARGS;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_CONNECTION_TIMEOUT;
@@ -99,6 +101,15 @@ class CmdArgs {
         if (arg == null) {
             args.put(SSH_CONNECTION_TIMEOUT,
                     getDefaultDuration(p, "default_ssh_connect_timeout"));
+        }
+        arg = args.get(DEBUG_LEVEL);
+        if (arg == null) {
+            args.put(DEBUG_LEVEL,
+                    p.getNumberProperty("default_ssh_debug_level").intValue());
+        }
+        arg = args.get(ENV_ARGS);
+        if (arg == null) {
+            args.put(ENV_ARGS, new HashMap<String, String>());
         }
     }
 

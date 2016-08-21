@@ -36,6 +36,12 @@ public interface Cmd {
 
     static final String SSH_ARGS = "sshArgs";
 
+    static final String ENV_ARGS = "env";
+
+    static final String CHDIR_ARGS = "chdir";
+
+    static final String PRIVILEGED_ARGS = "privileged";
+
     /**
      * Runs the specified command.
      *

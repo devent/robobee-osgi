@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecFactory;
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommands;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.cmd.external.core.ControlPathCreateDirErrorException;
@@ -67,12 +66,10 @@ public abstract class AbstractCmdRun {
         return getBaseName(shell);
     }
 
-    protected ProcessTask runCommand(RunCommands runCommands,
-            TemplateResource res, Map<String, Object> args)
-            throws CommandExecException {
+    protected ProcessTask runCommand(TemplateResource res,
+            Map<String, Object> args) throws CommandExecException {
         ProcessTask task;
         task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
-        runCommands.add(args.get(COMMAND_KEY), args);
         log.commandFinished(parent, task, args);
         return task;
     }
