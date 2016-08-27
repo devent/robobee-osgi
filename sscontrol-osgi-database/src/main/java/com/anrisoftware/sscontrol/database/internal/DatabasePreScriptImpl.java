@@ -19,7 +19,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 
 /**
  * <i>database</i> pre-script.
@@ -27,7 +27,7 @@ import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class DatabasePreScriptImpl implements SscontrolPreScript {
+public class DatabasePreScriptImpl implements PreHost {
 
     public interface DatabasePreScriptImplFactory {
 

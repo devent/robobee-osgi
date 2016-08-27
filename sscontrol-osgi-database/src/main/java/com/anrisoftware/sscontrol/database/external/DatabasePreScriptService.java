@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.database.external;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScriptService;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
  * Database pre-script service.
@@ -23,6 +23,6 @@ import com.anrisoftware.sscontrol.types.external.SscontrolPreScriptService;
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface DatabasePreScriptService extends SscontrolPreScriptService {
+public interface DatabasePreScriptService extends PreHostService {
 
 }

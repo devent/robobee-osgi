@@ -42,7 +42,7 @@ public class HostnameServiceImpl implements HostnameService {
 
     @Override
     public Hostname create() {
-        return hostnameFactory.create();
+        return (Hostname) hostnameFactory.create();
     }
 
     @Activate

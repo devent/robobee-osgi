@@ -15,20 +15,13 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import java.util.List;
-
 /**
- * Ordered service profile entries.
+ * Creates the pre-service for the host.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface Profile extends SscontrolScript {
+public interface PreHostService {
 
-    String getName();
-
-    ProfileProperties getEntry(String name);
-
-    List<String> getEntryNames();
-
+    PreHost create();
 }

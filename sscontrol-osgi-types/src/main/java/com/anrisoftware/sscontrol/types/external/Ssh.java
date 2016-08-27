@@ -23,7 +23,7 @@ import java.util.List;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface Ssh extends SscontrolScript {
+public interface Ssh extends HostService {
 
     /**
      * Returns the debug logging.

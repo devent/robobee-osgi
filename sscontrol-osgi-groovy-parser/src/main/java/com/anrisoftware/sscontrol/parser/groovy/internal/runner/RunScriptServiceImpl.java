@@ -26,7 +26,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.parser.external.RunScript;
 import com.anrisoftware.sscontrol.parser.external.RunScriptService;
 import com.anrisoftware.sscontrol.parser.groovy.internal.runner.RunScriptImpl.RunScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.google.inject.AbstractModule;
 
 /**
@@ -43,7 +43,7 @@ public class RunScriptServiceImpl implements RunScriptService {
     private RunScriptImplFactory runScriptFactory;
 
     @Override
-    public RunScript create(ScriptsRepository repository) {
+    public RunScript create(HostServices repository) {
         return runScriptFactory.create(repository);
     }
 

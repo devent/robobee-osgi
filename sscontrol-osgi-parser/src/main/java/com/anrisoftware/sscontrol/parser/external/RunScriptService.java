@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
-import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 
 /**
  * Script runner service.
@@ -25,6 +25,6 @@ import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
  */
 public interface RunScriptService {
 
-    RunScript create(ScriptsRepository repository);
+    RunScript create(HostServices repository);
 
 }

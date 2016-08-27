@@ -16,12 +16,13 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Returns the service script.
+ * Creates the host service properties.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface SscontrolScriptService {
+public interface HostPropertiesService {
 
-    SscontrolScript create();
+    HostServiceProperties create();
+
 }

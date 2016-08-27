@@ -18,8 +18,8 @@ package com.anrisoftware.sscontrol.parser.external;
 import java.util.Map;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 
 /**
  * Executes the script.
@@ -29,7 +29,6 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScript;
  */
 public interface RunScript {
 
-    SscontrolScript run(String scriptName, String profileName,
-            Map<String, Object> variables, SscontrolPreScript prescript)
-            throws AppException;
+    HostService run(String scriptName, Map<String, Object> variables,
+            PreHost prescript) throws AppException;
 }

@@ -15,12 +15,20 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.Set;
+
 /**
- * Marker for script.
+ * Contains the host service properties.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface SscontrolScript {
+public interface HostServiceProperties {
+
+    String getProperty(String name);
+
+    String getProperty(String name, String defaultValue);
+
+    Set<String> getPropertyNames();
 
 }

@@ -27,8 +27,8 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImpl.ProfilePropertiesImplFactory;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
-import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -39,8 +39,8 @@ import com.google.inject.Guice;
  * @version 1.0
  */
 @Component
-@Service(ProfilePropertiesService.class)
-public class ProfilePropertiesServiceImpl implements ProfilePropertiesService {
+@Service(HostPropertiesService.class)
+public class ProfilePropertiesServiceImpl implements HostPropertiesService {
 
     @Inject
     private ProfilePropertiesImplFactory factory;
@@ -49,12 +49,12 @@ public class ProfilePropertiesServiceImpl implements ProfilePropertiesService {
     private TypedAllPropertiesService typedAllPropertiesService;
 
     @Override
-    public ProfileProperties create(String name) {
+    public HostServiceProperties create(String name) {
         return factory.create(name);
     }
 
     @Override
-    public ProfileProperties create(ProfileProperties entry) {
+    public HostServiceProperties create(HostServiceProperties entry) {
         return factory.create(entry);
     }
 

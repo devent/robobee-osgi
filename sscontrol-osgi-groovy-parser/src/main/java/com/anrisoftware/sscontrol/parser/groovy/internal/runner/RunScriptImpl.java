@@ -15,20 +15,19 @@
  */
 package com.anrisoftware.sscontrol.parser.groovy.internal.runner;
 
-import groovy.lang.GroovyShell;
-
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.anrisoftware.sscontrol.parser.external.RunScript;
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.Profile;
-import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+
+import groovy.lang.GroovyShell;
 
 /**
  * Executes the script.
@@ -40,24 +39,23 @@ public class RunScriptImpl implements RunScript {
 
     public interface RunScriptImplFactory {
 
-        RunScriptImpl create(@Assisted ScriptsRepository repository);
+        RunScriptImpl create(@Assisted HostServices repository);
 
     }
 
-    private final ScriptsRepository repository;
+    private final HostServices repository;
 
     @Inject
     private RunScriptImplLogger log;
 
     @AssistedInject
-    RunScriptImpl(@Assisted ScriptsRepository repository) {
+    RunScriptImpl(@Assisted HostServices repository) {
         this.repository = repository;
     }
 
     @Override
-    public SscontrolScript run(String scriptName, String profileName,
-            Map<String, Object> variables, SscontrolPreScript prescript)
-            throws AppException {
+    public HostService run(String scriptName, Map<String, Object> variables,
+            PreHost prescript) throws AppException {
         /*
          * SscontrolScript script = repository.getScript(scriptName); Profile
          * profile = repository.getScript(profileName); GroovyShell shell =
@@ -69,7 +67,7 @@ public class RunScriptImpl implements RunScript {
     }
 
     private GroovyShell createShell(Map<String, Object> variables,
-            Profile profile, SscontrolPreScript prescript) throws AppException {
+            PreHost prescript) throws AppException {
         /*
          * CompilerConfiguration compiler = new CompilerConfiguration(); if
          * (prescript != null) { try { prescript.configureCompiler(compiler); }

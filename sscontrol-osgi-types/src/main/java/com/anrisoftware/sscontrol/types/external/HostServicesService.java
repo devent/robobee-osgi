@@ -16,13 +16,13 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Creates the service profile.
+ * Creates the host services repository.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ProfileService extends SscontrolScriptService {
+public interface HostServicesService {
 
-    @Override
-    Profile create();
+    HostServices create();
+
 }

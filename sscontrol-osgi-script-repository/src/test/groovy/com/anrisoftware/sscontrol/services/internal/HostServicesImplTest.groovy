@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.internal
+package com.anrisoftware.sscontrol.services.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.google.inject.util.Providers.of
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -25,51 +24,54 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.hostname.external.Hostname
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.sscontrol.services.internal.HostServiceStub.HostServiceStubFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
+import com.google.inject.Injector
+import com.google.inject.assistedinject.FactoryModuleBuilder
 
 /**
  * 
- *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
 @Slf4j
 @CompileStatic
-class HostnameScriptTest {
+class HostServicesImplTest {
+
+    Injector injector
 
     @Inject
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostnameImplFactory hostnameFactory
+    HostServiceStubServiceImpl serviceService
 
     @Test
-    void "hostname script"() {
+    void "load mock service"() {
         def testCases = [
             [
                 input: """
-service "hostname" with {
+service "mock" with {
     // Sets the hostname.
     set "blog.muellerpublic.de"
 }
 """,
                 expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
-                    assert hostname.hostname == 'blog.muellerpublic.de'
+                    assert services.getServices('mock').size() == 1
+                    HostServiceStub service = services.getServices('mock')[0] as HostServiceStub
+                    assert service.name == 'blog.muellerpublic.de'
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
             def services = servicesFactory.create()
-            services.putAvailableService 'hostname', hostnameFactory
+            services.putAvailableService 'mock', serviceService
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
             expected services
@@ -79,14 +81,18 @@ service "hostname" with {
     @Before
     void setupTest() {
         toStringStyle
-        Guice.createInjector(
-                new HostnameModule(),
+        this.injector = Guice.createInjector(
                 new HostServicesModule(),
+                new TypesModule(),
+                new StringsModule(),
                 new AbstractModule() {
-
                     @Override
                     protected void configure() {
+                        install(new FactoryModuleBuilder().implement(
+                                HostServiceStub.class, HostServiceStub.class)
+                                .build(HostServiceStubFactory.class));
                     }
-                }).injectMembers(this)
+                })
+        injector.injectMembers(this)
     }
 }

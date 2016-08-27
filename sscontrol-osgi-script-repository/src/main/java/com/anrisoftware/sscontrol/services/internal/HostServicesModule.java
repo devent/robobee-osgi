@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.external;
+package com.anrisoftware.sscontrol.services.internal;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScriptService;
+import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-/**
- * Hostname pre-script service.
- *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
- */
-public interface HostnamePreScriptService extends SscontrolPreScriptService {
+public class HostServicesModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(
+                HostServicesImpl.class, HostServicesImpl.class)
+                .build(HostServicesImplFactory.class));
+    }
 
 }

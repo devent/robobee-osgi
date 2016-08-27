@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.database.external.DatabasePreScriptService;
 import com.anrisoftware.sscontrol.database.internal.DatabasePreScriptImpl.DatabasePreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -41,7 +41,7 @@ public class DatabasePreScriptServiceImpl implements DatabasePreScriptService {
     private DatabasePreScriptImplFactory preScriptFactory;
 
     @Override
-    public SscontrolPreScript create() {
+    public PreHost create() {
         return preScriptFactory.create();
     }
 

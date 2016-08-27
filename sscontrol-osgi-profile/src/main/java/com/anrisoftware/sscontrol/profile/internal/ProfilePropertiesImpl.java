@@ -45,8 +45,8 @@ import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
-import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -59,10 +59,10 @@ import groovy.lang.GroovyObjectSupport;
  * @since 1.0
  */
 public class ProfilePropertiesImpl extends GroovyObjectSupport
-        implements ProfileProperties {
+        implements HostServiceProperties {
 
     public interface ProfilePropertiesImplFactory
-            extends ProfilePropertiesService {
+            extends HostPropertiesService {
 
     }
 
@@ -88,7 +88,7 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
     }
 
     @AssistedInject
-    ProfilePropertiesImpl(@Assisted ProfileProperties profileProperties,
+    ProfilePropertiesImpl(@Assisted HostServiceProperties profileProperties,
             TypedAllPropertiesService typedPropertiesService) {
         this.name = profileProperties.getName();
         this.properties = new Properties();

@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.ssh.external.SshPreScriptService;
 import com.anrisoftware.sscontrol.ssh.internal.SshPreScriptImpl.SshPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -41,7 +41,7 @@ public class SshPreScriptServiceImpl implements SshPreScriptService {
     private SshPreScriptImplFactory sshPreScriptFactory;
 
     @Override
-    public SscontrolPreScript create() {
+    public PreHost create() {
         return sshPreScriptFactory.create();
     }
 

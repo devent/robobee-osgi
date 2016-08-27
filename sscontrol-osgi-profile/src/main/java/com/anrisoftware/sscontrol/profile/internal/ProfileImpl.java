@@ -32,8 +32,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.external.Profile;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
-import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -55,27 +55,27 @@ public class ProfileImpl extends GroovyObjectSupport implements Profile {
 
     }
 
-    private final Map<String, ProfileProperties> entries;
+    private final Map<String, HostServiceProperties> entries;
 
     @Inject
     private ProfileImplLogger log;
 
     @Inject
-    private ProfilePropertiesService propertiesService;
+    private HostPropertiesService propertiesService;
 
     private String name;
 
     @AssistedInject
     ProfileImpl() {
         this.entries = synchronizedMap(
-                new LinkedHashMap<String, ProfileProperties>());
+                new LinkedHashMap<String, HostServiceProperties>());
     }
 
     @AssistedInject
     ProfileImpl(@Assisted Profile profile,
-            ProfilePropertiesService propertiesService) {
+            HostPropertiesService propertiesService) {
         this.name = profile.getName();
-        HashMap<String, ProfileProperties> dest = new LinkedHashMap<String, ProfileProperties>();
+        HashMap<String, HostServiceProperties> dest = new LinkedHashMap<String, HostServiceProperties>();
         this.entries = synchronizedMap(dest);
         copyProperties(dest, profile, propertiesService);
     }
@@ -86,25 +86,25 @@ public class ProfileImpl extends GroovyObjectSupport implements Profile {
     }
 
     public Object methodMissing(String name, Object args) throws AppException {
-        ProfileProperties p = propertiesService.create(name);
+        HostServiceProperties p = propertiesService.create(name);
         addEntry(name, p);
         return p;
     }
 
     public Object propertyMissing(String name, Object args)
             throws AppException {
-        ProfileProperties p = propertiesService.create(name);
+        HostServiceProperties p = propertiesService.create(name);
         addEntry(name, p);
         return p;
     }
 
-    public void addEntry(String name, ProfileProperties properties) {
+    public void addEntry(String name, HostServiceProperties properties) {
         entries.put(name, properties);
         log.profileEntryAdded(this, properties);
     }
 
     @Override
-    public ProfileProperties getEntry(String name) {
+    public HostServiceProperties getEntry(String name) {
         return entries.get(name);
     }
 
@@ -129,10 +129,10 @@ public class ProfileImpl extends GroovyObjectSupport implements Profile {
                 .append("entries", entries.size()).toString();
     }
 
-    private void copyProperties(HashMap<String, ProfileProperties> dest,
-            Profile profile, ProfilePropertiesService propertiesService) {
+    private void copyProperties(HashMap<String, HostServiceProperties> dest,
+            Profile profile, HostPropertiesService propertiesService) {
         for (String name : profile.getEntryNames()) {
-            ProfileProperties p = propertiesService
+            HostServiceProperties p = propertiesService
                     .create(profile.getEntry(name));
             dest.put(name, p);
         }

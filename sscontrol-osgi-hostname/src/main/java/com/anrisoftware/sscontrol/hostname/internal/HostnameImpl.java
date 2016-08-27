@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
+import com.anrisoftware.sscontrol.hostname.external.HostnameService;
 
 /**
  * Hostname service.
@@ -29,9 +30,7 @@ import com.anrisoftware.sscontrol.hostname.external.Hostname;
  */
 public class HostnameImpl implements Hostname {
 
-    public interface HostnameImplFactory {
-
-        HostnameImpl create();
+    public interface HostnameImplFactory extends HostnameService {
 
     }
 

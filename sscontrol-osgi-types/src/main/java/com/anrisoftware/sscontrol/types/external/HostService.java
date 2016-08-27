@@ -15,23 +15,12 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
-import java.util.Set;
-
 /**
- * Contains needed parameters of the system like, for example, paths of
- * directories, files and commands.
+ * Marker for a host service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ProfileProperties {
-
-    String getName();
-
-    String getProperty(String name);
-
-    String getProperty(String name, String defaultValue);
-
-    Set<String> getPropertyNames();
+public interface HostService {
 
 }

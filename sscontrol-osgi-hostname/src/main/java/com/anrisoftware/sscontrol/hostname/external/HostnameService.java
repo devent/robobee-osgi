@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.external;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * Hostname service.
@@ -23,6 +23,6 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface HostnameService extends SscontrolScriptService {
+public interface HostnameService extends HostServiceService {
 
 }

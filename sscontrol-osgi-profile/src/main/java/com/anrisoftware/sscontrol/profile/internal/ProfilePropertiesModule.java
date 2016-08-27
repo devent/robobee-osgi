@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.profile.internal;
 
 import com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImpl.ProfilePropertiesImplFactory;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -31,7 +31,7 @@ public class ProfilePropertiesModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(ProfileProperties.class, ProfilePropertiesImpl.class)
+                .implement(HostServiceProperties.class, ProfilePropertiesImpl.class)
                 .build(ProfilePropertiesImplFactory.class));
     }
 

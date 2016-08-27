@@ -16,12 +16,13 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Pre-script that can configure the script compile before the script is loaded.
+ * Loaded before the host service is executed. That allows to setup the compiler
+ * of the domain specific language (DSL) before the DSL is loaded and executed.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public interface SscontrolPreScript {
+public interface PreHost {
 
     /**
      * Configures the specified compiler.

@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.hostname.internal;
 
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -29,8 +30,9 @@ public class HostnameModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(HostnameImpl.class,
-                HostnameImpl.class).build(HostnameImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostService.class, HostnameImpl.class)
+                .build(HostnameImplFactory.class));
     }
 
 }

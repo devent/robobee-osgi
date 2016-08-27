@@ -16,12 +16,12 @@
 package com.anrisoftware.sscontrol.types.external;
 
 /**
- * Pre-script service.
+ * Creates the host service.
  *
- * @author Erwin Mueller, erwin.mueller@deventm.org
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
-public interface SscontrolPreScriptService {
+public interface HostServiceService {
 
-    SscontrolPreScript create();
+    HostService create();
 }

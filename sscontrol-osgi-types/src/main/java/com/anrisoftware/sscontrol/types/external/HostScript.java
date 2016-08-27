@@ -15,14 +15,39 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+
 /**
- * Creates the scripts repository.
+ * Configures the host system.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface ScriptsRepositoryService {
+public interface HostScript extends HostService, Runnable {
 
-    ScriptsRepository create();
+    /**
+     * Returns {@link String} name of the script.
+     */
+    String getName();
 
+    /**
+     * Returns the logger of the script.
+     */
+    Object getLog();
+
+    /**
+     * Returns {@link ExecutorService} pool to run the scripts on.
+     */
+    <T extends ExecutorService> T getThreads();
+
+    /**
+     * Returns the default {@link Properties} for the service.
+     */
+    Properties getDefaultProperties();
+
+    /**
+     * Returns the {@link HostServiceScript} scripts.
+     */
+    HostServices getScriptsRepository();
 }

@@ -15,16 +15,31 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.List;
+import java.util.Set;
+
 /**
- * Profile properties service.
+ * Host services repository.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public interface ProfilePropertiesService {
+public interface HostServices {
 
-    ProfileProperties create(ProfileProperties entry);
+    <T extends HostServiceService> T getAvailableService(String name);
 
-    ProfileProperties create(String name);
+    Set<String> getAvailableServices();
+
+    void putAvailableService(String name, HostServiceService service);
+
+    void removeAvailableService(String name);
+
+    List<HostService> getServices(String name);
+
+    Set<String> getServices();
+
+    void addService(String name, HostService service);
+
+    void removeService(String name, int index);
 
 }

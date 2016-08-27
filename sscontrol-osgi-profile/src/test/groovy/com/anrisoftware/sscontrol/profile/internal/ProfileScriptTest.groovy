@@ -27,7 +27,7 @@ import org.junit.Test
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory
 import com.anrisoftware.sscontrol.types.external.Profile
-import com.anrisoftware.sscontrol.types.external.ProfileProperties
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 
@@ -78,7 +78,7 @@ profile
                         'mail',
                         'httpd'
                     ]
-                    ProfileProperties p
+                    HostServiceProperties p
                     p = profile.getEntry('hostname')
                     assert p.name == 'hostname'
                     p = profile.getEntry('remote')

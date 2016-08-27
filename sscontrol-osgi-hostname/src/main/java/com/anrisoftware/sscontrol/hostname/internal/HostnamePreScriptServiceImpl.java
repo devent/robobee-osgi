@@ -21,9 +21,9 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.hostname.external.HostnamePreScriptService;
+import com.anrisoftware.sscontrol.hostname.external.HostnamePreService;
 import com.anrisoftware.sscontrol.hostname.internal.HostnamePreScriptImpl.DatabasePreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
+import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -34,14 +34,14 @@ import com.google.inject.Guice;
  * @since 1.0
  */
 @Component
-@Service(HostnamePreScriptService.class)
-public class HostnamePreScriptServiceImpl implements HostnamePreScriptService {
+@Service(HostnamePreService.class)
+public class HostnamePreScriptServiceImpl implements HostnamePreService {
 
     @Inject
     private DatabasePreScriptImplFactory preScriptFactory;
 
     @Override
-    public SscontrolPreScript create() {
+    public PreHost create() {
         return preScriptFactory.create();
     }
 

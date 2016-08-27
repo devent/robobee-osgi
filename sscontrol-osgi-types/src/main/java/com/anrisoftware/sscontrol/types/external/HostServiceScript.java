@@ -19,12 +19,12 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Marker for service scripts.
+ * Host service script.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface SscontrolServiceScript {
+public interface HostServiceScript {
 
     /**
      * Returns {@link String} name of the script.
@@ -37,9 +37,9 @@ public interface SscontrolServiceScript {
     Object getLog();
 
     /**
-     * Returns service {@link ProfileProperties} profile properties.
+     * Returns service {@link HostServiceProperties} profile properties.
      */
-    ProfileProperties getProfile();
+    HostServiceProperties getProfile();
 
     /**
      * Returns {@link ExecutorService} pool to run the scripts on.
@@ -52,12 +52,12 @@ public interface SscontrolServiceScript {
     Properties getDefaultProperties();
 
     /**
-     * Returns the {@link SscontrolScript} script.
+     * Returns the {@link HostService} script.
      */
-    SscontrolScript getService();
+    HostService getService();
 
     /**
-     * Returns the {@link SscontrolServiceScript} scripts.
+     * Returns the {@link HostServiceScript} scripts.
      */
-    ScriptsRepository getScriptsRepository();
+    HostServices getScriptsRepository();
 }

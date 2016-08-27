@@ -27,7 +27,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory;
 import com.anrisoftware.sscontrol.types.external.Profile;
-import com.anrisoftware.sscontrol.types.external.ProfilePropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.ProfileService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
     private ToStringService toStringService;
 
     @Reference
-    private ProfilePropertiesService profilePropertiesService;
+    private HostPropertiesService profilePropertiesService;
 
     @Override
     public Profile create() {
@@ -62,7 +62,7 @@ public class ProfileServiceImpl implements ProfileService {
 
             @Override
             protected void configure() {
-                bind(ProfilePropertiesService.class)
+                bind(HostPropertiesService.class)
                         .toProvider(of(profilePropertiesService));
                 bind(ToStringService.class).toProvider(of(toStringService));
             }

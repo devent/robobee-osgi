@@ -29,17 +29,17 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
-import com.anrisoftware.sscontrol.types.external.ScriptsRepository;
-import com.anrisoftware.sscontrol.types.external.ScriptsRepositoryService;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.HostServicesService;
 
 /**
- * Karaf {@code sscontrol:parse} command.
+ * Karaf {@code robobee:parse} command.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Command(scope = "sscontrol", name = "parse", description = "Parses the specified resource and checks for eventual errors.")
+@Command(scope = "robobee", name = "parse", description = "Parses the specified resource and checks for eventual errors.")
 @Service
 public class ParseCommand implements Action {
 
@@ -50,14 +50,15 @@ public class ParseCommand implements Action {
     private ParserService parseService;
 
     @Reference
-    private ScriptsRepositoryService scriptsRepositoryService;
+    private HostServicesService scriptsRepositoryService;
 
     @Override
     public Object execute() throws Exception {
         Parser parser = parseService.create();
-        SscontrolScript script = parser.parse(toUri(resource));
-        ScriptsRepository scriptsRepository = scriptsRepositoryService.create();
-        scriptsRepository.putScript(script.getClass().getName(), script);
+        HostService script = parser.parse(toUri(resource));
+        HostServices scriptsRepository = scriptsRepositoryService.create();
+        scriptsRepository.putAvailableService(script.getClass().getName(),
+                script);
         return format("%s added.", script.getClass().getName());
     }
 

@@ -40,10 +40,10 @@ import com.anrisoftware.sscontrol.parser.external.LoadScriptException;
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.groovy.external.ScriptServiceNotFound;
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScriptService;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
+import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -74,16 +74,16 @@ public class ParserImpl implements Parser {
     }
 
     @Override
-    public SscontrolScript parse(URI resource) throws AppException {
+    public HostService parse(URI resource) throws AppException {
         String scriptName = FilenameUtils.getName(resource.getPath());
         URI parent = getParent(resource);
-        SscontrolScriptService scriptService;
-        SscontrolPreScriptService prescript;
+        HostServiceService scriptService;
+        PreHostService prescript;
         String scriptServiceName = parseName(resource);
         scriptService = getService(scriptServiceName, "Service");
         prescript = getService(scriptServiceName, "PreScriptService");
-        SscontrolScript script = scriptService.create();
-        SscontrolScript parsedScript = loadScript(scriptName,
+        HostService script = scriptService.create();
+        HostService parsedScript = loadScript(scriptName,
                 scriptServiceName, parent, script, prescript.create());
         log.parsedScript(this, parsedScript);
         return parsedScript;
@@ -111,7 +111,7 @@ public class ParserImpl implements Parser {
     }
 
     private String loadScriptName(String name, URI parent,
-            SscontrolPreScript prescript) throws AppException {
+            PreHost prescript) throws AppException {
         try {
             loadScript(name, null, parent, null, prescript);
             throw new IllegalStateException();
@@ -120,8 +120,8 @@ public class ParserImpl implements Parser {
         }
     }
 
-    private SscontrolScript loadScript(String name, String serviceName,
-            URI parent, SscontrolScript script, SscontrolPreScript prescript)
+    private HostService loadScript(String name, String serviceName,
+            URI parent, HostService script, PreHost prescript)
             throws AppException {
         CompilerConfiguration cc = createCompiler(prescript);
         Binding binding = createBinding();
@@ -129,7 +129,7 @@ public class ParserImpl implements Parser {
                 script, cc, binding);
         try {
             engine.run(name, binding);
-            return (SscontrolScript) binding.getProperty(serviceName);
+            return (HostService) binding.getProperty(serviceName);
         } catch (ResourceException e) {
             throw new LoadScriptException(this, e, name, parent);
         } catch (ScriptException e) {
@@ -138,7 +138,7 @@ public class ParserImpl implements Parser {
     }
 
     private GroovyScriptEngine createEngine(String name, String serviceName,
-            URI parent, SscontrolScript script, CompilerConfiguration cc,
+            URI parent, HostService script, CompilerConfiguration cc,
             Binding binding) throws AppException {
         try {
             GroovyScriptEngine engine = new GroovyScriptEngine(
@@ -153,7 +153,7 @@ public class ParserImpl implements Parser {
         }
     }
 
-    private CompilerConfiguration createCompiler(SscontrolPreScript prescript)
+    private CompilerConfiguration createCompiler(PreHost prescript)
             throws AppException {
         CompilerConfiguration cc = new CompilerConfiguration();
         cc.setScriptBaseClass(ParsedScript.class.getName());

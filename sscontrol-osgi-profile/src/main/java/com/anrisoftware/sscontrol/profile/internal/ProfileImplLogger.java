@@ -20,7 +20,7 @@ import static com.anrisoftware.sscontrol.profile.internal.ProfileImplLogger._.pr
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
-import com.anrisoftware.sscontrol.types.external.ProfileProperties;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 
 /**
  * Logging for {@link ProfileImpl}.
@@ -54,7 +54,7 @@ final class ProfileImplLogger extends AbstractLogger {
         super(ProfileImpl.class);
     }
 
-    void profileEntryAdded(ProfileImpl profile, ProfileProperties properties) {
+    void profileEntryAdded(ProfileImpl profile, HostServiceProperties properties) {
         debug(profileEntryAdded, properties, profile);
     }
 }

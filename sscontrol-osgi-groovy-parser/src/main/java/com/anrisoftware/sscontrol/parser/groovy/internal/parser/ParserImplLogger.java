@@ -19,8 +19,8 @@ import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.SscontrolPreScript;
-import com.anrisoftware.sscontrol.types.external.SscontrolScript;
+import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
  * Logging for {@link ParserImpl}.
@@ -54,12 +54,12 @@ final class ParserImplLogger extends AbstractLogger {
         super(ParserImpl.class);
     }
 
-    void parsedScript(ParserImpl parser, SscontrolScript parsedScript) {
+    void parsedScript(ParserImpl parser, HostService parsedScript) {
         debug(parsedScript, parsedScript, parser);
     }
 
     AppException errorConfigureCompiler(Exception e,
-            SscontrolPreScript prescript) {
+            PreHost prescript) {
         // TODO Auto-generated method stub
         return null;
     }
