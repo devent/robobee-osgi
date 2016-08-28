@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.database.internal;
 
 import static com.google.inject.util.Providers.of;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -60,8 +62,8 @@ public class DatabaseServiceImpl implements DatabaseService {
     private BindingHostService bindingHostService;
 
     @Override
-    public Database create() {
-        return databaseFactory.create();
+    public Database create(Map<String, Object> args) {
+        return (Database) databaseFactory.create(args);
     }
 
     @Activate
@@ -70,12 +72,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 
             @Override
             protected void configure() {
-                bind(UserPasswordService.class).toProvider(
-                        of(userPasswordService));
+                bind(UserPasswordService.class)
+                        .toProvider(of(userPasswordService));
                 bind(ToStringService.class).toProvider(of(toStringService));
                 bind(DebugService.class).toProvider(of(debugService));
-                bind(BindingHostService.class).toProvider(
-                        of(bindingHostService));
+                bind(BindingHostService.class)
+                        .toProvider(of(bindingHostService));
             }
         }).injectMembers(this);
     }

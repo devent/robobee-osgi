@@ -15,8 +15,10 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
+import static java.lang.String.format;
 import static java.util.Collections.synchronizedList;
 import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.unmodifiableMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.Ssh;
+import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.Targets;
+import com.anrisoftware.sscontrol.types.external.TargetsService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -61,11 +67,14 @@ public class HostServicesImpl implements HostServices {
 
     private final Map<String, List<HostService>> hostServices;
 
+    private final Targets targets;
+
     @Inject
     private HostServicesImplLogger log;
 
     @AssistedInject
-    HostServicesImpl() {
+    HostServicesImpl(TargetsService targetsService) {
+        this.targets = targetsService.create();
         this.availableServices = synchronizedMap(
                 new HashMap<String, HostServiceService>());
         this.hostServices = synchronizedMap(
@@ -73,16 +82,27 @@ public class HostServicesImpl implements HostServices {
     }
 
     @AssistedInject
-    HostServicesImpl(@Assisted HostServices services) {
-        this();
+    HostServicesImpl(TargetsService targetsService,
+            @Assisted HostServices services) {
+        this(targetsService);
         copyAvailableServices(availableServices, services);
     }
 
     public HostService call(String name) {
+        return call(new HashMap<String, Object>(), name);
+    }
+
+    public HostService call(Map<String, Object> args, String name) {
         HostServiceService service = availableServices.get(name);
-        HostService hostService = service.create();
+        checkService(name, service);
+        Map<String, Object> a = parseArgs(args);
+        HostService hostService = service.create(a);
         addService(name, hostService);
         return hostService;
+    }
+
+    public List<SshHost> targets(String name) {
+        return targets.getHosts(name);
     }
 
     @SuppressWarnings("unchecked")
@@ -107,13 +127,6 @@ public class HostServicesImpl implements HostServices {
         availableServices.remove(name);
     }
 
-    private void copyAvailableServices(Map<String, HostServiceService> scripts,
-            HostServices repository) {
-        for (String name : repository.getAvailableServices()) {
-            scripts.put(name, repository.getAvailableService(name));
-        }
-    }
-
     @Override
     public List<HostService> getServices(String name) {
         return hostServices.get(name);
@@ -133,6 +146,10 @@ public class HostServicesImpl implements HostServices {
         }
         services.add(service);
         log.addService(this, name, service);
+        if (service instanceof Ssh) {
+            Ssh ssh = (Ssh) service;
+            targets.addTarget(ssh);
+        }
     }
 
     @Override
@@ -144,10 +161,45 @@ public class HostServicesImpl implements HostServices {
     }
 
     @Override
+    public Targets getTargets() {
+        return targets;
+    }
+    
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("available service", getAvailableServices())
                 .append("services", getServices()).toString();
+    }
+
+    private void copyAvailableServices(Map<String, HostServiceService> scripts,
+            HostServices repository) {
+        for (String name : repository.getAvailableServices()) {
+            scripts.put(name, repository.getAvailableService(name));
+        }
+    }
+
+    private Map<String, Object> parseArgs(Map<String, Object> args) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("targets", parseTarget(args));
+        return unmodifiableMap(result);
+    }
+
+    private List<SshHost> parseTarget(Map<String, Object> args) {
+        Object object = args.get("target");
+        if (object != null) {
+            String name = object.toString();
+            return targets.getHosts(name);
+        } else {
+            return new ArrayList<SshHost>();
+        }
+    }
+
+    private void checkService(String name, HostServiceService service) {
+        if (service == null) {
+            throw new NullPointerException(
+                    format("Service '%s' not found.", name));
+        }
     }
 
 }

@@ -31,6 +31,11 @@ public interface Ssh extends HostService {
     DebugLogging getDebugLogging();
 
     /**
+     * Returns the group the hosts belong to.
+     */
+    String getGroup();
+
+    /**
      * Returns the hosts.
      */
     List<SshHost> getHosts();

@@ -15,13 +15,19 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import com.anrisoftware.sscontrol.dhclient.external.DeclareStatement;
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient;
+import com.anrisoftware.sscontrol.dhclient.external.DhclientService;
 import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.DeclareStatementImplFactory;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -33,25 +39,20 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class DhclientImpl extends AbstractDeclaration implements Dhclient {
 
-    public interface DhclientImplFactory {
-
-        DhclientImpl create();
-
-        DhclientImpl create(@Assisted Dhclient dhclient);
+    public interface DhclientImplFactory extends DhclientService {
 
     }
+
+    private final List<SshHost> targets;
 
     @Inject
     private DeclareStatementImplFactory declareFactory;
 
+    @SuppressWarnings("unchecked")
     @AssistedInject
-    DhclientImpl() {
+    DhclientImpl(@Assisted Map<String, Object> args) {
         super();
-    }
-
-    @AssistedInject
-    DhclientImpl(@Assisted Dhclient dhclient) {
-        super(dhclient.getStatements());
+        this.targets = (List<SshHost>) args.get("targets");
     }
 
     public DeclareStatement declare(String name) {
@@ -66,6 +67,17 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
         InvokerHelper.invokeMethod(s, "declare", new Object[] { name, value });
         addStatement(s);
         return s;
+    }
+
+    @Override
+    public List<SshHost> getTargets() {
+        return targets;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString())
+                .append("targets", targets).toString();
     }
 
 }

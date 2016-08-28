@@ -217,7 +217,7 @@ database
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            def database = Eval.me 'database', databaseFactory.create(), test.input as String
+            def database = Eval.me 'database', databaseFactory.create([:]), test.input as String
             log.info '{}. case: database: {}', k, database
             Closure expected = test.expected
             expected database

@@ -42,4 +42,6 @@ public interface HostServices {
 
     void removeService(String name, int index);
 
+    Targets getTargets();
+
 }

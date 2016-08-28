@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.database.external.Database;
 import com.anrisoftware.sscontrol.database.external.DatabaseDb;
+import com.anrisoftware.sscontrol.database.external.DatabaseService;
 import com.anrisoftware.sscontrol.database.external.DatabaseUser;
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
@@ -41,6 +42,7 @@ import com.anrisoftware.sscontrol.types.external.BindingAddress;
 import com.anrisoftware.sscontrol.types.external.BindingHost;
 import com.anrisoftware.sscontrol.types.external.BindingHostService;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.assistedinject.Assisted;
@@ -54,11 +56,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class DatabaseImpl implements Database {
 
-    public interface DatabaseImplFactory {
-
-        DatabaseImpl create();
-
-        DatabaseImpl create(@Assisted Database database);
+    public interface DatabaseImplFactory extends DatabaseService {
 
     }
 
@@ -66,11 +64,10 @@ public class DatabaseImpl implements Database {
 
     private final List<DatabaseUser> users;
 
-    @Inject
-    private DatabaseImplLogger log;
+    private final List<SshHost> targets;
 
     @Inject
-    private DatabaseImplFactory databaseFactory;
+    private DatabaseImplLogger log;
 
     @Inject
     private DatabaseDbImplFactory dbFactory;
@@ -90,20 +87,14 @@ public class DatabaseImpl implements Database {
 
     private DebugLogging debug;
 
+    @SuppressWarnings("unchecked")
     @AssistedInject
-    DatabaseImpl(BindingHostService bindingHostService) {
+    DatabaseImpl(BindingHostService bindingHostService,
+            @Assisted Map<String, Object> args) {
+        this.targets = (List<SshHost>) args.get("targets");
         this.dbs = new ArrayList<DatabaseDb>();
         this.users = new ArrayList<DatabaseUser>();
         this.binding = bindingHostService.create();
-    }
-
-    @AssistedInject
-    DatabaseImpl(@Assisted Database database,
-            BindingHostService bindingHostService) {
-        this.dbs = new ArrayList<DatabaseDb>(database.getDatabases());
-        this.users = new ArrayList<DatabaseUser>(database.getUsers());
-        this.binding = bindingHostService.create(database.getBinding());
-        this.adminUser = database.getAdminUser();
     }
 
     @Inject
@@ -193,10 +184,8 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Database setBinding(BindingHost binding) {
-        DatabaseImpl database = databaseFactory.create(this);
-        database.binding = binding;
-        return database;
+    public void setBinding(BindingHost binding) {
+        this.binding = binding;
     }
 
     @Override
@@ -205,10 +194,8 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Database setAdminUser(UserPassword user) {
-        DatabaseImpl database = databaseFactory.create(this);
-        database.adminUser = user;
-        return database;
+    public void setAdminUser(UserPassword user) {
+        this.adminUser = user;
     }
 
     @Override
@@ -232,9 +219,14 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
+    public List<SshHost> getTargets() {
+        return targets;
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this).append("bind", binding)
-                .append("admin", adminUser).append("dbs", dbs)
-                .append("users", users).toString();
+        return new ToStringBuilder(this).append("targets", targets)
+                .append("bind", binding).append("admin", adminUser)
+                .append("dbs", dbs).append("users", users).toString();
     }
 }

@@ -15,12 +15,18 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
+import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /**
  * Hostname service.
@@ -39,6 +45,14 @@ public class HostnameImpl implements Hostname {
 
     private String hostname;
 
+    private final List<SshHost> targets;
+
+    @SuppressWarnings("unchecked")
+    @AssistedInject
+    HostnameImpl(@Assisted Map<String, Object> args) {
+        this.targets = (List<SshHost>) args.get("targets");
+    }
+
     public void set(String name) {
         this.hostname = name;
         log.hostnameSet(this, name);
@@ -50,8 +64,14 @@ public class HostnameImpl implements Hostname {
     }
 
     @Override
+    public List<SshHost> getTargets() {
+        return targets;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("hostname", hostname)
-                .toString();
+                .append("hosts", targets).toString();
     }
+
 }

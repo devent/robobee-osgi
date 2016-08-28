@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.ssh.internal;
 
 import static com.google.inject.util.Providers.of;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -48,8 +50,8 @@ public class SshServiceImpl implements SshService {
     private ToStringService toStringService;
 
     @Override
-    public Ssh create() {
-        return sshFactory.create();
+    public Ssh create(Map<String, Object> args) {
+        return sshFactory.create(args);
     }
 
     @Activate

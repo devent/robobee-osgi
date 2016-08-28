@@ -37,9 +37,9 @@ public interface HostServiceScript {
     Object getLog();
 
     /**
-     * Returns service {@link HostServiceProperties} profile properties.
+     * Returns service {@link HostServiceProperties} properties.
      */
-    HostServiceProperties getProfile();
+    HostServiceProperties getProperties();
 
     /**
      * Returns {@link ExecutorService} pool to run the scripts on.

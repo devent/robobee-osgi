@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
  *
@@ -19,15 +21,26 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+
 import javax.inject.Inject
 
 import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
-import com.anrisoftware.sscontrol.services.internal.HostServiceStub.HostServiceStubFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubFactory
+import com.anrisoftware.sscontrol.services.internal.HostnameStub.HostnameStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.HostsStub.Host
+import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubFactory
+import com.anrisoftware.sscontrol.services.internal.HostsStub.HostsStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubFactory
+import com.anrisoftware.sscontrol.services.internal.SshStub.SshStubServiceImpl
+import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -49,33 +62,105 @@ class HostServicesImplTest {
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostServiceStubServiceImpl serviceService
+    HostnameStubServiceImpl hostnameService
+
+    @Inject
+    SshStubServiceImpl sshService
+
+    @Inject
+    HostsStubServiceImpl hostsService
 
     @Test
     void "load mock service"() {
         def testCases = [
             [
-                input: """
-service "mock" with {
+                input: '''
+service 'hostname' with {
     // Sets the hostname.
     set "blog.muellerpublic.de"
 }
-""",
+''',
                 expected: { HostServices services ->
-                    assert services.getServices('mock').size() == 1
-                    HostServiceStub service = services.getServices('mock')[0] as HostServiceStub
+                    assert services.getServices('hostname').size() == 1
+                    HostnameStub service = services.getServices('hostname')[0] as HostnameStub
                     assert service.name == 'blog.muellerpublic.de'
+                },
+            ],
+            [
+                input: '''
+service 'ssh' with {
+    group "nodes"
+    host "192.168.0.3"
+    host "192.168.0.4"
+    host "192.168.0.5"
+}
+
+service 'hosts', target: 'nodes' with {
+    targets.eachWithIndex { h, i ->
+        host "node-${i}.muellerpublic.de", "$h.host"
+    }
+}
+''',
+                expected: { HostServices services ->
+                    assert services.getServices('hosts').size() == 1
+                    int i = 0
+                    HostsStub service = services.getServices('hosts')[i++] as HostsStub
+                    int k = 0
+                    Host host = service.hosts[k++] as Host
+                    assert host.host == 'node-0.muellerpublic.de'
+                    host = service.hosts[k++] as Host
+                    assert host.host == 'node-1.muellerpublic.de'
+                    host = service.hosts[k++] as Host
+                    assert host.host == 'node-2.muellerpublic.de'
+                },
+            ],
+            [
+                input: '''
+service 'ssh' with {
+    group "nodes"
+    host "192.168.0.3"
+    host "192.168.0.4"
+    host "192.168.0.5"
+}
+
+targets 'nodes' eachWithIndex { host, i ->
+    service 'hostname' with {
+        set "node-${i}.muellerpublic.de"
+    }
+}
+''',
+                expected: { HostServices services ->
+                    assert services.getServices('hostname').size() == 3
+                    int i = 0
+                    HostnameStub service = services.getServices('hostname')[i++] as HostnameStub
+                    assert service.name == 'node-0.muellerpublic.de'
+                    service = services.getServices('hostname')[i++] as HostnameStub
+                    assert service.name == 'node-1.muellerpublic.de'
+                    service = services.getServices('hostname')[i++] as HostnameStub
+                    assert service.name == 'node-2.muellerpublic.de'
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
             def services = servicesFactory.create()
-            services.putAvailableService 'mock', serviceService
-            Eval.me 'service', services, test.input as String
+            def targets = services.getTargets()
+            services.putAvailableService 'hostname', hostnameService
+            services.putAvailableService 'ssh', sshService
+            services.putAvailableService 'hosts', hostsService
+            eval service: services, targets: targets, test.input as String
             Closure expected = test.expected
             expected services
         }
+    }
+
+    def eval(Map args, String script) {
+        def b = new Binding()
+        args.each { name, value ->
+            b.setVariable name as String, value
+        }
+        def sh = new GroovyShell(b)
+        sh.evaluate script
     }
 
     @Before
@@ -83,14 +168,22 @@ service "mock" with {
         toStringStyle
         this.injector = Guice.createInjector(
                 new HostServicesModule(),
+                new TargetsModule(),
                 new TypesModule(),
                 new StringsModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {
+                        bind(TargetsService.class).to(TargetsImplFactory.class)
                         install(new FactoryModuleBuilder().implement(
-                                HostServiceStub.class, HostServiceStub.class)
-                                .build(HostServiceStubFactory.class));
+                                HostnameStub.class, HostnameStub.class)
+                                .build(HostnameStubFactory.class));
+                        install(new FactoryModuleBuilder().implement(
+                                SshStub.class, SshStub.class)
+                                .build(SshStubFactory.class));
+                        install(new FactoryModuleBuilder().implement(
+                                HostsStub.class, HostsStub.class)
+                                .build(HostsStubFactory.class));
                     }
                 })
         injector.injectMembers(this)

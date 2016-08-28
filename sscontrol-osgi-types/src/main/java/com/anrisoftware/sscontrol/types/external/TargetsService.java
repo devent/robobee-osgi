@@ -13,27 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.internal;
-
-import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+package com.anrisoftware.sscontrol.types.external;
 
 /**
- * <i>Dhclient</i> pre-script.
+ * Creates the host targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class DhclientPreScriptImpl implements PreHost {
+public interface TargetsService {
 
-    public interface DhclientPreScriptImplFactory {
-
-        DhclientPreScriptImpl create();
-
-    }
-
-    @Override
-    public void configureCompiler(Object compiler) throws AppException {
-    }
+    Targets create();
 
 }

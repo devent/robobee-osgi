@@ -15,12 +15,15 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.List;
+
 /**
- * Marker for a host service.
+ * Host service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 public interface HostService {
 
+    List<SshHost> getTargets();
 }

@@ -17,6 +17,8 @@ package com.anrisoftware.sscontrol.dhclient.internal;
 
 import static com.google.inject.util.Providers.of;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -48,8 +50,8 @@ public class DhclientServiceImpl implements DhclientService {
     private ToStringService toStringService;
 
     @Override
-    public Dhclient create() {
-        return dhclientFactory.create();
+    public Dhclient create(Map<String, Object> args) {
+        return (Dhclient) dhclientFactory.create(args);
     }
 
     @Activate

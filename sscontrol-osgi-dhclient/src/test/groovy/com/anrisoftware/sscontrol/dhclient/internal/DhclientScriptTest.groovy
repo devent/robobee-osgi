@@ -30,6 +30,12 @@ import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFac
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @Slf4j
 @CompileStatic
 class DhclientScriptTest {
@@ -38,7 +44,7 @@ class DhclientScriptTest {
     DhclientImplFactory dhclientFactory
 
     @Test
-    void "database script"() {
+    void "dhclient script"() {
         def testCases = [
             [
                 input: """
@@ -67,7 +73,7 @@ dhclient
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            def database = Eval.me 'dhclient', dhclientFactory.create(), test.input as String
+            def database = Eval.me 'dhclient', dhclientFactory.create([:]), test.input as String
             log.info '{}. case: dhclient: {}', k, database
             Closure expected = test.expected
             expected database

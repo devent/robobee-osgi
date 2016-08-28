@@ -45,11 +45,11 @@ public class SshImpl implements Ssh {
 
     public interface SshImplFactory {
 
-        SshImpl create();
-
-        SshImpl create(@Assisted Ssh ssh);
+        SshImpl create(Map<String, Object> args);
 
     }
+
+    private final List<SshHost> targets;
 
     private final List<SshHost> hosts;
 
@@ -61,19 +61,27 @@ public class SshImpl implements Ssh {
 
     private DebugLogging debug;
 
-    @AssistedInject
-    SshImpl() {
-        this.hosts = new ArrayList<SshHost>();
-    }
+    private String group;
 
+    @SuppressWarnings("unchecked")
     @AssistedInject
-    SshImpl(@Assisted Ssh ssh) {
-        this.hosts = new ArrayList<SshHost>(ssh.getHosts());
+    SshImpl(@Assisted Map<String, Object> args) {
+        this.targets = (List<SshHost>) args.get("targets");
+        this.hosts = new ArrayList<SshHost>();
     }
 
     @Inject
     public void setDebugService(DebugService debugService) {
         this.debug = debugService.create();
+    }
+
+    public void group(String group) {
+        this.group = group;
+    }
+
+    @Override
+    public String getGroup() {
+        return group;
     }
 
     public void debug(Map<String, Object> args, String name) {
@@ -108,9 +116,14 @@ public class SshImpl implements Ssh {
             @Override
             public boolean add(String host) {
                 host(host);
-                return super.add(host);
+                return true;
             }
         };
+    }
+
+    @Override
+    public List<SshHost> getHosts() {
+        return hosts;
     }
 
     @SuppressWarnings("unchecked")
@@ -124,13 +137,14 @@ public class SshImpl implements Ssh {
     }
 
     @Override
-    public List<SshHost> getHosts() {
-        return Collections.unmodifiableList(hosts);
+    public List<SshHost> getTargets() {
+        return Collections.unmodifiableList(targets);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).toString();
+        return new ToStringBuilder(this).append("group", group)
+                .append("hosts", hosts.size()).toString();
     }
 
 }

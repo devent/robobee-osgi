@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.dhclient.internal;
+package com.anrisoftware.sscontrol.services.internal;
+
+import static com.google.inject.Guice.createInjector;
 
 import javax.inject.Inject;
 
@@ -21,33 +23,37 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.sscontrol.dhclient.external.DhclientPreScriptService;
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptImpl.DhclientPreScriptImplFactory;
-import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory;
+import com.anrisoftware.sscontrol.types.external.Targets;
+import com.anrisoftware.sscontrol.types.external.TargetsService;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
- * <i>dhclient</i> pre-script service.
+ * Creates the host targets.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-@Component
-@Service(DhclientPreScriptService.class)
-public class DhclientPreScriptServiceImpl implements DhclientPreScriptService {
+@Component(immediate = true)
+@Service(TargetsService.class)
+public class TargetsServiceImpl implements TargetsService {
 
     @Inject
-    private DhclientPreScriptImplFactory dhclientPreScriptFactory;
+    private TargetsImplFactory targetsFactory;
+
+    private Targets targets;
 
     @Override
-    public PreHost create() {
-        return dhclientPreScriptFactory.create();
+    public synchronized Targets create() {
+        if (targets == null) {
+            this.targets = targetsFactory.create();
+        }
+        return targets;
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new DhclientPreModule(), new AbstractModule() {
+        createInjector(new TargetsModule(), new AbstractModule() {
 
             @Override
             protected void configure() {

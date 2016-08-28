@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.Map;
+
 /**
  * Creates the host service.
  *
@@ -23,5 +25,5 @@ package com.anrisoftware.sscontrol.types.external;
  */
 public interface HostServiceService {
 
-    HostService create();
+    HostService create(Map<String, Object> args);
 }

@@ -21,6 +21,7 @@ import com.anrisoftware.sscontrol.database.internal.DatabaseAccessImpl.DatabaseA
 import com.anrisoftware.sscontrol.database.internal.DatabaseDbImpl.DatabaseDbImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory;
 import com.anrisoftware.sscontrol.database.internal.DatabaseUserImpl.DatabaseUserImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -34,14 +35,17 @@ public class DatabaseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(DatabaseImpl.class,
-                DatabaseImpl.class).build(DatabaseImplFactory.class));
-        install(new FactoryModuleBuilder().implement(DatabaseDb.class,
-                DatabaseDbImpl.class).build(DatabaseDbImplFactory.class));
-        install(new FactoryModuleBuilder().implement(DatabaseUser.class,
-                DatabaseUserImpl.class).build(DatabaseUserImplFactory.class));
-        install(new FactoryModuleBuilder().implement(DatabaseAccessImpl.class,
-                DatabaseAccessImpl.class)
+        install(new FactoryModuleBuilder()
+                .implement(HostService.class, DatabaseImpl.class)
+                .build(DatabaseImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(DatabaseDb.class, DatabaseDbImpl.class)
+                .build(DatabaseDbImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(DatabaseUser.class, DatabaseUserImpl.class)
+                .build(DatabaseUserImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(DatabaseAccessImpl.class, DatabaseAccessImpl.class)
                 .build(DatabaseAccessImplFactory.class));
     }
 

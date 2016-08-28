@@ -17,7 +17,7 @@ class Localhost implements Ssh {
     }
 
     @Override
-    List<SshHost> getHosts() {
+    List<SshHost> getTargets() {
         [
             [
                 getHost: { 'localhost' },
@@ -27,5 +27,13 @@ class Localhost implements Ssh {
                 }
             ] as SshHost
         ]
+    }
+
+    @Override
+    String getGroup() {
+    }
+
+    @Override
+    List<SshHost> getHosts() {
     }
 }

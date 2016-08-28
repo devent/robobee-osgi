@@ -23,35 +23,46 @@ import com.anrisoftware.sscontrol.dhclient.internal.OptionStatementImpl.OptionSt
 import com.anrisoftware.sscontrol.dhclient.internal.PrependStatementImpl.PrependStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.RequestsStatementImpl.RequestsStatementImplFactory;
 import com.anrisoftware.sscontrol.dhclient.internal.SendStatementImpl.SendStatementImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 public class DhclientModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(DhclientImpl.class,
-                DhclientImpl.class).build(DhclientImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(HostService.class, DhclientImpl.class)
+                .build(DhclientImplFactory.class));
         install(new FactoryModuleBuilder().implement(
                 DhclientPreScriptImpl.class, DhclientPreScriptImpl.class)
                 .build(DhclientPreScriptImplFactory.class));
-        install(new FactoryModuleBuilder().implement(OptionStatementImpl.class,
-                OptionStatementImpl.class).build(
-                OptionStatementImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(OptionStatementImpl.class, OptionStatementImpl.class)
+                .build(OptionStatementImplFactory.class));
         install(new FactoryModuleBuilder().implement(
                 OptionDeclarationImpl.class, OptionDeclarationImpl.class)
                 .build(OptionDeclarationImplFactory.class));
-        install(new FactoryModuleBuilder().implement(SendStatementImpl.class,
-                SendStatementImpl.class).build(SendStatementImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(SendStatementImpl.class, SendStatementImpl.class)
+                .build(SendStatementImplFactory.class));
         install(new FactoryModuleBuilder().implement(
                 RequestsStatementImpl.class, RequestsStatementImpl.class)
                 .build(RequestsStatementImplFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                DeclareStatementImpl.class, DeclareStatementImpl.class).build(
-                DeclareStatementImplFactory.class));
-        install(new FactoryModuleBuilder().implement(
-                PrependStatementImpl.class, PrependStatementImpl.class).build(
-                PrependStatementImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(DeclareStatementImpl.class,
+                        DeclareStatementImpl.class)
+                .build(DeclareStatementImplFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(PrependStatementImpl.class,
+                        PrependStatementImpl.class)
+                .build(PrependStatementImplFactory.class));
     }
 
 }

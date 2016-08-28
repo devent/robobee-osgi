@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -41,8 +43,8 @@ public class HostnameServiceImpl implements HostnameService {
     private HostnameImplFactory hostnameFactory;
 
     @Override
-    public Hostname create() {
-        return (Hostname) hostnameFactory.create();
+    public Hostname create(Map<String, Object> args) {
+        return (Hostname) hostnameFactory.create(args);
     }
 
     @Activate

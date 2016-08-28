@@ -27,11 +27,17 @@ import org.junit.Test
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
-import com.anrisoftware.sscontrol.types.external.Ssh;
-import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.Ssh
+import com.anrisoftware.sscontrol.types.external.SshHost
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.Guice
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @Slf4j
 @CompileStatic
 class SshScriptTest {
@@ -73,6 +79,17 @@ ssh
 """,
                 expected: { Ssh ssh ->
                     assert ssh.debugLogging.modules.size() == 1
+                },
+            ],
+            [
+                input: """
+ssh.with {
+    group "nodes"
+}
+ssh
+""",
+                expected: { Ssh ssh ->
+                    assert ssh.group == 'nodes'
                 },
             ],
             [
@@ -165,7 +182,7 @@ ssh
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            def ssh = Eval.me 'ssh', sshFactory.create(), test.input as String
+            def ssh = Eval.me 'ssh', sshFactory.create([:]), test.input as String
             log.info '{}. case: ssh: {}', k, ssh
             Closure expected = test.expected
             expected ssh

@@ -30,11 +30,11 @@ import com.anrisoftware.sscontrol.types.external.UserPassword;
  */
 public interface Database extends HostService {
 
-    Database setBinding(BindingHost binding);
+    void setBinding(BindingHost binding);
 
     BindingHost getBinding();
 
-    Database setAdminUser(UserPassword userPassword);
+    void setAdminUser(UserPassword userPassword);
 
     UserPassword getAdminUser();
 

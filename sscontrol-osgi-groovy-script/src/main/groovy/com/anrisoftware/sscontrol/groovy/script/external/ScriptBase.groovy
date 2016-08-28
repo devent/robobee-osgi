@@ -23,11 +23,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.sscontrol.cmd.external.Shell
 import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
-import com.anrisoftware.sscontrol.types.external.ProfileProperties
-import com.anrisoftware.sscontrol.types.external.ScriptsRepository
-import com.anrisoftware.sscontrol.types.external.SscontrolScript
-import com.anrisoftware.sscontrol.types.external.SscontrolServiceScript
+import com.anrisoftware.sscontrol.types.external.HostService
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
+import com.anrisoftware.sscontrol.types.external.HostServiceScript
+import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
+import com.anrisoftware.sscontrol.types.external.SshHost
 
 /**
  * Base of all scripts that provides utilities functions and basic properties.
@@ -36,7 +37,7 @@ import com.anrisoftware.sscontrol.types.external.Ssh
  * @since 1.0
  */
 @Slf4j
-abstract class ScriptBase extends Script implements SscontrolServiceScript {
+abstract class ScriptBase extends Script implements HostServiceScript {
 
     /**
      * The {@link String} name of the script.
@@ -44,14 +45,14 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
     String name
 
     /**
-     * The service {@link ProfileProperties} profile properties.
+     * The service {@link HostServiceProperties} properties.
      */
-    ProfileProperties profile
+    HostServiceProperties properties
 
     /**
-     * The {@link SscontrolService} of the script.
+     * The {@link HostService} service.
      */
-    SscontrolScript service
+    HostService service
 
     /**
      * The {@link ExecutorService} pool to run the scripts on.
@@ -59,9 +60,9 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
     ExecutorService threads
 
     /**
-     * The {@link ScriptsRepository} containing the scripts.
+     * The {@link HostServices} containing the services.
      */
-    ScriptsRepository scriptsRepository
+    HostServices scriptsRepository
 
     /**
      * The command service to execute scripts.
@@ -76,6 +77,15 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
     @Override
     public <T extends ExecutorService> T getThreads() {
         threads
+    }
+
+    /**
+     * Returns the lists of hosts.
+     * 
+     * @return the {@link List} of {@link SshHost} hosts.
+     */
+    List<SshHost> getHosts() {
+        service.targets
     }
 
     /**
@@ -99,8 +109,8 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      * @return the process task of the executed command.
      */
     Shell shell(Map args, String command) {
-        if (ssh.hosts.size() == 1) {
-            shell.create(args, ssh.hosts[0], this, threads, log, command)
+        if (ssh.targets.size() == 1) {
+            shell.create(args, ssh.targets[0], this, threads, log, command)
         }
     }
 
@@ -114,7 +124,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      * @see #getDefaultProperties()
      */
     String getSystemName() {
-        profile.getProperty "system_name", defaultProperties
+        properties.getProperty "system_name", defaultProperties
     }
 
     /**
@@ -127,7 +137,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      * @see #getDefaultProperties()
      */
     String getDistributionName() {
-        profile.getProperty "distribution_name", defaultProperties
+        properties.getProperty "distribution_name", defaultProperties
     }
 
     /**
@@ -141,7 +151,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      * @see #getDefaultProperties()
      */
     String getRepositoryString() {
-        profile.getProperty "repository_string", defaultProperties
+        properties.getProperty "repository_string", defaultProperties
     }
 
     /**
@@ -154,7 +164,7 @@ abstract class ScriptBase extends Script implements SscontrolServiceScript {
      * @see #getDefaultProperties()
      */
     List getPackages() {
-        profile.getListProperty "packages", defaultProperties
+        properties.getListProperty "packages", defaultProperties
     }
 
     def getLog() {

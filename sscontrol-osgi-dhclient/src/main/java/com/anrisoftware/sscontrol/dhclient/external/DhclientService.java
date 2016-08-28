@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.external;
 
-import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
+import com.anrisoftware.sscontrol.types.external.HostServiceService;
 
 /**
  * <i>dhclient</i> service.
@@ -23,5 +23,5 @@ import com.anrisoftware.sscontrol.types.external.SscontrolScriptService;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public interface DhclientService extends SscontrolScriptService {
+public interface DhclientService extends HostServiceService {
 }
