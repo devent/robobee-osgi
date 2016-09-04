@@ -180,7 +180,7 @@ public class HostServicesImpl implements HostServices {
     }
 
     private Map<String, Object> parseArgs(Map<String, Object> args) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>(args);
         result.put("targets", parseTarget(args));
         return unmodifiableMap(result);
     }

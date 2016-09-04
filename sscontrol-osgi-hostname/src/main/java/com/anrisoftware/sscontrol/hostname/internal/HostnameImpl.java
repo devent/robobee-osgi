@@ -24,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
+import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -50,12 +51,18 @@ public class HostnameImpl implements Hostname {
     @SuppressWarnings("unchecked")
     @AssistedInject
     HostnameImpl(@Assisted Map<String, Object> args) {
+        ArgumentInvalidException.checkNullArg(args, "targets");
         this.targets = (List<SshHost>) args.get("targets");
+        parseArgs(args);
     }
 
-    public void set(String name) {
-        this.hostname = name;
-        log.hostnameSet(this, name);
+    public void set(Map<String, Object> args) {
+        parseArgs(args);
+    }
+
+    public void setFqdn(String fqdn) {
+        this.hostname = fqdn;
+        log.hostnameSet(this, fqdn);
     }
 
     @Override
@@ -72,6 +79,13 @@ public class HostnameImpl implements Hostname {
     public String toString() {
         return new ToStringBuilder(this).append("hostname", hostname)
                 .append("hosts", targets).toString();
+    }
+
+    private void parseArgs(Map<String, Object> args) {
+        Object v = args.get("fqdn");
+        if (v != null) {
+            this.hostname = v.toString();
+        }
     }
 
 }

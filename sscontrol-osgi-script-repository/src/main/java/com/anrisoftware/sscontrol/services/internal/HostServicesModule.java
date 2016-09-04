@@ -19,6 +19,12 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostService
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 public class HostServicesModule extends AbstractModule {
 
     @Override

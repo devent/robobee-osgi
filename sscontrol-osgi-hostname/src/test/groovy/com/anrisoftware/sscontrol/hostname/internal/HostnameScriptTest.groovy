@@ -28,8 +28,11 @@ import org.junit.Test
 import com.anrisoftware.sscontrol.hostname.external.Hostname
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.types.external.HostServices
+import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
@@ -50,14 +53,24 @@ class HostnameScriptTest {
     HostnameImplFactory hostnameFactory
 
     @Test
-    void "hostname script"() {
+    void "hostname service"() {
         def testCases = [
             [
                 input: """
 service "hostname" with {
     // Sets the hostname.
-    set "blog.muellerpublic.de"
+    set fqdn: "blog.muellerpublic.de"
 }
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('hostname').size() == 1
+                    Hostname hostname = services.getServices('hostname')[0] as Hostname
+                    assert hostname.hostname == 'blog.muellerpublic.de'
+                },
+            ],
+            [
+                input: """
+service "hostname", fqdn: "blog.muellerpublic.de"
 """,
                 expected: { HostServices services ->
                     assert services.getServices('hostname').size() == 1
@@ -82,10 +95,12 @@ service "hostname" with {
         Guice.createInjector(
                 new HostnameModule(),
                 new HostServicesModule(),
+                new TargetsModule(),
                 new AbstractModule() {
 
                     @Override
                     protected void configure() {
+                        bind TargetsService to TargetsImplFactory
                     }
                 }).injectMembers(this)
     }
