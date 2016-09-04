@@ -15,16 +15,14 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
-import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -41,18 +39,16 @@ public class HostnameImpl implements Hostname {
 
     }
 
-    @Inject
-    private HostnameImplLogger log;
-
-    private String hostname;
+    private final HostnameImplLogger log;
 
     private final List<SshHost> targets;
 
-    @SuppressWarnings("unchecked")
+    private String hostname;
+
     @AssistedInject
-    HostnameImpl(@Assisted Map<String, Object> args) {
-        ArgumentInvalidException.checkNullArg(args, "targets");
-        this.targets = (List<SshHost>) args.get("targets");
+    HostnameImpl(HostnameImplLogger log, @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.targets = new ArrayList<SshHost>();
         parseArgs(args);
     }
 
@@ -81,10 +77,15 @@ public class HostnameImpl implements Hostname {
                 .append("hosts", targets).toString();
     }
 
+    @SuppressWarnings("unchecked")
     private void parseArgs(Map<String, Object> args) {
-        Object v = args.get("fqdn");
+        Object v = args.get("targets");
         if (v != null) {
-            this.hostname = v.toString();
+            targets.addAll((List<SshHost>) v);
+        }
+        v = args.get("fqdn");
+        if (v != null) {
+            setFqdn(v.toString());
         }
     }
 
