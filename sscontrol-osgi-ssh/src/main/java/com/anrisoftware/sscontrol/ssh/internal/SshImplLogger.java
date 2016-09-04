@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.internal;
 
+import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger._.groupSet;
 import static com.anrisoftware.sscontrol.ssh.internal.SshImplLogger._.hostAdded;
 
 import javax.inject.Singleton;
@@ -33,7 +34,9 @@ final class SshImplLogger extends AbstractLogger {
 
     enum _ {
 
-        hostAdded("Host added {} to {}");
+        hostAdded("Host added {} to {}"),
+
+        groupSet("Group '{}' set for {}");
 
         private String name;
 
@@ -56,5 +59,9 @@ final class SshImplLogger extends AbstractLogger {
 
     void hostAdded(SshImpl ssh, SshHost host) {
         debug(hostAdded, host, ssh);
+    }
+
+    void groupSet(SshImpl ssh, String group) {
+        debug(groupSet, group, ssh);
     }
 }

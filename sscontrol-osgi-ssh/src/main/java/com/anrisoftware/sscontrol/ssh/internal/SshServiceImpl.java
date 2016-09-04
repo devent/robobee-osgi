@@ -51,7 +51,7 @@ public class SshServiceImpl implements SshService {
 
     @Override
     public Ssh create(Map<String, Object> args) {
-        return sshFactory.create(args);
+        return (Ssh) sshFactory.create(args);
     }
 
     @Activate

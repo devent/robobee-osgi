@@ -26,10 +26,17 @@ import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
+import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 /**
@@ -189,6 +196,52 @@ ssh
         }
     }
 
+    @Inject
+    HostServicesImplFactory servicesFactory
+
+    @Test
+    void "ssh service"() {
+        def testCases = [
+            [
+                input: """
+service "ssh" with {
+    host "192.168.0.2"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.hosts.size() == 1
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                },
+            ],
+            [
+                input: """
+service "ssh", group: "master" with {
+    host "192.168.0.2"
+}
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('ssh').size() == 1
+                    Ssh ssh = services.getServices('ssh')[0] as Ssh
+                    assert ssh.group == 'master'
+                    assert ssh.hosts.size() == 1
+                    SshHost host = ssh.hosts[0]
+                    assert host.host == "192.168.0.2"
+                },
+            ],
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            log.info '{}. case: {}', k, test
+            def services = servicesFactory.create()
+            services.putAvailableService 'ssh', sshFactory
+            Eval.me 'service', services, test.input as String
+            Closure expected = test.expected
+            expected services
+        }
+    }
+
     @Before
     void setupTest() {
         toStringStyle
@@ -196,6 +249,15 @@ ssh
                 new SshModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
-                new StringsModule()).injectMembers(this)
+                new StringsModule(),
+                new HostServicesModule(),
+                new TargetsModule(),
+                new AbstractModule() {
+
+                    @Override
+                    protected void configure() {
+                        bind TargetsService to TargetsImplFactory
+                    }
+                }).injectMembers(this)
     }
 }

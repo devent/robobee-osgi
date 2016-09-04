@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.debug.external.DebugService;
+import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.Ssh;
@@ -43,9 +44,7 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class SshImpl implements Ssh {
 
-    public interface SshImplFactory {
-
-        SshImpl create(Map<String, Object> args);
+    public interface SshImplFactory extends SshService {
 
     }
 
@@ -53,8 +52,7 @@ public class SshImpl implements Ssh {
 
     private final List<SshHost> hosts;
 
-    @Inject
-    private SshImplLogger log;
+    private final SshImplLogger log;
 
     @Inject
     private SshHostImplFactory sshHostFactory;
@@ -63,11 +61,12 @@ public class SshImpl implements Ssh {
 
     private String group;
 
-    @SuppressWarnings("unchecked")
     @AssistedInject
-    SshImpl(@Assisted Map<String, Object> args) {
-        this.targets = (List<SshHost>) args.get("targets");
+    SshImpl(SshImplLogger log, @Assisted Map<String, Object> args) {
+        this.log = log;
+        this.targets = new ArrayList<SshHost>();
         this.hosts = new ArrayList<SshHost>();
+        parseArgs(args);
     }
 
     @Inject
@@ -76,7 +75,12 @@ public class SshImpl implements Ssh {
     }
 
     public void group(String group) {
+        setGroup(group);
+    }
+
+    public void setGroup(String group) {
         this.group = group;
+        log.groupSet(this, group);
     }
 
     @Override
@@ -145,6 +149,18 @@ public class SshImpl implements Ssh {
     public String toString() {
         return new ToStringBuilder(this).append("group", group)
                 .append("hosts", hosts.size()).toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void parseArgs(Map<String, Object> args) {
+        Object v = args.get("targets");
+        if (v != null) {
+            targets.addAll((List<SshHost>) v);
+        }
+        v = args.get("group");
+        if (v != null) {
+            setGroup(v.toString());
+        }
     }
 
 }
