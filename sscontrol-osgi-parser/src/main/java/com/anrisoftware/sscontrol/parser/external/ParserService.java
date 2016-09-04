@@ -15,7 +15,10 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
+import java.net.URI;
 import java.util.Map;
+
+import com.anrisoftware.sscontrol.types.external.HostServices;
 
 /**
  * Script parser service.
@@ -25,8 +28,9 @@ import java.util.Map;
  */
 public interface ParserService {
 
-    Parser create(Map<String, Object> variables);
+    Parser create(URI[] roots, String name, HostServices hostServices);
 
-    Parser create();
+    Parser create(URI[] roots, String name, Map<String, Object> variables,
+            HostServices hostServices);
 
 }

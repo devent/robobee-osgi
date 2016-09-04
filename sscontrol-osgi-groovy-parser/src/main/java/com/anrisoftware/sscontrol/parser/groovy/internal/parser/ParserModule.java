@@ -19,12 +19,18 @@ import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.Parse
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 public class ParserModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(
-                ParserImpl.class, ParserImpl.class)
+        install(new FactoryModuleBuilder()
+                .implement(ParserImpl.class, ParserImpl.class)
                 .build(ParserImplFactory.class));
     }
 

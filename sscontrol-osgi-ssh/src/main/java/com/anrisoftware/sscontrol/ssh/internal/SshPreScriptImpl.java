@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.ssh.internal;
 
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.PreHost;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
 
 /**
  * <i>Ssh</i> pre-script.
@@ -26,9 +27,13 @@ import com.anrisoftware.sscontrol.types.external.PreHost;
  */
 public class SshPreScriptImpl implements PreHost {
 
-    public interface SshPreScriptImplFactory {
-
-        SshPreScriptImpl create();
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    public interface SshPreScriptImplFactory extends PreHostService {
 
     }
 

@@ -15,9 +15,4 @@
  */
 package com.anrisoftware.sscontrol.parser.groovy.internal
 
-database.with {
-    binding local, port: 3306
-    admin user: 'root', password: 'somepass'
-    db 'phpmyadmin'
-    user 'phpmyadmin', password: '1234' with { access database: 'phpmyadmindb' }
-}
+service "hostname", fqdn: "test.muellerpublic.de"

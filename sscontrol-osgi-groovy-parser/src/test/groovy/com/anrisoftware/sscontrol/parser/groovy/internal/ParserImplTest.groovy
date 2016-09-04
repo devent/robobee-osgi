@@ -19,23 +19,26 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
-import org.apache.sling.testing.mock.osgi.junit.OsgiContext
-import org.junit.BeforeClass
-import org.junit.Rule
+import javax.inject.Inject
+
+import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.globalpom.strings.ToStringServiceImpl;
-import com.anrisoftware.sscontrol.database.external.Database
-import com.anrisoftware.sscontrol.database.internal.DatabasePreScriptServiceImpl
-import com.anrisoftware.sscontrol.database.internal.DatabaseServiceImpl
-import com.anrisoftware.sscontrol.debug.internal.DebugServiceImpl
-import com.anrisoftware.sscontrol.dhclient.external.Dhclient
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientPreScriptServiceImpl
-import com.anrisoftware.sscontrol.dhclient.internal.DhclientServiceImpl
-import com.anrisoftware.sscontrol.parser.external.ParserService
-import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserServiceImpl
-import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostServiceImpl
-import com.anrisoftware.sscontrol.types.internal.UserPasswordServiceImpl
+import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnamePreScriptImpl
+import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnameStubFactory
+import com.anrisoftware.sscontrol.parser.groovy.internal.HostnameStub.HostnamePreScriptImpl.HostnamePreScriptImplFactory
+import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserModule
+import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory
+import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.services.internal.TargetsModule
+import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
+import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.types.external.HostService
+import com.anrisoftware.sscontrol.types.external.PreHost
+import com.anrisoftware.sscontrol.types.external.TargetsService
+import com.google.inject.AbstractModule
+import com.google.inject.Guice
+import com.google.inject.assistedinject.FactoryModuleBuilder
 
 /**
  *
@@ -47,40 +50,51 @@ import com.anrisoftware.sscontrol.types.internal.UserPasswordServiceImpl
 @CompileStatic
 class ParserImplTest {
 
-    @Rule
-    public final OsgiContext context = new OsgiContext()
+    @Inject
+    ParserImplFactory scriptsFactory
+
+    @Inject
+    HostServicesImplFactory servicesFactory
+
+    @Inject
+    HostnameStubFactory hostnameFactory
+
+    @Inject
+    HostnamePreScriptImplFactory hostnamePreFactory
 
     @Test
-    void "parse dhclient script"() {
-        context.registerInjectActivateService(new ToStringServiceImpl(), null)
-        context.registerInjectActivateService(new DhclientServiceImpl(), null)
-        context.registerInjectActivateService(new DhclientPreScriptServiceImpl(), null)
-        ParserService service = context.registerInjectActivateService(new ParserServiceImpl(), null)
-        def parser = service.create()
-        def script = parser.parse dhclientScript
-        assert script instanceof Dhclient
+    void "parse script"() {
+        def parent = hostnameScript.toString()
+        int index = parent.lastIndexOf '/'
+        parent = parent.substring(0, index + 1)
+        def roots = [new URI(parent)] as URI[]
+        def name = 'HostnameScript.groovy'
+        def variables = [:]
+        def hostServices = servicesFactory.create()
+        hostServices.putAvailableService 'hostname', hostnameFactory
+        hostServices.putAvailablePreService 'hostname', hostnamePreFactory
+        def parser = scriptsFactory.create(roots, name, variables, hostServices)
+        parser.parse()
+        assert hostServices.services.size() == 1
     }
 
-    @Test
-    void "parse database script"() {
-        context.registerInjectActivateService(new ToStringServiceImpl(), null)
-        context.registerInjectActivateService(new UserPasswordServiceImpl(), null)
-        context.registerInjectActivateService(new DebugServiceImpl(), null)
-        context.registerInjectActivateService(new BindingHostServiceImpl(), null)
-        context.registerInjectActivateService(new DatabaseServiceImpl(), null)
-        context.registerInjectActivateService(new DatabasePreScriptServiceImpl(), null)
-        ParserService service = context.registerInjectActivateService(new ParserServiceImpl(), null)
-        def parser = service.create()
-        def script = parser.parse databaseScript
-        assert script instanceof Database
-    }
-
-    @BeforeClass
-    static void setupTest() {
+    @Before
+    void setupTest() {
         toStringStyle
+        Guice.createInjector(
+                new ParserModule(),
+                new HostServicesModule(),
+                new TargetsModule(),
+                new AbstractModule() {
+
+                    @Override
+                    protected void configure() {
+                        bind TargetsService to TargetsImplFactory
+                        install(new FactoryModuleBuilder().implement(HostService.class, HostnameStub.class).build(HostnameStubFactory.class));
+                        install(new FactoryModuleBuilder().implement(PreHost.class, HostnamePreScriptImpl.class).build(HostnamePreScriptImplFactory.class));
+                    }
+                }).injectMembers(this)
     }
 
-    static final URI dhclientScript = ParserImplTest.class.getResource('DhclientScript.groovy').toURI()
-
-    static final URI databaseScript = ParserImplTest.class.getResource('DatabaseScript.groovy').toURI()
+    static final URI hostnameScript = ParserImplTest.class.getResource('HostnameScript.groovy').toURI()
 }

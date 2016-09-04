@@ -34,6 +34,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
+import com.anrisoftware.sscontrol.types.external.HostServicesService;
+import com.anrisoftware.sscontrol.types.external.PreHostService;
 import com.anrisoftware.sscontrol.types.external.Ssh;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.Targets;
@@ -55,15 +57,13 @@ public class HostServicesImpl implements HostServices {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface HostServicesImplFactory {
-
-        HostServicesImpl create();
-
-        HostServicesImpl create(@Assisted HostServices repository);
+    public interface HostServicesImplFactory extends HostServicesService {
 
     }
 
     private final Map<String, HostServiceService> availableServices;
+
+    private final Map<String, PreHostService> availablePreServices;
 
     private final Map<String, List<HostService>> hostServices;
 
@@ -77,11 +77,12 @@ public class HostServicesImpl implements HostServices {
         this.targets = targetsService.create();
         this.availableServices = synchronizedMap(
                 new HashMap<String, HostServiceService>());
+        this.availablePreServices = synchronizedMap(
+                new HashMap<String, PreHostService>());
         this.hostServices = synchronizedMap(
                 new LinkedHashMap<String, List<HostService>>());
     }
 
-    @AssistedInject
     HostServicesImpl(TargetsService targetsService,
             @Assisted HostServices services) {
         this(targetsService);
@@ -127,6 +128,23 @@ public class HostServicesImpl implements HostServices {
         availableServices.remove(name);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends PreHostService> T getAvailablePreService(String name) {
+        return (T) availablePreServices.get(name);
+    }
+
+    @Override
+    public void putAvailablePreService(String name,
+            PreHostService service) {
+        availablePreServices.put(name, service);
+    }
+
+    @Override
+    public void removeAvailablePreService(String name) {
+        availablePreServices.remove(name);
+    }
+
     @Override
     public List<HostService> getServices(String name) {
         return hostServices.get(name);
@@ -164,7 +182,7 @@ public class HostServicesImpl implements HostServices {
     public Targets getTargets() {
         return targets;
     }
-    
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)

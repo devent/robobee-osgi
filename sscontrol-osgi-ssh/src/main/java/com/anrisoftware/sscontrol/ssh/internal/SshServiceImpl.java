@@ -29,7 +29,7 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.globalpom.strings.ToStringService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory;
-import com.anrisoftware.sscontrol.types.external.Ssh;
+import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -50,8 +50,8 @@ public class SshServiceImpl implements SshService {
     private ToStringService toStringService;
 
     @Override
-    public Ssh create(Map<String, Object> args) {
-        return (Ssh) sshFactory.create(args);
+    public HostService create(Map<String, Object> args) {
+        return sshFactory.create(args);
     }
 
     @Activate

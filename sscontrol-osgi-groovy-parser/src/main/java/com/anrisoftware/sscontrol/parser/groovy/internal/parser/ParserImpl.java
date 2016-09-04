@@ -15,36 +15,28 @@
  */
 package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
 
-import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import groovy.lang.Binding;
-import groovy.lang.MissingPropertyException;
-import groovy.util.GroovyScriptEngine;
-import groovy.util.ResourceException;
-import groovy.util.ScriptException;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.FilenameUtils;
 import org.codehaus.groovy.control.CompilerConfiguration;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 import com.anrisoftware.sscontrol.parser.external.LoadScriptException;
 import com.anrisoftware.sscontrol.parser.external.Parser;
-import com.anrisoftware.sscontrol.parser.groovy.external.ScriptServiceNotFound;
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.PreHost;
-import com.anrisoftware.sscontrol.types.external.PreHostService;
-import com.anrisoftware.sscontrol.types.external.HostService;
-import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.google.inject.assistedinject.Assisted;
+
+import groovy.lang.Binding;
+import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
 
 /**
  * Groovy script parser.
@@ -54,126 +46,104 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ParserImpl implements Parser {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface ParserImplFactory {
 
-        ParserImpl create(@Assisted Map<String, Object> variables);
+        ParserImpl create(@Assisted URI[] roots, @Assisted String name,
+                @Assisted Map<String, Object> variables,
+                @Assisted HostServices hostServices);
 
     }
 
     private final Map<String, Object> variables;
 
-    @Inject
-    private ParserImplLogger log;
+    private final HostServices hostServices;
+
+    private final URI[] roots;
+
+    private final String name;
 
     @Inject
-    private BundleContext bundleContext;
-
-    @Inject
-    ParserImpl(@Assisted Map<String, Object> variables) {
+    ParserImpl(@Assisted URI[] roots, @Assisted String name,
+            @Assisted Map<String, Object> variables,
+            @Assisted HostServices hostServices) {
+        this.hostServices = hostServices;
+        this.roots = roots.clone();
+        this.name = name;
         this.variables = new HashMap<String, Object>(variables);
     }
 
     @Override
-    public HostService parse(URI resource) throws AppException {
-        String scriptName = FilenameUtils.getName(resource.getPath());
-        URI parent = getParent(resource);
-        HostServiceService scriptService;
-        PreHostService prescript;
-        String scriptServiceName = parseName(resource);
-        scriptService = getService(scriptServiceName, "Service");
-        prescript = getService(scriptServiceName, "PreScriptService");
-        HostService script = scriptService.create();
-        HostService parsedScript = loadScript(scriptName,
-                scriptServiceName, parent, script, prescript.create());
-        log.parsedScript(this, parsedScript);
-        return parsedScript;
+    public HostServices parse() throws AppException {
+        return parseScript();
     }
 
-    private String parseName(URI resource) throws AppException {
-        String scriptName = FilenameUtils.getName(resource.getPath());
-        URI parent = getParent(resource);
-        String scriptServiceName = loadScriptName(scriptName, parent, null);
-        return scriptServiceName;
+    private HostServices parseScript() throws AppException {
+        URL[] roots = toURLs(this.roots);
+        return loadScript(roots);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> T getService(String name, String postfix)
-            throws ScriptServiceNotFound {
-        String serviceName = format(
-                "com.anrisoftware.sscontrol.%s.external.%s%s", name,
-                capitalize(name), postfix);
-        ServiceReference<?> reference = bundleContext
-                .getServiceReference(serviceName);
-        if (reference == null) {
-            throw new ScriptServiceNotFound(this, serviceName);
-        }
-        return (T) bundleContext.getService(reference);
-    }
-
-    private String loadScriptName(String name, URI parent,
-            PreHost prescript) throws AppException {
-        try {
-            loadScript(name, null, parent, null, prescript);
-            throw new IllegalStateException();
-        } catch (MissingPropertyException e) {
-            return e.getProperty();
-        }
-    }
-
-    private HostService loadScript(String name, String serviceName,
-            URI parent, HostService script, PreHost prescript)
-            throws AppException {
-        CompilerConfiguration cc = createCompiler(prescript);
+    private HostServices loadScript(URL[] roots) throws AppException {
+        CompilerConfiguration cc = createCompiler();
         Binding binding = createBinding();
-        GroovyScriptEngine engine = createEngine(name, serviceName, parent,
-                script, cc, binding);
+        GroovyScriptEngine engine = createEngine(cc, binding, roots);
         try {
             engine.run(name, binding);
-            return (HostService) binding.getProperty(serviceName);
+            return hostServices;
         } catch (ResourceException e) {
-            throw new LoadScriptException(this, e, name, parent);
+            throw new LoadScriptException(this, e, name);
         } catch (ScriptException e) {
-            throw new LoadScriptException(this, e, name, parent);
+            throw new LoadScriptException(this, e, name);
         }
     }
 
-    private GroovyScriptEngine createEngine(String name, String serviceName,
-            URI parent, HostService script, CompilerConfiguration cc,
-            Binding binding) throws AppException {
-        try {
-            GroovyScriptEngine engine = new GroovyScriptEngine(
-                    new URL[] { parent.toURL() });
-            engine.setConfig(cc);
-            if (serviceName != null) {
-                binding.setProperty(serviceName, script);
-            }
-            return engine;
-        } catch (MalformedURLException e) {
-            throw new LoadScriptException(this, e, name, parent);
-        }
+    private GroovyScriptEngine createEngine(CompilerConfiguration cc,
+            Binding binding, URL[] roots) throws AppException {
+        GroovyScriptEngine engine = new GroovyScriptEngine(roots);
+        engine.setConfig(cc);
+        return engine;
     }
 
-    private CompilerConfiguration createCompiler(PreHost prescript)
-            throws AppException {
+    private CompilerConfiguration createCompiler() throws AppException {
         CompilerConfiguration cc = new CompilerConfiguration();
         cc.setScriptBaseClass(ParsedScript.class.getName());
-        if (prescript != null) {
-            prescript.configureCompiler(cc);
+        Set<String> services = hostServices.getAvailableServices();
+        for (String name : services) {
+            PreHost pre = hostServices.getAvailablePreService(name).create();
+            pre.configureCompiler(cc);
         }
         return cc;
     }
 
     private Binding createBinding() {
         Binding binding = new Binding();
+        binding.setProperty("service", hostServices);
+        binding.setProperty("targets", hostServices.getTargets());
         for (Map.Entry<String, Object> entry : variables.entrySet()) {
             binding.setProperty(entry.getKey(), entry.getValue());
         }
         return binding;
     }
 
-    private URI getParent(URI resource) {
-        return resource.getPath().endsWith("/") ? resource.resolve("..")
-                : resource.resolve(".");
+    private URL[] toURLs(URI[] roots) throws LoadScriptException {
+        URL[] urls = new URL[roots.length];
+        for (int i = 0; i < urls.length; i++) {
+            urls[i] = toURL(roots[i]);
+        }
+        return urls;
+    }
+
+    private URL toURL(URI uri) throws LoadScriptException {
+        try {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new LoadScriptException(this, e, name);
+        }
     }
 
 }

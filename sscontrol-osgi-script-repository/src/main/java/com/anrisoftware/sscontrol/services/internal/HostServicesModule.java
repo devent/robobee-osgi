@@ -16,6 +16,7 @@
 package com.anrisoftware.sscontrol.services.internal;
 
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -29,8 +30,8 @@ public class HostServicesModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(
-                HostServicesImpl.class, HostServicesImpl.class)
+        install(new FactoryModuleBuilder()
+                .implement(HostServices.class, HostServicesImpl.class)
                 .build(HostServicesImplFactory.class));
     }
 

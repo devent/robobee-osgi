@@ -26,6 +26,8 @@ import java.util.Set;
  */
 public interface HostServices {
 
+    static final String AVAILABLE_SERVICE_PROPERTY = "availableService";
+
     <T extends HostServiceService> T getAvailableService(String name);
 
     Set<String> getAvailableServices();
@@ -33,6 +35,12 @@ public interface HostServices {
     void putAvailableService(String name, HostServiceService service);
 
     void removeAvailableService(String name);
+
+    <T extends PreHostService> T getAvailablePreService(String name);
+
+    void putAvailablePreService(String name, PreHostService service);
+
+    void removeAvailablePreService(String name);
 
     List<HostService> getServices(String name);
 

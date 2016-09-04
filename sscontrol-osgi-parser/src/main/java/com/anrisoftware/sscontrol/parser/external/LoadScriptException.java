@@ -15,12 +15,22 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
-import java.net.URI;
-
 import com.anrisoftware.sscontrol.types.external.AppException;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @SuppressWarnings("serial")
 public class LoadScriptException extends AppException {
+
+    public LoadScriptException(Parser parser, Throwable e, String name) {
+        super("Load script error", e);
+        addContextValue("parser", parser);
+        addContextValue("name", name);
+    }
 
     public LoadScriptException(String message, Throwable cause) {
         super(message, cause);
@@ -28,13 +38,6 @@ public class LoadScriptException extends AppException {
 
     public LoadScriptException(String message) {
         super(message);
-    }
-
-    public LoadScriptException(Parser parser, Exception e, String name, URI root) {
-        super("Load script error", e);
-        addContextValue("name", name);
-        addContextValue("root", root);
-        addContextValue("parser", parser);
     }
 
 }

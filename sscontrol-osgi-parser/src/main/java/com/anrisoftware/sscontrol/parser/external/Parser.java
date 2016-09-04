@@ -15,10 +15,8 @@
  */
 package com.anrisoftware.sscontrol.parser.external;
 
-import java.net.URI;
-
 import com.anrisoftware.sscontrol.types.external.AppException;
-import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 
 /**
  * Script parser.
@@ -28,5 +26,5 @@ import com.anrisoftware.sscontrol.types.external.HostService;
  */
 public interface Parser {
 
-    HostService parse(URI resource) throws AppException;
+    HostServices parse() throws AppException;
 }

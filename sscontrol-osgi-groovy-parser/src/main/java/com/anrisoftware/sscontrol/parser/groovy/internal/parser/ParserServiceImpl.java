@@ -17,6 +17,7 @@ package com.anrisoftware.sscontrol.parser.groovy.internal.parser;
 
 import static com.google.inject.util.Providers.of;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import org.osgi.framework.BundleContext;
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
 import com.anrisoftware.sscontrol.parser.groovy.internal.parser.ParserImpl.ParserImplFactory;
+import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -47,14 +49,15 @@ public class ParserServiceImpl implements ParserService {
     private ParserImplFactory scriptsFactory;
 
     @Override
-    public Parser create() {
+    public Parser create(URI[] roots, String name, HostServices hostServices) {
         Map<String, Object> variables = new HashMap<String, Object>();
-        return scriptsFactory.create(variables);
+        return scriptsFactory.create(roots, name, variables, hostServices);
     }
 
     @Override
-    public Parser create(Map<String, Object> variables) {
-        return scriptsFactory.create(variables);
+    public Parser create(URI[] roots, String name,
+            Map<String, Object> variables, HostServices hostServices) {
+        return scriptsFactory.create(roots, name, variables, hostServices);
     }
 
     @Activate
