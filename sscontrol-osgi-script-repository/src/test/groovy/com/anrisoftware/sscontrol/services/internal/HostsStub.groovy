@@ -5,6 +5,7 @@ import groovy.transform.ToString
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.HostService
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.assistedinject.Assisted
@@ -81,5 +82,9 @@ class HostsStub implements HostService {
     @Override
     List<SshHost> getTargets() {
         targets
+    }
+
+    @Override
+    HostServiceProperties getServiceProperties() {
     }
 }

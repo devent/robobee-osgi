@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.hostname.external.Hostname;
 import com.anrisoftware.sscontrol.hostname.external.HostnameService;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -43,12 +47,17 @@ public class HostnameImpl implements Hostname {
 
     private final List<SshHost> targets;
 
+    private final HostServiceProperties serviceProperties;
+
     private String hostname;
 
     @AssistedInject
-    HostnameImpl(HostnameImplLogger log, @Assisted Map<String, Object> args) {
+    HostnameImpl(HostnameImplLogger log,
+            HostPropertiesService propertiesService,
+            @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<SshHost>();
+        this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }
 
@@ -69,6 +78,15 @@ public class HostnameImpl implements Hostname {
     @Override
     public List<SshHost> getTargets() {
         return targets;
+    }
+
+    public List<String> getProperty() {
+        return propertyStatement(serviceProperties);
+    }
+
+    @Override
+    public HostServiceProperties getServiceProperties() {
+        return serviceProperties;
     }
 
     @Override

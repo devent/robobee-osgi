@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging
 import com.anrisoftware.sscontrol.types.external.HostService
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
@@ -83,6 +84,10 @@ class SshStub implements Ssh {
     @Override
     List<SshHost> getTargets() {
         targets
+    }
+
+    @Override
+    HostServiceProperties getServiceProperties() {
     }
 
     @Override

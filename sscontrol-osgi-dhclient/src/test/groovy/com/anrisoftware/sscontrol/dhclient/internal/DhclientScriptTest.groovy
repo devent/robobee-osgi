@@ -25,9 +25,14 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory
+import com.anrisoftware.sscontrol.profile.internal.ProfileModule
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.google.inject.AbstractModule
 import com.google.inject.Guice
 
 /**
@@ -70,6 +75,25 @@ dhclient
                     assert dhclient.statements.size() == 8
                 },
             ],
+            [
+                input: """
+dhclient.with {
+    property << 'default_option = rfc3442-classless-static-routes code 121 = array of unsigned integer 8'
+    property << 'default_sends = host-name "<hostname>"'
+    property << 'default_sends = host-name "my.hostname"'
+}
+dhclient
+""",
+                expected: { Dhclient dhclient ->
+                    assert dhclient.statements.size() == 0
+                    assert dhclient.serviceProperties.propertyNames.size() == 2
+                    assert dhclient.serviceProperties.getProperty('default_sends') == 'host-name "my.hostname"'
+                    assert dhclient.serviceProperties.propertyNames.containsAll([
+                        'default_option',
+                        'default_sends'
+                    ])
+                },
+            ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
@@ -86,7 +110,16 @@ dhclient
         Guice.createInjector(
                 new DhclientModule(),
                 new TypesModule(),
-                new StringsModule()
+                new StringsModule(),
+                new ProfileModule(),
+                new PropertiesUtilsModule(),
+                new AbstractModule() {
+
+                    @Override
+                    protected void configure() {
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                    }
+                }
                 ).injectMembers(this)
     }
 }

@@ -1,6 +1,7 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
 
@@ -35,5 +36,9 @@ class Localhost implements Ssh {
 
     @Override
     List<SshHost> getHosts() {
+    }
+
+    @Override
+    HostServiceProperties getServiceProperties() {
     }
 }

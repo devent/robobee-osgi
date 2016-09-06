@@ -25,12 +25,16 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.hostname.external.Hostname
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.profile.internal.ProfileModule
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
@@ -96,11 +100,14 @@ service "hostname", fqdn: "blog.muellerpublic.de"
                 new HostnameModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new ProfileModule(),
+                new PropertiesUtilsModule(),
                 new AbstractModule() {
 
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }

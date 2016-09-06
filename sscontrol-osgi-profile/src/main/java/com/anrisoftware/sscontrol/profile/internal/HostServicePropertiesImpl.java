@@ -18,6 +18,8 @@ package com.anrisoftware.sscontrol.profile.internal;
 import static com.anrisoftware.sscontrol.types.external.ArgumentInvalidException.checkBlankArg;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,9 +27,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.Format;
 import java.text.ParseException;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -42,26 +44,29 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.propertiesutils.StringToType;
 import com.anrisoftware.propertiesutils.TypedAllProperties;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
-import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
-import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.ArgumentInvalidException;
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.assistedinject.AssistedInject;
 
 import groovy.lang.GroovyObjectSupport;
 
 /**
- * Implements service profile.
+ * Implements service properties.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class ProfilePropertiesImpl extends GroovyObjectSupport
+public class HostServicePropertiesImpl extends GroovyObjectSupport
         implements HostServiceProperties {
 
-    public interface ProfilePropertiesImplFactory
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
+    public interface HostServicePropertiesImplFactory
             extends HostPropertiesService {
 
     }
@@ -72,38 +77,37 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
 
     private final TypedAllProperties typedProperties;
 
-    private final String name;
-
     @Inject
-    private ProfilePropertiesImplLogger log;
+    private HostServicePropertiesImplLogger log;
 
     @AssistedInject
-    ProfilePropertiesImpl(@Assisted String name,
-            TypedAllPropertiesFactory propertiesFactory) {
-        checkBlankArg(name, "name");
-        this.name = name;
+    HostServicePropertiesImpl(TypedAllPropertiesFactory propertiesFactory) {
         this.properties = new Properties();
         this.typedAllPropertiesFactory = propertiesFactory;
         this.typedProperties = propertiesFactory.create(properties);
     }
 
-    @AssistedInject
-    ProfilePropertiesImpl(@Assisted HostServiceProperties profileProperties,
-            TypedAllPropertiesService typedPropertiesService) {
-        this.name = profileProperties.getName();
-        this.properties = new Properties();
-        this.typedAllPropertiesFactory = typedPropertiesService;
-        this.typedProperties = typedPropertiesService.create(properties);
-        copyProperties(this.properties, properties);
-    }
-
-    public void propertyMissing(String name, Object value) throws AppException {
-        putProperty(name, value);
+    @Override
+    public void addProperty(String property) {
+        checkBlankArg(property, "property");
+        Properties p = new Properties();
+        try {
+            p.load(new StringReader(property));
+        } catch (IOException e) {
+        }
+        Enumeration<?> names = p.propertyNames();
+        if (names.hasMoreElements()) {
+            String name = (String) names.nextElement();
+            setProperty(name, p.getProperty(name));
+        }
     }
 
     @Override
-    public String getName() {
-        return name;
+    public void setProperty(String name, String value)
+            throws ArgumentInvalidException {
+        checkBlankArg(name, "name");
+        properties.put(name, value);
+        log.propertyAdded(this, name, value);
     }
 
     @Override
@@ -123,13 +127,6 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
     @Override
     public String getProperty(String name, String defaultValue) {
         return properties.getProperty(name, defaultValue);
-    }
-
-    public void putProperty(String name, Object value)
-            throws ArgumentInvalidException {
-        checkBlankArg(name, "name");
-        properties.put(name, value);
-        log.propertyAdded(this, name, value);
     }
 
     @SuppressWarnings("unchecked")
@@ -369,16 +366,9 @@ public class ProfilePropertiesImpl extends GroovyObjectSupport
         }
     }
 
-    private void copyProperties(Properties dest, Properties properties) {
-        for (Entry<Object, Object> key : properties.entrySet()) {
-            String property = properties.getProperty(key.getKey().toString());
-            dest.put(key, property);
-        }
-    }
-
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", name)
-                .append("properties", properties.size()).toString();
+        return new ToStringBuilder(this).append("properties", properties.size())
+                .toString();
     }
 }

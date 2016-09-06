@@ -15,20 +15,20 @@
  */
 package com.anrisoftware.sscontrol.profile.internal;
 
-import static com.anrisoftware.sscontrol.profile.internal.ProfilePropertiesImplLogger._.propertyAdded;
+import static com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImplLogger._.propertyAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ProfilePropertiesImpl}.
+ * Logging for {@link HostServicePropertiesImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class ProfilePropertiesImplLogger extends AbstractLogger {
+final class HostServicePropertiesImplLogger extends AbstractLogger {
 
     enum _ {
 
@@ -47,13 +47,13 @@ final class ProfilePropertiesImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ProfilePropertiesImpl}.
+     * Sets the context of the logger to {@link HostServicePropertiesImpl}.
      */
-    public ProfilePropertiesImplLogger() {
-        super(ProfilePropertiesImpl.class);
+    public HostServicePropertiesImplLogger() {
+        super(HostServicePropertiesImpl.class);
     }
 
-    void propertyAdded(ProfilePropertiesImpl properties, String name,
+    void propertyAdded(HostServicePropertiesImpl properties, String name,
             Object value) {
         debug(propertyAdded, name, value, properties);
     }

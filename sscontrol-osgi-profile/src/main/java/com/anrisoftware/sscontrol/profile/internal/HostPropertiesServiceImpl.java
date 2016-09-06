@@ -24,48 +24,45 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
-import com.anrisoftware.globalpom.strings.ToStringService;
-import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory;
-import com.anrisoftware.sscontrol.types.external.Profile;
+import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
+import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
-import com.anrisoftware.sscontrol.types.external.ProfileService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
 /**
- * Profile service.
+ * Properties service.
  *
- * @author Erwin Müller, erwin.mueller@deventm.de
- * @since 1.0
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
  */
 @Component
-@Service(ProfileService.class)
-public class ProfileServiceImpl implements ProfileService {
+@Service(HostPropertiesService.class)
+public class HostPropertiesServiceImpl implements HostPropertiesService {
 
     @Inject
-    private ProfileImplFactory profileFactory;
+    private HostServicePropertiesImplFactory factory;
 
     @Reference
-    private ToStringService toStringService;
-
-    @Reference
-    private HostPropertiesService profilePropertiesService;
+    private TypedAllPropertiesService typedAllPropertiesService;
 
     @Override
-    public Profile create() {
-        return profileFactory.create();
+    public HostServiceProperties create() {
+        return factory.create();
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ProfileModule(), new AbstractModule() {
+        Guice.createInjector(new ProfileModule(),
+                new AbstractModule() {
 
-            @Override
-            protected void configure() {
-                bind(HostPropertiesService.class)
-                        .toProvider(of(profilePropertiesService));
-                bind(ToStringService.class).toProvider(of(toStringService));
-            }
-        }).injectMembers(this);
+                    @Override
+                    protected void configure() {
+                        bind(TypedAllPropertiesFactory.class)
+                                .toProvider(of(typedAllPropertiesService));
+                    }
+                }).injectMembers(this);
     }
 }

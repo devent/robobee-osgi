@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.AppException
 import com.anrisoftware.sscontrol.types.external.HostService
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.PreHost
 import com.anrisoftware.sscontrol.types.external.PreHostService
@@ -86,5 +87,9 @@ class HostnameStub implements HostService {
     @Override
     List<SshHost> getTargets() {
         targets
+    }
+
+    @Override
+    HostServiceProperties getServiceProperties() {
     }
 }

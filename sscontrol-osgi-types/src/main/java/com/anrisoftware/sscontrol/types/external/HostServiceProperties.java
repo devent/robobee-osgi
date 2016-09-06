@@ -25,6 +25,10 @@ import java.util.Set;
  */
 public interface HostServiceProperties {
 
+    void setProperty(String name, String value);
+
+    void addProperty(String property);
+
     String getProperty(String name);
 
     String getProperty(String name, String defaultValue);
