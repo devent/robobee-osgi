@@ -20,6 +20,7 @@ import static java.lang.String.format;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
@@ -29,7 +30,6 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import com.anrisoftware.sscontrol.parser.external.Parser;
 import com.anrisoftware.sscontrol.parser.external.ParserService;
-import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.HostServicesService;
 
@@ -43,8 +43,11 @@ import com.anrisoftware.sscontrol.types.external.HostServicesService;
 @Service
 public class ParseCommand implements Action {
 
-    @Argument(name = "resource", description = "The resource URI to be parsed.", required = true, multiValued = false)
-    private String resource;
+    @Argument(name = "roots", description = "The resource roots.", required = true, multiValued = true)
+    private List<String> roots;
+
+    @Argument(name = "name", description = "The resource to be parsed.", required = true, multiValued = false)
+    private String name;
 
     @Reference
     private ParserService parseService;
@@ -54,12 +57,19 @@ public class ParseCommand implements Action {
 
     @Override
     public Object execute() throws Exception {
-        Parser parser = parseService.create();
-        HostService script = parser.parse(toUri(resource));
-        HostServices scriptsRepository = scriptsRepositoryService.create();
-        scriptsRepository.putAvailableService(script.getClass().getName(),
-                script);
-        return format("%s added.", script.getClass().getName());
+        URI[] uriroots = toUris(roots);
+        HostServices hostServices = scriptsRepositoryService.create();
+        Parser parser = parseService.create(uriroots, name, hostServices);
+        parser.parse();
+        return format("%s parsed.", name);
+    }
+
+    private URI[] toUris(List<String> roots) throws URISyntaxException {
+        URI[] uris = new URI[roots.size()];
+        for (int i = 0; i < uris.length; i++) {
+            uris[i] = toUri(roots.get(i));
+        }
+        return null;
     }
 
     private URI toUri(String resource) throws URISyntaxException {
