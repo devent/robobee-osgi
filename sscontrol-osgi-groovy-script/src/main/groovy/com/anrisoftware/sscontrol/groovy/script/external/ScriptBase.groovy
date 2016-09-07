@@ -115,32 +115,6 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Returns the system name, for example {@code "ubuntu"}.
-     *
-     * <ul>
-     * <li>profile property {@code system_name}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getSystemName() {
-        properties.getProperty "system_name", defaultProperties
-    }
-
-    /**
-     * Returns the distribution name, for example {@code "lucid"}.
-     *
-     * <ul>
-     * <li>profile property {@code distribution_name}</li>
-     * </ul>
-     *
-     * @see #getDefaultProperties()
-     */
-    String getDistributionName() {
-        properties.getProperty "distribution_name", defaultProperties
-    }
-
-    /**
      * Returns the repository string, for
      * example {@code "deb http://archive.ubuntu.com/ubuntu <distributionName> <repository>"}
      *

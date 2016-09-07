@@ -27,6 +27,7 @@ import org.junit.Test
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.hostname.external.Hostname
+import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.profile.internal.ProfileModule
 import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
@@ -72,21 +73,12 @@ service "hostname" with {
                     assert hostname.hostname == 'blog.muellerpublic.de'
                 },
             ],
-            [
-                input: """
-service "hostname", fqdn: "blog.muellerpublic.de"
-""",
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
-                    assert hostname.hostname == 'blog.muellerpublic.de'
-                },
-            ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
             def services = servicesFactory.create()
             services.putAvailableService 'hostname', hostnameFactory
+            services.addService 'ssh', new Localhost()
             Eval.me 'service', services, test.input as String
             Closure expected = test.expected
             expected services

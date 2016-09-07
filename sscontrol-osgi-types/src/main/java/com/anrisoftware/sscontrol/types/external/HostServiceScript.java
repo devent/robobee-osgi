@@ -27,9 +27,14 @@ import java.util.concurrent.ExecutorService;
 public interface HostServiceScript {
 
     /**
-     * Returns {@link String} name of the script.
+     * Returns the system name, for example {@code "ubuntu"}.
      */
-    String getName();
+    String getSystemName();
+
+    /**
+     * Returns the system version, for example {@code "14.04"}.
+     */
+    String getSystemVersion();
 
     /**
      * Returns the logger of the script.

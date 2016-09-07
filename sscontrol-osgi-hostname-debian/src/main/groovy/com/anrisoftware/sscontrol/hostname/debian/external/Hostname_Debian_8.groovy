@@ -54,4 +54,14 @@ class Hostname_Debian_8 extends Hostname_Debian {
     def getLog() {
         log
     }
+
+    @Override
+    String getSystemName() {
+        'debian'
+    }
+
+    @Override
+    String getSystemVersion() {
+        '8'
+    }
 }
