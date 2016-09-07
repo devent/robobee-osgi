@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.internal;
 
+import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import com.anrisoftware.sscontrol.debug.external.DebugService;
 import com.anrisoftware.sscontrol.ssh.external.SshService;
 import com.anrisoftware.sscontrol.ssh.internal.SshHostImpl.SshHostImplFactory;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.Ssh;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
@@ -50,6 +53,8 @@ public class SshImpl implements Ssh {
 
     private final List<SshHost> targets;
 
+    private final HostServiceProperties serviceProperties;
+
     private final List<SshHost> hosts;
 
     private final SshImplLogger log;
@@ -62,16 +67,22 @@ public class SshImpl implements Ssh {
     private String group;
 
     @AssistedInject
-    SshImpl(SshImplLogger log, @Assisted Map<String, Object> args) {
+    SshImpl(SshImplLogger log, HostPropertiesService propertiesService,
+            @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<SshHost>();
         this.hosts = new ArrayList<SshHost>();
+        this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }
 
     @Inject
     public void setDebugService(DebugService debugService) {
         this.debug = debugService.create();
+    }
+
+    public List<String> getProperty() {
+        return propertyStatement(serviceProperties);
     }
 
     public void group(String group) {
@@ -143,6 +154,11 @@ public class SshImpl implements Ssh {
     @Override
     public List<SshHost> getTargets() {
         return Collections.unmodifiableList(targets);
+    }
+
+    @Override
+    public HostServiceProperties getServiceProperties() {
+        return serviceProperties;
     }
 
     @Override
