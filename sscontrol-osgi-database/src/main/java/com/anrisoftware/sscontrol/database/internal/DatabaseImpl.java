@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
+import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
@@ -42,6 +43,8 @@ import com.anrisoftware.sscontrol.types.external.BindingAddress;
 import com.anrisoftware.sscontrol.types.external.BindingHost;
 import com.anrisoftware.sscontrol.types.external.BindingHostService;
 import com.anrisoftware.sscontrol.types.external.DebugLogging;
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
+import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
@@ -65,6 +68,8 @@ public class DatabaseImpl implements Database {
     private final List<DatabaseUser> users;
 
     private final List<SshHost> targets;
+
+    private final HostServiceProperties serviceProperties;
 
     @Inject
     private DatabaseImplLogger log;
@@ -90,8 +95,10 @@ public class DatabaseImpl implements Database {
     @SuppressWarnings("unchecked")
     @AssistedInject
     DatabaseImpl(BindingHostService bindingHostService,
+            HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.targets = (List<SshHost>) args.get("targets");
+        this.serviceProperties = propertiesService.create();
         this.dbs = new ArrayList<DatabaseDb>();
         this.users = new ArrayList<DatabaseUser>();
         this.binding = bindingHostService.create();
@@ -178,6 +185,10 @@ public class DatabaseImpl implements Database {
         invokeMethod(debug, "debug", arguments);
     }
 
+    public List<String> getProperty() {
+        return propertyStatement(serviceProperties);
+    }
+
     @SuppressWarnings("unchecked")
     public List<Object> getDebug() {
         return (List<Object>) invokeMethod(debug, "getDebug", null);
@@ -221,6 +232,11 @@ public class DatabaseImpl implements Database {
     @Override
     public List<SshHost> getTargets() {
         return targets;
+    }
+
+    @Override
+    public HostServiceProperties getServiceProperties() {
+        return serviceProperties;
     }
 
     @Override
