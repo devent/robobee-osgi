@@ -21,9 +21,6 @@ import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-
 import javax.inject.Inject
 
 import org.junit.Before
@@ -174,16 +171,10 @@ targets 'nodes' eachWithIndex { host, i ->
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(TargetsService.class).to(TargetsImplFactory.class)
-                        install(new FactoryModuleBuilder().implement(
-                                HostnameStub.class, HostnameStub.class)
-                                .build(HostnameStubFactory.class));
-                        install(new FactoryModuleBuilder().implement(
-                                SshStub.class, SshStub.class)
-                                .build(SshStubFactory.class));
-                        install(new FactoryModuleBuilder().implement(
-                                HostsStub.class, HostsStub.class)
-                                .build(HostsStubFactory.class));
+                        bind(TargetsService).to(TargetsImplFactory)
+                        install(new FactoryModuleBuilder().implement(HostnameStub, HostnameStub).build(HostnameStubFactory));
+                        install(new FactoryModuleBuilder().implement(SshStub, SshStub).build(SshStubFactory));
+                        install(new FactoryModuleBuilder().implement(HostsStub, HostsStub).build(HostsStubFactory));
                     }
                 })
         injector.injectMembers(this)

@@ -31,7 +31,8 @@ public class ProfileModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(HostServiceProperties.class, HostServicePropertiesImpl.class)
+                .implement(HostServiceProperties.class,
+                        HostServicePropertiesImpl.class)
                 .build(HostServicePropertiesImplFactory.class));
     }
 

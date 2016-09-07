@@ -25,84 +25,79 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
-import com.anrisoftware.sscontrol.profile.internal.ProfileImpl.ProfileImplFactory
-import com.anrisoftware.sscontrol.types.external.Profile
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.profile.internal.PropertiesStub.PropertiesStubFactory
+import com.anrisoftware.sscontrol.profile.internal.PropertiesStub.PropertiesStubServiceImpl
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
+import com.google.inject.AbstractModule
 import com.google.inject.Guice
+import com.google.inject.Injector
+import com.google.inject.assistedinject.FactoryModuleBuilder
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @Slf4j
 @CompileStatic
 class ProfileScriptTest {
 
     @Inject
-    ProfileImplFactory profileFactory
+    PropertiesStubServiceImpl propertiesService
 
     @Test
-    void "profile script"() {
+    void "properties script"() {
         def testCases = [
             [
                 input: """
-profile 'Ubuntu 12.04' with {
+dhclient.with {
+    property << 'default_option = rfc3442-classless-static-routes code 121 = array of unsigned integer 8'
+    property << 'default_sends = host-name "<hostname>"'
+    property << 'default_sends = host-name "my.hostname"'
+    property << 'multi_line = first line \\\nsecond line'
 }
-profile
+dhclient
 """,
-                expected: { Profile profile ->
-                    assert profile.name == 'Ubuntu 12.04'
-                },
-            ],
-            [
-                input: """
-profile.with {
-    hostname
-    hosts
-    remote.with { service = 'openssh' }
-    mail.with {
-        service = 'postfix'
-        storage = 'mysql'
-        auth = 'sasl'
-        delivery = 'courier'
-    }
-    httpd.with {
-        service = ['idapache2': 'apache', 'idproxy': 'nginx']
-    }
-}
-profile
-""",
-                expected: { Profile profile ->
-                    assert profile.entryNames.size() == 5
-                    assert profile.entryNames == [
-                        'hostname',
-                        'hosts',
-                        'remote',
-                        'mail',
-                        'httpd'
-                    ]
-                    HostServiceProperties p
-                    p = profile.getEntry('hostname')
-                    assert p.name == 'hostname'
-                    p = profile.getEntry('remote')
-                    assert p.name == 'remote'
-                    assert p.propertyNames.size() == 1
-                    assert p.propertyNames.containsAll(['service'])
+                expected: { PropertiesStub dhclient ->
+                    assert dhclient.serviceProperties.propertyNames.size() == 3
+                    assert dhclient.serviceProperties.getProperty('default_sends') == 'host-name "my.hostname"'
+                    assert dhclient.serviceProperties.getProperty('multi_line') == 'first line second line'
+                    assert dhclient.serviceProperties.propertyNames.containsAll([
+                        'default_option',
+                        'default_sends',
+                        'multi_line'
+                    ])
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            def profile = Eval.me 'profile', profileFactory.create(), test.input as String
-            log.info '{}. case: profile: {}', k, profile
+            def database = Eval.me 'dhclient', propertiesService.create([:]), test.input as String
+            log.info '{}. case: dhclient: {}', k, database
             Closure expected = test.expected
-            expected profile
+            expected database
         }
     }
+
+    Injector injector
 
     @Before
     void setupTest() {
         toStringStyle
-        Guice.createInjector(
+        this.injector = Guice.createInjector(
                 new ProfileModule(),
                 new TypesModule(),
-                new PropertiesUtilsModule()).injectMembers(this)
+                new PropertiesUtilsModule(),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
+                        install(new FactoryModuleBuilder().implement(PropertiesStub, PropertiesStub).build(PropertiesStubFactory));
+                    }
+                })
+        injector.injectMembers(this)
     }
 }
