@@ -25,12 +25,16 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.profile.internal.ProfileModule
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
 import com.anrisoftware.sscontrol.ssh.internal.SshImpl.SshImplFactory
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
@@ -247,16 +251,20 @@ service "ssh", group: "master" with {
         toStringStyle
         Guice.createInjector(
                 new SshModule(),
+                new SshPreModule(),
+                new ProfileModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
+                new PropertiesUtilsModule(),
                 new AbstractModule() {
 
                     @Override
                     protected void configure() {
                         bind TargetsService to TargetsImplFactory
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }
