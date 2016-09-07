@@ -56,6 +56,12 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 @Slf4j
 @CompileStatic
 class ScriptBaseTest {
@@ -64,6 +70,7 @@ class ScriptBaseTest {
     void "shell"() {
         def testCases = [
             [
+                name: 'shell basic',
                 input: new ScriptBase() {
 
                     @Override
@@ -80,6 +87,7 @@ class ScriptBaseTest {
                 ]
             ],
             [
+                name: 'shell env x=y',
                 input: new ScriptBase() {
 
                     @Override
@@ -98,6 +106,7 @@ class ScriptBaseTest {
                 ]
             ],
             [
+                name: 'shell env single quote',
                 input: new ScriptBase() {
 
                     @Override
@@ -116,6 +125,7 @@ class ScriptBaseTest {
                 ]
             ],
             [
+                name: 'shell env var expansion',
                 input: new ScriptBase() {
 
                     @Override
@@ -134,6 +144,7 @@ class ScriptBaseTest {
                 ]
             ],
             [
+                name: 'shell env args expansion',
                 input: new ScriptBase() {
 
                     @Override
@@ -153,6 +164,7 @@ class ScriptBaseTest {
                 ]
             ],
             [
+                name: 'shell env args no expansion',
                 input: new ScriptBase() {
 
                     @Override
@@ -173,7 +185,7 @@ class ScriptBaseTest {
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
+            log.info '{}. --- {} --- case: {}', k, test.name, test
             ScriptBase script = test.input
             script.ssh = localhost
             script.shell = shell
