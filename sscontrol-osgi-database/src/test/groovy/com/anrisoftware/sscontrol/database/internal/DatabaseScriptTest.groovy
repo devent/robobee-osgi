@@ -26,13 +26,17 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.strings.StringsModule
+import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.database.external.Database
 import com.anrisoftware.sscontrol.database.external.DatabaseAccess
 import com.anrisoftware.sscontrol.database.external.DatabaseDb
 import com.anrisoftware.sscontrol.database.external.DatabaseUser
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
+import com.anrisoftware.sscontrol.profile.internal.ProfileModule
+import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.types.external.BindingHostService
+import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.BindingHost.Host
 import com.anrisoftware.sscontrol.types.groovy.internal.BindingHostServiceImpl
 import com.anrisoftware.sscontrol.types.groovy.internal.GroovyTypesModule
@@ -232,11 +236,14 @@ database
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),
+                new ProfileModule(),
+                new PropertiesUtilsModule(),
                 new GroovyTypesModule(), new AbstractModule() {
 
                     @Override
                     protected void configure() {
                         bind BindingHostService to BindingHostServiceImpl
+                        bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
                     }
                 }).injectMembers(this)
     }
