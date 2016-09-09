@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.anrisoftware.sscontrol.types.external.HostService;
+import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
 import com.anrisoftware.sscontrol.types.external.HostServiceService;
 import com.anrisoftware.sscontrol.types.external.HostServices;
 import com.anrisoftware.sscontrol.types.external.HostServicesService;
@@ -65,6 +66,8 @@ public class HostServicesImpl implements HostServices {
 
     private final Map<String, PreHostService> availablePreServices;
 
+    private final Map<String, HostServiceScriptService> availableScriptServices;
+
     private final Map<String, List<HostService>> hostServices;
 
     private final Targets targets;
@@ -81,6 +84,8 @@ public class HostServicesImpl implements HostServices {
                 new HashMap<String, PreHostService>());
         this.hostServices = synchronizedMap(
                 new LinkedHashMap<String, List<HostService>>());
+        this.availableScriptServices = synchronizedMap(
+                new HashMap<String, HostServiceScriptService>());
     }
 
     HostServicesImpl(TargetsService targetsService,
@@ -135,14 +140,36 @@ public class HostServicesImpl implements HostServices {
     }
 
     @Override
-    public void putAvailablePreService(String name,
-            PreHostService service) {
+    public void putAvailablePreService(String name, PreHostService service) {
         availablePreServices.put(name, service);
     }
 
     @Override
     public void removeAvailablePreService(String name) {
         availablePreServices.remove(name);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends HostServiceScriptService> T getAvailableScriptService(
+            String name) {
+        return (T) availableScriptServices.get(name);
+    }
+
+    @Override
+    public void putAvailableScriptService(String name,
+            HostServiceScriptService service) {
+        availableScriptServices.put(name, service);
+    }
+
+    @Override
+    public void removeAvailableScriptService(String name) {
+        availableScriptServices.remove(name);
+    }
+
+    @Override
+    public Set<String> getAvailableScriptServices() {
+        return availableScriptServices.keySet();
     }
 
     @Override
@@ -187,6 +214,8 @@ public class HostServicesImpl implements HostServices {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("available service", getAvailableServices())
+                .append("available script service",
+                        getAvailableScriptServices())
                 .append("services", getServices()).toString();
     }
 
