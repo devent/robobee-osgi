@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.debian.external
 
+import static com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian_8_Service.*
 import static com.google.inject.Guice.createInjector
 import groovy.util.logging.Slf4j
 
@@ -57,11 +58,11 @@ class Hostname_Debian_8 extends Hostname_Debian {
 
     @Override
     String getSystemName() {
-        'debian'
+        SYSTEM_NAME
     }
 
     @Override
     String getSystemVersion() {
-        '8'
+        SYSTEM_VERSION
     }
 }

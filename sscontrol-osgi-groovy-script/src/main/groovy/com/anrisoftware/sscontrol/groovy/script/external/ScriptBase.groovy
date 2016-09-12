@@ -19,6 +19,8 @@ import groovy.util.logging.Slf4j
 
 import java.util.concurrent.ExecutorService
 
+import javax.inject.Inject
+
 import org.apache.commons.lang3.builder.ToStringBuilder
 
 import com.anrisoftware.sscontrol.cmd.external.Shell
@@ -27,8 +29,8 @@ import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
+import com.google.inject.assistedinject.Assisted
 
 /**
  * Base of all scripts that provides utilities functions and basic properties.
@@ -45,47 +47,70 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     String name
 
     /**
-     * The service {@link HostServiceProperties} properties.
-     */
-    HostServiceProperties properties
-
-    /**
      * The {@link HostService} service.
      */
+    @Inject
+    @Assisted
     HostService service
 
     /**
      * The {@link ExecutorService} pool to run the scripts on.
      */
+    @Inject
+    @Assisted
     ExecutorService threads
 
     /**
      * The {@link HostServices} containing the services.
      */
+    @Inject
+    @Assisted
     HostServices scriptsRepository
 
     /**
      * The command service to execute scripts.
      */
+    @Inject
     ShellFactory shell
 
     /**
      * The hosts targets.
      */
-    Ssh ssh
+    @Inject
+    @Assisted
+    SshHost target
+
+    File chdir
+
+    Map env
 
     @Override
     public <T extends ExecutorService> T getThreads() {
         threads
     }
 
-    /**
-     * Returns the lists of hosts.
-     * 
-     * @return the {@link List} of {@link SshHost} hosts.
-     */
-    List<SshHost> getHosts() {
-        service.targets
+    @Override
+    SshHost getTarget() {
+        target
+    }
+
+    @Override
+    def getLog() {
+        log
+    }
+
+    @Override
+    HostServiceProperties getProperties() {
+        service.serviceProperties
+    }
+
+    @Override
+    String toString() {
+        new ToStringBuilder(this).
+                append('name', getName()).
+                append('system', getSystemName()).
+                append('version', getSystemVersion()).
+                toString()
     }
 
     /**
@@ -109,9 +134,14 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      * @return the process task of the executed command.
      */
     Shell shell(Map args, String command) {
-        if (ssh.targets.size() == 1) {
-            shell.create(args, ssh.targets[0], this, threads, log, command)
+        Map a = new HashMap(args)
+        if (!a.containsKey('chdir')) {
+            a.chdir = chdir
         }
+        if (!a.containsKey('env')) {
+            a.env = env
+        }
+        shell.create(a, target, this, threads, log, command)
     }
 
     /**
@@ -139,14 +169,5 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     List getPackages() {
         properties.getListProperty "packages", defaultProperties
-    }
-
-    def getLog() {
-        log
-    }
-
-    @Override
-    String toString() {
-        new ToStringBuilder(this).append(getName())
     }
 }

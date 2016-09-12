@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.types.external;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * Creates the host service script.
  *
@@ -23,5 +25,19 @@ package com.anrisoftware.sscontrol.types.external;
  */
 public interface HostServiceScriptService {
 
-    HostServiceScript create();
+    /**
+     * Returns the system name, for example {@code "ubuntu"}.
+     */
+    String getSystemName();
+
+    /**
+     * Returns the system version, for example {@code "14.04"}.
+     */
+    String getSystemVersion();
+
+    /**
+     * Creates the script.
+     */
+    HostServiceScript create(HostServices repository, HostService service,
+            SshHost target, ExecutorService threads);
 }

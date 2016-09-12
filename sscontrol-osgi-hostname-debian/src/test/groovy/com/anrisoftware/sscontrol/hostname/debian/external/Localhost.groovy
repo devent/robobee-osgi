@@ -1,5 +1,7 @@
 package com.anrisoftware.sscontrol.hostname.debian.external
 
+import groovy.transform.ToString
+
 import com.anrisoftware.sscontrol.types.external.DebugLogging
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.Ssh
@@ -11,6 +13,7 @@ import com.anrisoftware.sscontrol.types.external.SshHost
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
+@ToString
 class Localhost implements Ssh {
 
     @Override

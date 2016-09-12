@@ -27,6 +27,11 @@ import java.util.concurrent.ExecutorService;
 public interface HostServiceScript {
 
     /**
+     * Executes the script.
+     */
+    Object run();
+
+    /**
      * Returns the system name, for example {@code "ubuntu"}.
      */
     String getSystemName();
@@ -65,4 +70,9 @@ public interface HostServiceScript {
      * Returns the {@link HostServiceScript} scripts.
      */
     HostServices getScriptsRepository();
+
+    /**
+     * Returns the {@link SshHost} target.
+     */
+    SshHost getTarget();
 }

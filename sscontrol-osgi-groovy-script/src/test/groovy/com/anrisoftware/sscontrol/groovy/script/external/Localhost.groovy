@@ -1,8 +1,7 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
-import com.anrisoftware.sscontrol.types.external.DebugLogging
-import com.anrisoftware.sscontrol.types.external.HostServiceProperties
-import com.anrisoftware.sscontrol.types.external.Ssh
+import groovy.transform.ToString
+
 import com.anrisoftware.sscontrol.types.external.SshHost
 
 /**
@@ -11,34 +10,25 @@ import com.anrisoftware.sscontrol.types.external.SshHost
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class Localhost implements Ssh {
+@ToString
+class Localhost implements SshHost {
 
     @Override
-    DebugLogging getDebugLogging() {
+    String getHost() {
+        'localhost'
     }
 
     @Override
-    List<SshHost> getTargets() {
-        [
-            [
-                getHost: { 'localhost' },
-                getUser: { System.getProperty('user.name') },
-                getPort: { 22 },
-                getKey: {
-                }
-            ] as SshHost
-        ]
+    String getUser() {
+        System.getProperty('user.name')
     }
 
     @Override
-    String getGroup() {
+    Integer getPort() {
+        22
     }
 
     @Override
-    List<SshHost> getHosts() {
-    }
-
-    @Override
-    HostServiceProperties getServiceProperties() {
+    URI getKey() {
     }
 }

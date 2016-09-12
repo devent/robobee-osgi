@@ -63,7 +63,6 @@ import com.google.inject.Injector
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
 class ScriptBaseTest {
 
     @Test
@@ -81,10 +80,19 @@ class ScriptBaseTest {
                     def run() {
                         shell "echo 'test shell'" call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
             [
                 name: 'shell env x=y',
@@ -100,10 +108,19 @@ class ScriptBaseTest {
                         shell "echo \"test shell \$STRING\"" with { //
                             env "STRING=hello" } call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
             [
                 name: 'shell env single quote',
@@ -119,10 +136,19 @@ class ScriptBaseTest {
                         shell "echo \"test shell \$STRING\"" with { //
                             env "STRING='hello'" } call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
             [
                 name: 'shell env var expansion',
@@ -138,10 +164,19 @@ class ScriptBaseTest {
                         shell "echo \"test shell \$STRING\"" with { //
                             env "STRING=\"hello \$HOSTNAME\"" } call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
             [
                 name: 'shell env args expansion',
@@ -158,10 +193,19 @@ class ScriptBaseTest {
                             env name: "STRING", value: "hello world"
                         } call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
             [
                 name: 'shell env args no expansion',
@@ -178,21 +222,37 @@ class ScriptBaseTest {
                             env name: "STRING", value: "hello \$HOSTNAME", literally: false
                         } call()
                     }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
                 },
-                expected: [
-                    :
-                ]
+                expected: {
+                }
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
-            ScriptBase script = test.input
-            script.ssh = localhost
-            script.shell = shell
-            script.threads = threads
+            def script = createScript(test)
             script.run()
-            Map expected = test.expected
+            Closure expected = test.expected
+            expected()
         }
+    }
+
+    @CompileStatic
+    ScriptBase createScript(Map test) {
+        ScriptBase script = test.input as ScriptBase
+        script.target = localhost
+        script.shell = shell
+        script.threads = threads
+        return script
     }
 
     @Inject
