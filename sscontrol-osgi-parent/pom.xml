@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.anrisoftware.globalpom</groupId>
         <artifactId>globalpom-groovy-osgi</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.2</version>
         <relativePath />
     </parent>
 
@@ -22,9 +22,9 @@
         <project.custom.year>${project.inceptionYear}</project.custom.year>
         <project.custom.source.source>1.7</project.custom.source.source>
         <project.custom.source.target>1.7</project.custom.source.target>
-        <project.custom.bundles.log.version>2.1-SNAPSHOT</project.custom.bundles.log.version>
-        <project.custom.bundles.resources.version>2.1-SNAPSHOT</project.custom.bundles.resources.version>
-        <project.custom.bundles.globalpomutils.version>3.1-SNAPSHOT</project.custom.bundles.globalpomutils.version>
+        <project.custom.bundles.log.version>2.1</project.custom.bundles.log.version>
+        <project.custom.bundles.resources.version>2.1</project.custom.bundles.resources.version>
+        <project.custom.bundles.globalpomutils.version>3.1</project.custom.bundles.globalpomutils.version>
         <org.osgi.service.http.port>8080</org.osgi.service.http.port>
         <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
     </properties>
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
                 <artifactId>globalpom-groovytestutils</artifactId>
-                <version>2.1-SNAPSHOT</version>
+                <version>2.1</version>
             </dependency>
             <dependency>
                 <groupId>com.anrisoftware.globalpom</groupId>
