@@ -18,7 +18,7 @@ final class TargetsImplLogger extends AbstractLogger {
 
     enum _ {
 
-        addHosts("Add hosts {} to {}");
+        addHosts("Add hosts '{}':={} to {}");
 
         private String name;
 
@@ -39,7 +39,7 @@ final class TargetsImplLogger extends AbstractLogger {
         super(TargetsImpl.class);
     }
 
-    public void addHosts(TargetsImpl targets, Ssh ssh) {
-        debug(addHosts, ssh, targets);
+    public void addHosts(TargetsImpl targets, Ssh ssh, String group) {
+        debug(addHosts, group, ssh, targets);
     }
 }

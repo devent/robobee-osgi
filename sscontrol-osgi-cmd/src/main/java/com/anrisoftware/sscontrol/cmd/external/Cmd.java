@@ -40,6 +40,8 @@ public interface Cmd {
 
     static final String ENV_ARGS = "env";
 
+    static final String SUDO_ENV_ARGS = "sudoEnv";
+
     static final String CHDIR_ARGS = "chdir";
 
     static final String PRIVILEGED_ARGS = "privileged";

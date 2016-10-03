@@ -1,31 +1,11 @@
-/*
- * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.anrisoftware.sscontrol.hostname.debian.external
+package com.anrisoftware.sscontrol.unix.internal.utils
 
-import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.unix.internal.utils.UnixTestUtil.*
-import groovy.transform.CompileDynamic
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.durationformat.DurationFormatModule
@@ -46,17 +26,8 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
-import com.anrisoftware.sscontrol.cmd.external.Cmd
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdImpl
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
-import com.anrisoftware.sscontrol.cmd.internal.shell.ShellModule
-import com.anrisoftware.sscontrol.hostname.external.Hostname
-import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.profile.internal.ProfileModule
 import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
@@ -69,79 +40,23 @@ import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
-import com.google.inject.assistedinject.FactoryModuleBuilder
 
 /**
- * 
+ * Extend this class to test service scripts.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
-class Hostname_Debian_8_Test {
-
-    @Inject
-    HostServicesImplFactory servicesFactory
-
-    @Inject
-    HostnameImplFactory hostnameFactory
-
-    @Inject
-    Hostname_Debian_8_Factory hostnameDebianFactory
-
-    @Test
-    void "hostname script"() {
-        def testCases = [
-            [
-                input: """
-service "hostname" with {
-    // Sets the hostname.
-    set fqdn: "blog.muellerpublic.de"
-}
-""",
-                expected: { HostServices services ->
-                    assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
-                    assert hostname.hostname == 'blog.muellerpublic.de'
-                },
-            ],
-        ]
-        testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
-            def dir = folder.newFolder()
-            def services = servicesFactory.create()
-            services.putAvailableService 'hostname', hostnameFactory
-            services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
-            services.addService 'ssh', localhost
-            Eval.me 'service', services, test.input as String
-            services.getServices().each { String name ->
-                List<HostService> service = services.getServices(name)
-                service.eachWithIndex { HostService s, int i ->
-                    List<SshHost> targets = s.targets == null ? services.targets.getHosts('all') : s.targets
-                    targets.each { SshHost host ->
-                        log.info '{}. {} {} {}', i, name, s, host
-                        HostServiceScript script = services.getAvailableScriptService('hostname/debian/8').create(services, s, host, threads)
-                        script = setupScript script, dir: dir
-                        script.run()
-                    }
-                }
-            }
-            Closure expected = test.expected
-            expected services
-        }
-    }
-
-    @CompileDynamic
-    HostServiceScript setupScript(Map args, HostServiceScript script) {
-        script.chdir = args.dir
-        return script
-    }
+abstract class ScriptTestBase {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
     Injector injector
+
+    @Inject
+    HostServicesImplFactory servicesFactory
 
     @Inject
     ThreadsTestPropertiesProvider threadsProperties
@@ -152,22 +67,56 @@ service "hostname" with {
     Threads threads
 
     @Inject
-    CmdRunCaller cmdRunCaller
-
-    @Inject
     Localhost localhost
 
-    @Before
-    void setupTest() {
-        toStringStyle
+    void doTest(Map test, int k) {
+        log.info '{}. case: {}', k, test
+        File dir = folder.newFolder()
+        def services = servicesFactory.create()
+        putServices services
+        services.addService 'ssh', localhost
+        Eval.me 'service', services, test.input as String
+        def all = services.targets.getHosts('default')
+        createDummyCommands dir
+        services.getServices().each { String name ->
+            List<HostService> service = services.getServices(name)
+            service.eachWithIndex { HostService s, int i ->
+                if (s.name == serviceName) {
+                    List<SshHost> targets = s.targets.size() == 0 ? all : s.targets
+                    targets.each { SshHost host ->
+                        log.info '{}. {} {} {}', i, name, s, host
+                        HostServiceScript script = services.getAvailableScriptService('hostname/debian/8').create(services, s, host, threads)
+                        script = setupScript script, dir: dir
+                        script.run()
+                    }
+                }
+            }
+        }
+        Closure expected = test.expected
+        expected services: services, dir: dir
+    }
+
+    abstract String getServiceName()
+
+    abstract void createDummyCommands(File dir)
+
+    abstract void putServices(HostServices services)
+
+    abstract List getAdditionalModules()
+
+    HostServiceScript setupScript(Map args, def script) {
+        def chdir = args.dir as File
+        script.chdir = chdir
+        script.sudoEnv.PATH = chdir
+        script.env.PATH = chdir
+        return script
+    }
+
+    Injector createInjector() {
         this.injector = Guice.createInjector(
-                new HostnameModule(),
-                new HostServicesModule(),
                 new TargetsModule(),
                 new ProfileModule(),
                 new PropertiesUtilsModule(),
-                new ShellModule(),
-                new CmdModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),
                 new PipeOutputsModule(),
@@ -186,16 +135,13 @@ service "hostname" with {
 
                     @Override
                     protected void configure() {
-                        bind Cmd to CmdImpl
                         bind TargetsService to TargetsImplFactory
                         bind(HostPropertiesService).to(HostServicePropertiesImplFactory)
-                        install(new FactoryModuleBuilder().implement(HostServiceScript.class, Hostname_Debian_8.class).build(Hostname_Debian_8_Factory.class))
                     }
                 })
-        injector.injectMembers(this)
-        this.threads = createThreads()
+        this.injector = injector.createChildInjector(additionalModules)
+        injector
     }
-
 
     Threads createThreads() {
         PropertiesThreads threads = threadsFactory.create();

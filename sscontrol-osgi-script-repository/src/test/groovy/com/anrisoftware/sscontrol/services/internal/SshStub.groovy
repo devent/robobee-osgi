@@ -77,6 +77,11 @@ class SshStub implements Ssh {
     }
 
     @Override
+    String getName() {
+        'ssh'
+    }
+
+    @Override
     List<SshHost> getHosts() {
         hosts
     }

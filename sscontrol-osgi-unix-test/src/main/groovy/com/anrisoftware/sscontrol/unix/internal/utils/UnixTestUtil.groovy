@@ -28,6 +28,16 @@ class UnixTestUtil {
         return file.absolutePath
     }
 
+    static void createBashCommand(File dir) {
+        def bash = new File("/bin/bash")
+        def bashDest = new File(dir, "bash")
+        def out = new FileOutputStream(bashDest)
+        if (bash.isFile()) {
+            IOUtils.copy new FileInputStream(bash), out
+        }
+        bashDest.setExecutable true
+    }
+
     static String fileToString(File file) {
         String str = FileUtils.readFileToString file
         str.replaceAll(/junit\d+/, 'junit')

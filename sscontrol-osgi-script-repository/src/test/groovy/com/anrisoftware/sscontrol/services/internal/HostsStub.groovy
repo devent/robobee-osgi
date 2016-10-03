@@ -80,6 +80,11 @@ class HostsStub implements HostService {
     }
 
     @Override
+    String getName() {
+        'host'
+    }
+
+    @Override
     List<SshHost> getTargets() {
         targets
     }

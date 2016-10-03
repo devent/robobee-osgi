@@ -15,12 +15,12 @@
  */
 package com.anrisoftware.sscontrol.services.internal;
 
-import static java.util.Collections.synchronizedList;
+import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,14 +53,14 @@ public class TargetsImpl implements Targets {
 
     }
 
-    private final List<Ssh> hosts;
+    private final Map<String, List<Ssh>> hosts;
 
     @Inject
     private TargetsImplLogger log;
 
     @AssistedInject
     TargetsImpl() {
-        this.hosts = synchronizedList(new ArrayList<Ssh>());
+        this.hosts = synchronizedMap(new HashMap<String, List<Ssh>>());
     }
 
     public List<SshHost> call(String name) {
@@ -75,7 +75,7 @@ public class TargetsImpl implements Targets {
 
     @Override
     public List<SshHost> getHosts(String name) {
-        List<Ssh> targets = collectHosts(name);
+        List<Ssh> targets = hosts.get(name);
         List<SshHost> result = new ArrayList<SshHost>();
         for (Ssh ssh : targets) {
             result.addAll(ssh.getHosts());
@@ -85,19 +85,30 @@ public class TargetsImpl implements Targets {
 
     @Override
     public Set<String> getGroups() {
-        return collectGroups();
+        return hosts.keySet();
     }
 
     @Override
     public void addTarget(Ssh ssh) {
-        hosts.add(ssh);
-        log.addHosts(this, ssh);
+        String group = ssh.getGroup();
+        if (isBlank(group)) {
+            group = "default";
+        }
+        List<Ssh> list = hosts.get(group);
+        if (list == null) {
+            list = new ArrayList<Ssh>();
+            hosts.put(group, list);
+        }
+        list.add(ssh);
+        log.addHosts(this, ssh, group);
     }
 
     @Override
     public void removeTarget(String name) {
-        List<Ssh> services = collectHosts(name);
-        hosts.removeAll(services);
+        if (isBlank(name)) {
+            name = "default";
+        }
+        hosts.remove(name);
     }
 
     @Override
@@ -109,25 +120,6 @@ public class TargetsImpl implements Targets {
     private Map<String, Object> parseArgs(Map<String, Object> args) {
         Map<String, Object> result = new HashMap<String, Object>();
         return unmodifiableMap(result);
-    }
-
-    private List<Ssh> collectHosts(String name) {
-        List<Ssh> result = new ArrayList<Ssh>(hosts.size());
-        for (int i = 0; i < hosts.size(); i++) {
-            Ssh ssh = hosts.get(i);
-            if (name.equals(ssh.getGroup())) {
-                result.add(ssh);
-            }
-        }
-        return result;
-    }
-
-    private Set<String> collectGroups() {
-        Set<String> result = new HashSet<String>();
-        for (Ssh ssh : hosts) {
-            result.add(ssh.getGroup());
-        }
-        return result;
     }
 
 }

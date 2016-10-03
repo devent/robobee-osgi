@@ -39,6 +39,8 @@ import com.google.inject.Guice;
 @Service(HostnameService.class)
 public class HostnameServiceImpl implements HostnameService {
 
+    static final String HOSTNAME_NAME = "hostname";
+
     @Inject
     private HostnameImplFactory hostnameFactory;
 

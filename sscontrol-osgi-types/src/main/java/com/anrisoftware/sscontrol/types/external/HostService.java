@@ -25,6 +25,8 @@ import java.util.List;
  */
 public interface HostService {
 
+    String getName();
+
     List<SshHost> getTargets();
 
     HostServiceProperties getServiceProperties();

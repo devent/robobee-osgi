@@ -22,6 +22,46 @@
             <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpom-groovytestutils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-templates</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-core</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-exec</artifactId>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- own modules -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-services-repository</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-profile</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
 
     </dependencies>
 

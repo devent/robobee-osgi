@@ -4,6 +4,7 @@ import static com.anrisoftware.sscontrol.cmd.external.Cmd.ENV_ARGS;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_PORT;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_USER;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SUDO_ENV_ARGS;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class ShellImpl implements Shell {
 
     private final Map<String, String> env;
 
+    private final Map<String, String> sudoEnv;
+
     @Inject
     private Cmd cmd;
 
@@ -53,13 +56,15 @@ public class ShellImpl implements Shell {
         this.log = log;
         this.command = command;
         this.ssh = ssh;
-        this.env = new HashMap<String, String>();
+        this.env = new HashMap<String, String>(getEnv("env", args));
+        this.sudoEnv = new HashMap<String, String>(getEnv("sudoEnv", args));
     }
 
     @Override
     public ProcessTask call() throws CommandExecException {
         args.put("log", log);
         args.put(ENV_ARGS, env);
+        args.put(SUDO_ENV_ARGS, sudoEnv);
         setupSsh();
         return cmd.call(args, parent, threads, command);
     }
@@ -82,6 +87,15 @@ public class ShellImpl implements Shell {
         value = String.format("%s%s%s", quote, value, quote);
         env.put(args.get("name").toString(), value);
         return this;
+    }
+
+    private Map<String, String> getEnv(String name, Map<String, Object> args) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> env = (Map<String, String>) args.get(name);
+        if (env == null) {
+            env = new HashMap<String, String>();
+        }
+        return env;
     }
 
     private void setupSsh() {

@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hostname.internal;
 
+import static com.anrisoftware.sscontrol.hostname.internal.HostnameServiceImpl.HOSTNAME_NAME;
 import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
 
 import java.util.ArrayList;
@@ -71,6 +72,11 @@ public class HostnameImpl implements Hostname {
     }
 
     @Override
+    public String getName() {
+        return HOSTNAME_NAME;
+    }
+
+    @Override
     public String getHostname() {
         return hostname;
     }
@@ -91,8 +97,9 @@ public class HostnameImpl implements Hostname {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("hostname", hostname)
-                .append("hosts", targets).toString();
+        return new ToStringBuilder(this).append("name", getName())
+                .append("hostname", hostname).append("hosts", targets)
+                .toString();
     }
 
     @SuppressWarnings("unchecked")

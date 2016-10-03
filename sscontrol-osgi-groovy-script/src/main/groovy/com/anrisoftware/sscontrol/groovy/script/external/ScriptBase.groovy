@@ -15,6 +15,7 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
+import static org.apache.commons.lang3.Validate.*
 import groovy.util.logging.Slf4j
 
 import java.util.concurrent.ExecutorService
@@ -82,7 +83,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     File chdir
 
-    Map env
+    Map env = [:]
+
+    Map sudoEnv = [:]
 
     @Override
     public <T extends ExecutorService> T getThreads() {
@@ -101,7 +104,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
 
     @Override
     HostServiceProperties getProperties() {
-        service.serviceProperties
+        def p = service.serviceProperties
+        notNull p, "serviceProperties=null for $service"
+        return p
     }
 
     @Override
@@ -140,6 +145,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         }
         if (!a.containsKey('env')) {
             a.env = env
+        } else {
+            a.env.putAll env
+        }
+        if (!a.containsKey('sudoEnv')) {
+            a.sudoEnv = sudoEnv
+        } else {
+            a.sudoEnv.putAll sudoEnv
         }
         shell.create(a, target, this, threads, log, command)
     }

@@ -48,7 +48,7 @@ class Hostname_Debian_8 extends Hostname_Debian {
 
     @Activate
     void start() {
-        createInjector().injectMembers(this);
+        createInjector().injectMembers(this)
     }
 
     @Override

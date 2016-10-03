@@ -2,6 +2,7 @@ sshCmd(args) ::= <<
 #!/bin/bash
 ssh <sshArgs(args)> <sshDebug(args)> <sshOptions(args, args.sshDefaultOptions)> <sshOptions(args, args.sshOptions)> <args.sshUser>@<args.sshHost> "<args.shell>" \<\< \eof1
 <if(args.privileged)>
+<theEnv(args.sudoEnv)>
 sudo "<args.shell>" \<\< \eof2
 <theCommand(args)>
 eof2
@@ -13,6 +14,10 @@ eof1
 
 theCommand(args) ::= <<
 <if(args.chdir)>cd "<args.chdir>"<endif>
-<args.env.keys:{k | export <k>=<args.env.(k)>};separator="\n">
+<theEnv(args.env)>
 <args.command>
+>>
+
+theEnv(env) ::= <<
+<env.keys:{k | export <k>=<env.(k)>};separator="\n">
 >>
