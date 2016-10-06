@@ -38,12 +38,12 @@
         <module>../sscontrol-osgi-groovy-script</module>
         <module>../sscontrol-osgi-groovy-types</module>
         <module>../sscontrol-osgi-features</module>
-        <module>../sscontrol-osgi-hostname-debian-8</module>
-        <module>../sscontrol-osgi-hostname-linux</module>
+        <module>../sscontrol-osgi-hostname-debian</module>
+        <module>../sscontrol-osgi-hostname-systemd</module>
         <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-parser</module>
         <module>../sscontrol-osgi-profile</module>
-        <module>../sscontrol-osgi-script-repository</module>
+        <module>../sscontrol-osgi-services-repository</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-types</module>
     </modules>
@@ -123,6 +123,13 @@
                 <type>bundle</type>
             </dependency>
 
+            <!-- propertiesutils -->
+            <dependency>
+                <groupId>com.anrisoftware.propertiesutils</groupId>
+                <artifactId>propertiesutils-contextproperties</artifactId>
+                <version>2.1</version>
+                <type>bundle</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
