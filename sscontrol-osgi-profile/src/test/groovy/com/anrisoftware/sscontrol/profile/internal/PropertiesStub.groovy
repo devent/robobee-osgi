@@ -84,4 +84,14 @@ class PropertiesStub implements HostService {
     List<String> getProperty() {
         return propertyStatement(serviceProperties);
     }
+
+    @Override
+    Object getProperty(String propertyName) {
+        return null;
+    }
+
+    @Override
+    String getName() {
+        return null;
+    }
 }

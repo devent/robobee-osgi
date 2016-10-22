@@ -285,8 +285,8 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     public <T> T getTypedProperty(String key, Format format,
             ContextProperties defaults) throws ParseException {
-        T value = typedProperties.getTypedProperty(key, format);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            T value = typedProperties.getTypedProperty(key, format);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -296,8 +296,8 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     public <T> List<T> getTypedListProperty(String key, Format format,
             ContextProperties defaults) throws ParseException {
-        List<T> value = typedProperties.getTypedListProperty(key, format);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key, format);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -308,9 +308,9 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
     public <T> List<T> getTypedListProperty(String key, Format format,
             String separatorChars, ContextProperties defaults)
             throws ParseException {
-        List<T> value = typedProperties.getTypedListProperty(key, format,
-                separatorChars);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key, format,
+                    separatorChars);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -321,8 +321,9 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
     public <T> List<T> getTypedListProperty(String key,
             StringToType<T> stringToType, ContextProperties defaults)
             throws ParseException {
-        List<T> value = typedProperties.getTypedListProperty(key, stringToType);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key,
+                    stringToType);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -333,9 +334,9 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
     public <T> List<T> getTypedListProperty(String key,
             StringToType<T> stringToType, String separatorChars,
             ContextProperties defaults) throws ParseException {
-        List<T> value = typedProperties.getTypedListProperty(key, stringToType,
-                separatorChars);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<T> value = typedProperties.getTypedListProperty(key,
+                    stringToType, separatorChars);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -345,8 +346,8 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     public List<String> getListProperty(String key,
             ContextProperties defaults) {
-        List<String> value = typedProperties.getListProperty(key);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<String> value = typedProperties.getListProperty(key);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
@@ -356,9 +357,9 @@ public class HostServicePropertiesImpl extends GroovyObjectSupport
 
     public List<String> getListProperty(String key, String separatorChars,
             ContextProperties defaults) {
-        List<String> value = typedProperties.getListProperty(key,
-                separatorChars);
-        if (value != null) {
+        if (properties.containsKey(key)) {
+            List<String> value = typedProperties.getListProperty(key,
+                    separatorChars);
             return value;
         } else {
             return typedAllPropertiesFactory.create(defaults)
