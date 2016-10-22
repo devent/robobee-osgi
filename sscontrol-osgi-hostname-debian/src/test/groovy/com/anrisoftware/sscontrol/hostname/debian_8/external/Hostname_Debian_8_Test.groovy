@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian.external.debian_8
+package com.anrisoftware.sscontrol.hostname.debian_8.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.unix.internal.utils.UnixTestUtil.*
@@ -30,8 +30,9 @@ import com.anrisoftware.sscontrol.cmd.internal.core.CmdImpl
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
 import com.anrisoftware.sscontrol.cmd.internal.shell.ShellModule
-import com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian_8
-import com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8;
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Test;
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule

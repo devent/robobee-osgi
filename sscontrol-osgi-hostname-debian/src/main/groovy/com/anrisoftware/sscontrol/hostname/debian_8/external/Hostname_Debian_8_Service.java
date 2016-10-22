@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian.external;
+package com.anrisoftware.sscontrol.hostname.debian_8.external;
 
 import java.util.concurrent.ExecutorService;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian.external;
+package com.anrisoftware.sscontrol.hostname.debian_8.external;
 
 import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
@@ -24,11 +24,11 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class DebianPropertiesProvider extends AbstractContextPropertiesProvider {
+class Hostname_Debian_8_Properties extends AbstractContextPropertiesProvider {
 
-    private static final URL RESOURCE = DebianPropertiesProvider.class.getResource("/hostname_debian_8.properties");
+    private static final URL RESOURCE = Hostname_Debian_8_Properties.class.getResource("/hostname_debian_8.properties");
 
-    DebianPropertiesProvider() {
-        super(DebianPropertiesProvider.class, RESOURCE);
+    Hostname_Debian_8_Properties() {
+        super(Hostname_Debian_8_Properties.class, RESOURCE);
     }
 }

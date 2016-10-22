@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian.external
+package com.anrisoftware.sscontrol.hostname.debian_8.external
 
-import static com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian_8_Service.*
+import static com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Service.*
 import static com.google.inject.Guice.createInjector
 import groovy.util.logging.Slf4j
 
@@ -26,6 +26,7 @@ import org.apache.felix.scr.annotations.Component
 import org.apache.felix.scr.annotations.Service
 
 import com.anrisoftware.propertiesutils.ContextProperties
+import com.anrisoftware.sscontrol.hostname.debian.external.Hostname_Debian
 
 /**
  * Configures the <i>hostname</i> on Debian 8 systems.
@@ -39,7 +40,7 @@ import com.anrisoftware.propertiesutils.ContextProperties
 class Hostname_Debian_8 extends Hostname_Debian {
 
     @Inject
-    DebianPropertiesProvider debianPropertiesProvider
+    Hostname_Debian_8_Properties debianPropertiesProvider
 
     @Override
     ContextProperties getDefaultProperties() {

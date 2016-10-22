@@ -35,7 +35,7 @@ abstract class Hostname_Debian extends Hostname_Systemd {
     }
 
     void installPackages() {
-        log.info 'Installing packages.'
+        log.info "Installing packages {}.", packages
         shell privileged: true, "apt-get -y install ${packages.join(' ')}" with { //
             env "DEBIAN_FRONTEND=noninteractive" } call()
     }
