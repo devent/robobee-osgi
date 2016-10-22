@@ -33,8 +33,8 @@ import com.anrisoftware.sscontrol.database.external.DatabaseDb
 import com.anrisoftware.sscontrol.database.external.DatabaseUser
 import com.anrisoftware.sscontrol.database.internal.DatabaseImpl.DatabaseImplFactory
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.profile.internal.ProfileModule
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.types.external.BindingHostService
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.BindingHost.Host
@@ -236,7 +236,7 @@ database
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),
-                new ProfileModule(),
+                new PropertiesModule(),
                 new PropertiesUtilsModule(),
                 new GroovyTypesModule(), new AbstractModule() {
 

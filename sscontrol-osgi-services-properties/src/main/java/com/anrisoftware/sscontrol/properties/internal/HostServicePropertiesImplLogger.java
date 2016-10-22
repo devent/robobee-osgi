@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.internal;
+package com.anrisoftware.sscontrol.properties.internal;
 
-import static com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImplLogger._.propertyAdded;
+import static com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImplLogger._.propertyAdded;
 
 import javax.inject.Singleton;
 

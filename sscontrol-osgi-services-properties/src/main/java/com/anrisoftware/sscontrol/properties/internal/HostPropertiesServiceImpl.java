@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.internal;
+package com.anrisoftware.sscontrol.properties.internal;
 
 import static com.google.inject.util.Providers.of;
 
@@ -26,7 +26,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.propertiesutils.TypedAllPropertiesFactory;
 import com.anrisoftware.propertiesutils.TypedAllPropertiesService;
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.AbstractModule;
@@ -55,7 +55,7 @@ public class HostPropertiesServiceImpl implements HostPropertiesService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ProfileModule(),
+        Guice.createInjector(new PropertiesModule(),
                 new AbstractModule() {
 
                     @Override

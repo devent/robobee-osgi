@@ -240,9 +240,15 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
+    public String getName() {
+        return "db";
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this).append("targets", targets)
-                .append("bind", binding).append("admin", adminUser)
-                .append("dbs", dbs).append("users", users).toString();
+        return new ToStringBuilder(this).append("name", getName())
+                .append("targets", targets).append("bind", binding)
+                .append("admin", adminUser).append("dbs", dbs)
+                .append("users", users).toString();
     }
 }

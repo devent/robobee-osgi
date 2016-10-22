@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.internal
+package com.anrisoftware.sscontrol.properties.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import groovy.transform.CompileStatic
@@ -25,9 +25,9 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
-import com.anrisoftware.sscontrol.profile.internal.PropertiesStub.PropertiesStubFactory
-import com.anrisoftware.sscontrol.profile.internal.PropertiesStub.PropertiesStubServiceImpl
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesStub.PropertiesStubFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesStub.PropertiesStubServiceImpl
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -43,7 +43,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  */
 @Slf4j
 @CompileStatic
-class ProfileScriptTest {
+class ServicePropertiesScriptTest {
 
     @Inject
     PropertiesStubServiceImpl propertiesService
@@ -88,7 +88,7 @@ dhclient
     void setupTest() {
         toStringStyle
         this.injector = Guice.createInjector(
-                new ProfileModule(),
+                new PropertiesModule(),
                 new TypesModule(),
                 new PropertiesUtilsModule(),
                 new AbstractModule() {

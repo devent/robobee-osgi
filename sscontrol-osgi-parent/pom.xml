@@ -44,7 +44,7 @@
         <module>../sscontrol-osgi-hostname-systemd</module>
         <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-parser</module>
-        <module>../sscontrol-osgi-profile</module>
+        <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-types</module>

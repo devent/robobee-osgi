@@ -27,8 +27,8 @@ import org.junit.Test
 import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.debug.internal.DebugLoggingModule
-import com.anrisoftware.sscontrol.profile.internal.ProfileModule
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
@@ -252,7 +252,7 @@ service "ssh", group: "master" with {
         Guice.createInjector(
                 new SshModule(),
                 new SshPreModule(),
-                new ProfileModule(),
+                new PropertiesModule(),
                 new DebugLoggingModule(),
                 new TypesModule(),
                 new StringsModule(),

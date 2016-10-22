@@ -44,8 +44,8 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
-import com.anrisoftware.sscontrol.profile.internal.ProfileModule
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesImpl.HostServicesImplFactory
 import com.anrisoftware.sscontrol.services.internal.TargetsImpl.TargetsImplFactory
@@ -133,7 +133,7 @@ abstract class ScriptTestBase {
     Injector createInjector() {
         this.injector = Guice.createInjector(
                 new TargetsModule(),
-                new ProfileModule(),
+                new PropertiesModule(),
                 new PropertiesUtilsModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),

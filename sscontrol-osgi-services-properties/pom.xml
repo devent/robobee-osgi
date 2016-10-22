@@ -12,12 +12,12 @@
         <relativePath>../sscontrol-osgi-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-profile</artifactId>
-    <name>sscontrol-osgi - profile</name>
+    <artifactId>sscontrol-osgi-services-properties</artifactId>
+    <name>sscontrol-osgi - services-properties</name>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.profile</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-services-properties</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
@@ -77,27 +77,11 @@
         <dependency>
             <groupId>com.anrisoftware.propertiesutils</groupId>
             <artifactId>propertiesutils-contextproperties</artifactId>
-            <version>2.1</version>
             <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.asm</artifactId>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>

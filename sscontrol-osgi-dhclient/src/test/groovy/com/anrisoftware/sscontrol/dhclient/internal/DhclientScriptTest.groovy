@@ -28,8 +28,8 @@ import com.anrisoftware.globalpom.strings.StringsModule
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
 import com.anrisoftware.sscontrol.dhclient.external.Dhclient
 import com.anrisoftware.sscontrol.dhclient.internal.DhclientImpl.DhclientImplFactory
-import com.anrisoftware.sscontrol.profile.internal.ProfileModule
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
+import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.internal.TypesModule
 import com.google.inject.AbstractModule
@@ -111,7 +111,7 @@ dhclient
                 new DhclientModule(),
                 new TypesModule(),
                 new StringsModule(),
-                new ProfileModule(),
+                new PropertiesModule(),
                 new PropertiesUtilsModule(),
                 new AbstractModule() {
 

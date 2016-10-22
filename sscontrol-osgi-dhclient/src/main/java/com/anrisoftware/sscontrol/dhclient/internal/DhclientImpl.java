@@ -92,9 +92,15 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
     }
 
     @Override
+    public String getName() {
+        return "dhclient";
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString())
-                .append("targets", targets).toString();
+        return new ToStringBuilder(this).append("name", getName())
+                .append("targets", targets).appendSuper(super.toString())
+                .toString();
     }
 
 }

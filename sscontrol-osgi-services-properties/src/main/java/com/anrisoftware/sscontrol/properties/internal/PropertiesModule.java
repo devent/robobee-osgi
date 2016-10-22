@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.profile.internal;
+package com.anrisoftware.sscontrol.properties.internal;
 
-import com.anrisoftware.sscontrol.profile.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
+import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -26,7 +26,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class ProfileModule extends AbstractModule {
+public class PropertiesModule extends AbstractModule {
 
     @Override
     protected void configure() {

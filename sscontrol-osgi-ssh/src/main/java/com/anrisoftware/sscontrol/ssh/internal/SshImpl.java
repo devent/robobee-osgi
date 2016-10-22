@@ -162,9 +162,15 @@ public class SshImpl implements Ssh {
     }
 
     @Override
+    public String getName() {
+        return "ssh";
+    }
+
+    @Override
     public String toString() {
-        return new ToStringBuilder(this).append("group", group)
-                .append("hosts", hosts.size()).toString();
+        return new ToStringBuilder(this).append("name", getName())
+                .append("group", group).append("hosts", hosts.size())
+                .toString();
     }
 
     @SuppressWarnings("unchecked")

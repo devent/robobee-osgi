@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-profile</artifactId>
+            <artifactId>sscontrol-osgi-services-properties</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
