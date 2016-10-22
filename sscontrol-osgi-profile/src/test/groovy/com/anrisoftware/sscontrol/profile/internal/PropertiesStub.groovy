@@ -86,12 +86,7 @@ class PropertiesStub implements HostService {
     }
 
     @Override
-    Object getProperty(String propertyName) {
-        return null;
-    }
-
-    @Override
     String getName() {
-        return null;
+        "stub"
     }
 }
