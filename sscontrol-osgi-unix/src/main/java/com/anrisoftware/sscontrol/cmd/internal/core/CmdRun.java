@@ -75,34 +75,44 @@ public class CmdRun extends AbstractCmdRun {
     @Override
     public ProcessTask call() throws CommandExecException {
         ArgsMap args = argsFactory.create(this.args).getArgs();
-        if (args.containsKey(SSH_KEY)) {
-            setupSshKey(args);
-        }
-        if (args.useSshMaster()) {
-            sshMasterFactory.create(args, parent, threads).call();
-        }
+        setupSshKey(args);
+        setupSshMaster(args);
         String sshshell = getShellName(args);
         String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
         try {
             TemplateResource res = templates.get().getResource(template);
             return runCommand(res, args);
         } finally {
-            cleanupCmd();
+            cleanupCmd(args);
+        }
+    }
+
+    private void setupSshMaster(ArgsMap args) throws CommandExecException {
+        if (args.useSshMaster()) {
+            sshMasterFactory.create(args, parent, threads).call();
         }
     }
 
     private void setupSshKey(ArgsMap args) throws SetupSshKeyException {
+        if (args.containsKey(SSH_KEY)) {
+            setupSshKey0(args);
+        }
+    }
+
+    private void setupSshKey0(ArgsMap args) throws SetupSshKeyException {
         URI key = (URI) args.get(SSH_KEY);
         try {
             File tmp = File.createTempFile("robobee", null);
             IOUtils.copy(key.toURL().openStream(), new FileOutputStream(tmp));
+            tmp.setReadable(false, false);
+            tmp.setReadable(true, true);
             args.put(SSH_KEY, tmp);
         } catch (IOException e) {
             throw new SetupSshKeyException(e, key);
         }
     }
 
-    private void cleanupCmd() {
+    private void cleanupCmd(ArgsMap args) {
         if (args.containsKey(SSH_KEY)) {
             File sshKey = (File) args.get(SSH_KEY);
             sshKey.delete();

@@ -3,7 +3,7 @@ sshCmd(args) ::= <<
 <sshCommand(args)>
 <if(args.privileged)>
 <theEnv(args.sudoEnv)>
-sudo "<args.shell>" \<\< \eof2
+sudo <args.shell> \<\< \eof2
 <theCommand(args)>
 eof2
 <else>

@@ -95,6 +95,10 @@ service "hostname" with {
         services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
     }
 
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
+        return script
+    }
+
     List getAdditionalModules() {
         [
             new HostnameModule(),

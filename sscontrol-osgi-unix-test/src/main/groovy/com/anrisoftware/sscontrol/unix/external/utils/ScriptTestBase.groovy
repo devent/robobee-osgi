@@ -123,7 +123,7 @@ abstract class ScriptTestBase {
         services.addService 'ssh', SshFactory.localhost(injector)
     }
 
-    HostServiceScript setupScript(Map args, def script) {
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
         def chdir = args.dir as File
         script.chdir = chdir
         script.sudoEnv.PATH = chdir

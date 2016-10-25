@@ -56,7 +56,7 @@ class SshFactory implements Ssh {
                 getHost: { 'robobee' },
                 getUser: { 'robobee' },
                 getPort: { 22 },
-                getKey: { UnixTestUtil.robobeeKey }
+                getKey: { UnixTestUtil.robobeeKey.toURI() }
             ] as SshHost
         ]
         return ssh

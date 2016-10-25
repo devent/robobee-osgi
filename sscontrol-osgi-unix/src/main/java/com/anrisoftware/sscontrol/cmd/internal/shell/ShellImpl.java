@@ -18,8 +18,10 @@
  */
 package com.anrisoftware.sscontrol.cmd.internal.shell;
 
+
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.ENV_ARGS;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_HOST;
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_KEY;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_PORT;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_USER;
 import static com.anrisoftware.sscontrol.cmd.external.Cmd.SUDO_ENV_ARGS;
@@ -120,5 +122,6 @@ public class ShellImpl implements Shell {
         args.put(SSH_USER, ssh.getUser());
         args.put(SSH_HOST, ssh.getHost());
         args.put(SSH_PORT, ssh.getPort());
+        args.put(SSH_KEY, ssh.getKey());
     }
 }

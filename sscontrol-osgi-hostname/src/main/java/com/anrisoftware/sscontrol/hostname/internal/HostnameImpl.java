@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.hostname.internal;
 
 import static com.anrisoftware.sscontrol.hostname.internal.HostnameServiceImpl.HOSTNAME_NAME;
-import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ import com.anrisoftware.sscontrol.hostname.external.HostnameService;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -87,7 +88,13 @@ public class HostnameImpl implements Hostname {
     }
 
     public List<String> getProperty() {
-        return propertyStatement(serviceProperties);
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                serviceProperties.addProperty(property);
+            }
+        });
     }
 
     @Override
