@@ -19,7 +19,7 @@
 package com.anrisoftware.sscontrol.unix.internal.core
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.unix.internal.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.unix.external.utils.UnixTestUtil.*
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject

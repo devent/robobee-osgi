@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-unix-test. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.unix.internal.utils
-
-import groovy.transform.ToString
+package com.anrisoftware.sscontrol.unix.external.utils
 
 import javax.inject.Inject
 
@@ -27,6 +25,7 @@ import com.anrisoftware.sscontrol.types.external.HostPropertiesService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
+import com.google.inject.Injector
 
 /**
  * 
@@ -34,13 +33,41 @@ import com.anrisoftware.sscontrol.types.external.SshHost
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@ToString
-class Localhost implements Ssh {
+class SshFactory implements Ssh {
+
+    static Ssh localhost(Injector injector) {
+        def ssh = injector.getInstance(SshFactory)
+        ssh.hosts = [
+            [
+                getHost: { 'localhost' },
+                getUser: { System.getProperty('user.name') },
+                getPort: { 22 },
+                getKey: {
+                }
+            ] as SshHost
+        ]
+        return ssh
+    }
+
+    static Ssh testServer(Injector injector) {
+        def ssh = injector.getInstance(SshFactory)
+        ssh.hosts = [
+            [
+                getHost: { 'robobee' },
+                getUser: { 'robobee' },
+                getPort: { 22 },
+                getKey: { UnixTestUtil.robobeeKey }
+            ] as SshHost
+        ]
+        return ssh
+    }
+
+    List<SshHost> hosts
 
     def serviceProperties
 
     @Inject
-    Localhost(HostPropertiesService propertiesService) {
+    SshFactory(HostPropertiesService propertiesService) {
         this.serviceProperties = propertiesService.create()
     }
 
@@ -61,17 +88,13 @@ class Localhost implements Ssh {
     String getGroup() {
     }
 
+    void setHosts(List<SshHost> hosts) {
+        this.hosts = hosts
+    }
+
     @Override
     List<SshHost> getHosts() {
-        [
-            [
-                getHost: { 'localhost' },
-                getUser: { System.getProperty('user.name') },
-                getPort: { 22 },
-                getKey: {
-                }
-            ] as SshHost
-        ]
+        hosts
     }
 
     @Override

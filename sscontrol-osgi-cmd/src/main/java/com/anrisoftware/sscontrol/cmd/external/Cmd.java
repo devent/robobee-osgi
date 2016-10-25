@@ -61,6 +61,8 @@ public interface Cmd {
 
     static final String PRIVILEGED_ARGS = "privileged";
 
+    static final String SSH_KEY = "sshKey";
+
     /**
      * Runs the specified command.
      *

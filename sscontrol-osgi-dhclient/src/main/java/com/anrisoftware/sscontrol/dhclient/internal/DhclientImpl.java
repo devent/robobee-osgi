@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.dhclient.internal;
 
-import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,7 @@ import com.anrisoftware.sscontrol.dhclient.internal.DeclareStatementImpl.Declare
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -78,7 +79,13 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
     }
 
     public List<String> getProperty() {
-        return propertyStatement(serviceProperties);
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                serviceProperties.addProperty(property);
+            }
+        });
     }
 
     @Override

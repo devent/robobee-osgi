@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.unix.external.utils.ScriptTestBase
+import com.anrisoftware.sscontrol.unix.external.utils.SshFactory
 import com.google.inject.AbstractModule
 import com.google.inject.assistedinject.FactoryModuleBuilder
 
@@ -47,13 +48,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  */
 @Slf4j
 @CompileStatic
-class Hostname_Debian_8_Test extends ScriptTestBase {
-
-    static final URL sudoOutExpected = Hostname_Debian_8_Test.class.getResource('sudo_out_expected.txt')
-
-    static final URL hostnamectlOutExpected = Hostname_Debian_8_Test.class.getResource('hostnamectl_out_expected.txt')
-
-    static final URL aptgetOutExpected = Hostname_Debian_8_Test.class.getResource('apt-get_out_expected.txt')
+class Hostname_Debian_8_Server_Test extends ScriptTestBase {
 
     @Inject
     HostnameImplFactory hostnameFactory
@@ -76,9 +71,6 @@ service "hostname" with {
 """,
                 expected: { Map args ->
                     File dir = args.dir as File
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(sudoOutExpected)
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(aptgetOutExpected)
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(hostnamectlOutExpected)
                 },
             ],
         ]
@@ -87,17 +79,15 @@ service "hostname" with {
         }
     }
 
+    void putSshService(HostServices services) {
+        services.addService 'ssh', SshFactory.testServer(injector)
+    }
+
     String getServiceName() {
         'hostname'
     }
 
     void createDummyCommands(File dir) {
-        createEchoCommands dir, [
-            'sudo',
-            'apt-get',
-            'hostnamectl'
-        ]
-        createBashCommand dir
     }
 
     void putServices(HostServices services) {

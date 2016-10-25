@@ -18,16 +18,24 @@
  */
 package com.anrisoftware.sscontrol.cmd.internal.core;
 
+import static com.anrisoftware.sscontrol.cmd.external.Cmd.SSH_KEY;
 import static java.lang.String.format;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.apache.commons.io.IOUtils;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
+import com.anrisoftware.sscontrol.cmd.external.core.SetupSshKeyException;
 import com.anrisoftware.sscontrol.cmd.internal.core.CmdArgs.CmdArgsFactory;
 import com.anrisoftware.sscontrol.cmd.internal.core.SshMaster.SshMasterFactory;
 import com.google.inject.assistedinject.Assisted;
@@ -67,13 +75,38 @@ public class CmdRun extends AbstractCmdRun {
     @Override
     public ProcessTask call() throws CommandExecException {
         ArgsMap args = argsFactory.create(this.args).getArgs();
+        if (args.containsKey(SSH_KEY)) {
+            setupSshKey(args);
+        }
         if (args.useSshMaster()) {
             sshMasterFactory.create(args, parent, threads).call();
         }
         String sshshell = getShellName(args);
         String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
-        TemplateResource res = templates.get().getResource(template);
-        return runCommand(res, args);
+        try {
+            TemplateResource res = templates.get().getResource(template);
+            return runCommand(res, args);
+        } finally {
+            cleanupCmd();
+        }
+    }
+
+    private void setupSshKey(ArgsMap args) throws SetupSshKeyException {
+        URI key = (URI) args.get(SSH_KEY);
+        try {
+            File tmp = File.createTempFile("robobee", null);
+            IOUtils.copy(key.toURL().openStream(), new FileOutputStream(tmp));
+            args.put(SSH_KEY, tmp);
+        } catch (IOException e) {
+            throw new SetupSshKeyException(e, key);
+        }
+    }
+
+    private void cleanupCmd() {
+        if (args.containsKey(SSH_KEY)) {
+            File sshKey = (File) args.get(SSH_KEY);
+            sshKey.delete();
+        }
     }
 
     private static final String COMMAND_NAME_FORMAT = "%s%s";

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.ssh.internal;
 
-import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.Ssh;
 import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -82,7 +83,13 @@ public class SshImpl implements Ssh {
     }
 
     public List<String> getProperty() {
-        return propertyStatement(serviceProperties);
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                serviceProperties.addProperty(property);
+            }
+        });
     }
 
     public void group(String group) {
@@ -125,15 +132,14 @@ public class SshImpl implements Ssh {
         log.hostAdded(this, sshHost);
     }
 
-    @SuppressWarnings("serial")
     public List<String> getHost() {
-        return new ArrayList<String>() {
+        return stringListStatement(new ListProperty() {
+
             @Override
-            public boolean add(String host) {
-                host(host);
-                return true;
+            public void add(String property) {
+                host(property);
             }
-        };
+        });
     }
 
     @Override

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-unix-test. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.unix.internal.utils
+package com.anrisoftware.sscontrol.unix.external.utils
 
 import groovy.transform.CompileStatic
 
@@ -66,4 +66,6 @@ class UnixTestUtil {
     }
 
     static final URL echoCommand = UnixTestUtil.class.getResource('echo_command.txt')
+
+    static final URL robobeeKey = UnixTestUtil.class.getResource('robobee')
 }

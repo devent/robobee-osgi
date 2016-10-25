@@ -9,3 +9,7 @@ sshArgs(args) ::= <%
 sshOptions(args, options) ::= <%
 <first(options):{it|-o }><options;separator=" -o ">
 %>
+
+sshKeyOption(args) ::= <%
+-i <args.sshKey>
+%>

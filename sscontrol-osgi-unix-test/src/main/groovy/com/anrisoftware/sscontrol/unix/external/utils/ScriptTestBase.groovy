@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-unix-test. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.unix.internal.utils
+package com.anrisoftware.sscontrol.unix.external.utils
 
-import static com.anrisoftware.sscontrol.unix.internal.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.unix.external.utils.UnixTestUtil.*
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
@@ -84,15 +84,12 @@ abstract class ScriptTestBase {
 
     Threads threads
 
-    @Inject
-    Localhost localhost
-
     void doTest(Map test, int k) {
         log.info '{}. case: {}', k, test
         File dir = folder.newFolder()
         def services = servicesFactory.create()
         putServices services
-        services.addService 'ssh', localhost
+        putSshService services
         Eval.me 'service', services, test.input as String
         def all = services.targets.getHosts('default')
         createDummyCommands dir
@@ -121,6 +118,10 @@ abstract class ScriptTestBase {
     abstract void putServices(HostServices services)
 
     abstract List getAdditionalModules()
+
+    void putSshService(HostServices services) {
+        services.addService 'ssh', SshFactory.localhost(injector)
+    }
 
     HostServiceScript setupScript(Map args, def script) {
         def chdir = args.dir as File

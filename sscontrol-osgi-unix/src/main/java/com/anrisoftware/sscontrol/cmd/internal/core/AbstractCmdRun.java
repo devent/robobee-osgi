@@ -37,6 +37,12 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.cmd.external.core.ControlPathCreateDirErrorException;
 
+/**
+ * 
+ *
+ * @author Erwin Müller <erwin.mueller@deventm.de>
+ * @version 1.0
+ */
 public abstract class AbstractCmdRun {
 
     protected final Map<String, Object> args;

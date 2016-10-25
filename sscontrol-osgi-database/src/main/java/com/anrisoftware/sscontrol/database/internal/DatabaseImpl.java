@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.database.internal;
 
-import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement;
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 import static org.apache.commons.lang3.Validate.notNull;
 import static org.codehaus.groovy.runtime.InvokerHelper.invokeMethod;
 
@@ -46,6 +46,7 @@ import com.anrisoftware.sscontrol.types.external.DebugLogging;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
+import com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.ListProperty;
 import com.anrisoftware.sscontrol.types.external.UserPassword;
 import com.anrisoftware.sscontrol.types.external.UserPasswordService;
 import com.google.inject.assistedinject.Assisted;
@@ -186,7 +187,13 @@ public class DatabaseImpl implements Database {
     }
 
     public List<String> getProperty() {
-        return propertyStatement(serviceProperties);
+        return stringListStatement(new ListProperty() {
+
+            @Override
+            public void add(String property) {
+                serviceProperties.addProperty(property);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

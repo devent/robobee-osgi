@@ -31,5 +31,8 @@ public interface SshHost {
 
     Integer getPort();
 
+    /**
+     * Returns the private SSH key.
+     */
     URI getKey();
 }

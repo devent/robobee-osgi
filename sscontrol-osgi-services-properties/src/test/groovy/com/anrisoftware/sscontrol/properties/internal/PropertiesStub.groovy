@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.properties.internal
 
-import static com.anrisoftware.sscontrol.types.external.HostServicePropertiesUtil.propertyStatement
+import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement
 import groovy.transform.ToString
 
 import javax.inject.Inject
@@ -82,7 +82,7 @@ class PropertiesStub implements HostService {
     }
 
     List<String> getProperty() {
-        return propertyStatement(serviceProperties);
+        return stringListStatement(serviceProperties);
     }
 
     @Override

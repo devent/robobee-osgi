@@ -1,7 +1,18 @@
 sshCmd(args) ::= <<
 #!/bin/bash
-ssh <sshArgs(args)> <sshDebug(args)> <sshOptions(args, args.sshDefaultOptions)> <sshOptions(args, args.sshOptions)> <args.sshUser>@<args.sshHost> "<args.shell>" &> <args.sshControlPath>_master.log \<\< \eof1
+<sshCommand(args)>
 sleep 0
 eof1
 echo "Finished setup master with socket '<args.sshControlPath>'."
 >>
+
+sshCommand(args) ::= <%
+ssh
+<\ ><sshArgs(args)>
+<\ ><sshDebug(args)>
+<\ ><sshOptions(args, args.sshDefaultOptions)>
+<\ ><sshOptions(args, args.sshOptions)>
+<\ ><if(args.sshKey)><sshKeyOption(args)><endif>
+<\ ><args.sshUser>@<args.sshHost>
+<\ >"<args.shell>" &> <args.sshControlPath>_master.log \<\< \eof1
+%>
