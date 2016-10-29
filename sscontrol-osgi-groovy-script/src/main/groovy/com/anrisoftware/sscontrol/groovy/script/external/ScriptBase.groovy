@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-import com.anrisoftware.sscontrol.cmd.external.Shell
-import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.shell.external.Shell
+import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.types.external.HostService
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceScript

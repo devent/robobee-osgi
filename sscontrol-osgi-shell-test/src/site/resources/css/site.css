@@ -1,0 +1,107 @@
+/**
+ * Copyright 2016 Erwin Müller <erwin.mueller@deventm.org>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+h2, h3, h4, h5, h6 {
+    color: #4088b8;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    padding-top: 0px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+}
+
+h2 {
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+    border-bottom-color: #dadada;
+    font-size: 140%;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 120%;
+}
+
+h4 {
+    font-size: 100%;
+}
+
+h5 {
+    font-size: 100%;
+    font-style: italic;
+}
+
+h6 {
+    font-size: 100%;
+    font-style: italic;
+}
+
+p {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 18px;
+    margin-left: 10px;
+}
+
+a {
+    color: #4088b8;
+    font-weight: 500;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+}
+
+a:hover {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+}
+
+a.externalLink[href^="http"] {
+    background-color: transparent;
+    background-image: url("../images/external-link-blue-light05-Shapes4FREE.png");
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: right center;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-size: auto auto;
+    padding-right: 18px;
+}
+
+a.externalLink[href^="https"] {
+    background-color: transparent;
+    background-image: url("../images/external-link-blue-light05-Shapes4FREE.png");
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: right center;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-size: auto auto;
+    padding-right: 18px;
+}
+
+ul, ol, dl {
+    font-size: 100%;
+    margin-top: 2px;
+    margin-right: 0px;
+    margin-bottom: 16px;
+    margin-left: 35px;
+}
+
+div.section > img {
+    margin-bottom: 1em;
+}

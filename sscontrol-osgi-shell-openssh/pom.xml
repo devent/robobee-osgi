@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,16 +10,17 @@
         <relativePath>../sscontrol-osgi-parent</relativePath>
     </parent>
 
-    <artifactId>sscontrol-osgi-hostname</artifactId>
-    <name>sscontrol-osgi - hostname</name>
-    <description>Hostname service.</description>
+    <artifactId>sscontrol-osgi-shell-openssh</artifactId>
+    <name>sscontrol-osgi - OpenSSH Shell</name>
+    <description>Implements the shell command by using the OpenSSH client.</description>
     <packaging>bundle</packaging>
 
     <properties>
-        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-hostname</project.custom.bundle.namespace>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-shell-openssh</project.custom.bundle.namespace>
     </properties>
 
     <dependencies>
+
         <!-- test dependencies -->
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
@@ -30,20 +29,13 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-services-repository</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>bundle</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-services-properties</artifactId>
+            <artifactId>sscontrol-osgi-shell-test</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
             <scope>test</scope>
         </dependency>
 
-        <!-- own bundles dependencies -->
+        <!-- own modules -->
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
             <artifactId>sscontrol-osgi-types</artifactId>
@@ -52,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>com.anrisoftware.sscontrol</groupId>
-            <artifactId>sscontrol-osgi-debug</artifactId>
+            <artifactId>sscontrol-osgi-shell</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
@@ -60,29 +52,27 @@
         <!-- compile dependencies -->
         <dependency>
             <groupId>com.anrisoftware.globalpom</groupId>
-            <artifactId>globalpom-log</artifactId>
-            <type>bundle</type>
-        </dependency>
-        <dependency>
-            <groupId>com.anrisoftware.globalpom</groupId>
             <artifactId>globalpomutils-core</artifactId>
             <type>bundle</type>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-exec</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-templates</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-assistedinject</artifactId>
+            <groupId>com.anrisoftware.resources</groupId>
+            <artifactId>resources-st</artifactId>
+            <type>bundle</type>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
+            <groupId>org.jscience</groupId>
+            <artifactId>jscience</artifactId>
         </dependency>
     </dependencies>
 

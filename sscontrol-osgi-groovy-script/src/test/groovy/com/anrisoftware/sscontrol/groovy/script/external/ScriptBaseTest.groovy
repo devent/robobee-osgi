@@ -48,9 +48,9 @@ import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesM
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.cmd.external.Cmd
 import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdImpl
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
+import com.anrisoftware.sscontrol.cmd.internal.shell.CmdImpl;
+import com.anrisoftware.sscontrol.cmd.internal.shell.CmdModule;
+import com.anrisoftware.sscontrol.cmd.internal.shell.CmdRunCaller;
 import com.anrisoftware.sscontrol.cmd.internal.shell.ShellModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice

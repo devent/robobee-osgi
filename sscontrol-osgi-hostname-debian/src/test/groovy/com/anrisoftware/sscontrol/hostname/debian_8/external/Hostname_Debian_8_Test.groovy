@@ -16,7 +16,7 @@
 package com.anrisoftware.sscontrol.hostname.debian_8.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.anrisoftware.sscontrol.unix.external.utils.UnixTestUtil.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -25,17 +25,17 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import com.anrisoftware.sscontrol.cmd.external.Cmd
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdImpl
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdModule
-import com.anrisoftware.sscontrol.cmd.internal.core.CmdRunCaller
-import com.anrisoftware.sscontrol.cmd.internal.shell.ShellModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
+import com.anrisoftware.sscontrol.shell.external.Cmd
+import com.anrisoftware.sscontrol.shell.external.utils.ScriptTestBase
+import com.anrisoftware.sscontrol.shell.internal.CmdImpl
+import com.anrisoftware.sscontrol.shell.internal.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.CmdRunCaller
+import com.anrisoftware.sscontrol.shell.internal.ShellModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
-import com.anrisoftware.sscontrol.unix.external.utils.ScriptTestBase
 import com.google.inject.AbstractModule
 import com.google.inject.assistedinject.FactoryModuleBuilder
 

@@ -30,7 +30,6 @@
     </properties>
 
     <modules>
-        <module>../sscontrol-osgi-cmd</module>
         <module>../sscontrol-osgi-command-parse</module>
         <module>../sscontrol-osgi-database</module>
         <module>../sscontrol-osgi-debug</module>
@@ -42,14 +41,16 @@
         <module>../sscontrol-osgi-hostname</module>
         <module>../sscontrol-osgi-hostname-debian</module>
         <module>../sscontrol-osgi-hostname-systemd</module>
+        <module>../sscontrol-osgi-hosts</module>
         <module>../sscontrol-osgi-itests-karaf</module>
         <module>../sscontrol-osgi-parser</module>
         <module>../sscontrol-osgi-services-properties</module>
         <module>../sscontrol-osgi-services-repository</module>
+        <module>../sscontrol-osgi-shell</module>
+        <module>../sscontrol-osgi-shell-openssh</module>
+        <module>../sscontrol-osgi-shell-test</module>
         <module>../sscontrol-osgi-ssh</module>
         <module>../sscontrol-osgi-types</module>
-        <module>../sscontrol-osgi-unix</module>
-        <module>../sscontrol-osgi-unix-test</module>
     </modules>
 
     <dependencies>
