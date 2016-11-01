@@ -31,7 +31,6 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.textmatch.match.MatchTextModule
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.replace.external.ReplaceService
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -52,21 +51,18 @@ class ReplaceImplTest {
     void "test replace"() {
         def testCases = [
             [
-                input: """
-// Search and replace the configuration lines.
-replace dest: '/var/www/wordpress/wp-config.php', owner: 'www-data', group: 'www-data' with {
-    line search: /(?m)^define\\('DB_NAME', '.*?'\\);/, replace: "define('DB_NAME', '\$service.database.database');"
-    line search: /(?m)^define\\('DB_USER', '.*?'\\);/, replace: "define('DB_USER', '\$service.database.user');"
-    line search: /(?m)^define\\('DB_PASSWORD', '.*?'\\);/, replace: "define('DB_PASSWORD', '\$service.database.password');"
-}
-""",
-                expected: { ReplaceService replace ->
-                },
+                search: /(?m)^define\('DB_NAME', '.*?'\);/,
+                replace: "define('DB_NAME', 'db');",
+                expected: '''
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'database_name_here');
+''',
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. case: {}', k, test
-            def replace = replaceFactory.create()
+            def replace = replaceFactory.create(test)
             Eval.me 'replace', replace, test.input as String
             Closure expected = test.expected
             expected replace
