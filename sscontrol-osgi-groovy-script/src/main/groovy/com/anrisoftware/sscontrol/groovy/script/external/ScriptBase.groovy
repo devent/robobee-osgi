@@ -140,6 +140,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     Shell shell(Map args, String command) {
         Map a = new HashMap(args)
+        def target = this.target
+        if (a.containsKey('target')) {
+            target = a.target
+        }
         if (!a.containsKey('chdir')) {
             a.chdir = chdir
         }

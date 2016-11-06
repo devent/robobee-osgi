@@ -18,13 +18,14 @@
  */
 package com.anrisoftware.sscontrol.shell.internal;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARGS;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SUDO_ENV_ARGS;
+import static org.apache.commons.lang3.Validate.isTrue;
+import static org.apache.commons.lang3.Validate.notNull;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +34,9 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.shell.external.Cmd;
-import com.anrisoftware.sscontrol.shell.external.Shell;
+import com.anrisoftware.sscontrol.fetch.external.Fetch;
 import com.anrisoftware.sscontrol.shell.external.ShellExecException;
+import com.anrisoftware.sscontrol.shell.internal.ScpRun.ScpRunFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
@@ -46,90 +47,68 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class ShellImpl implements Shell {
+public class FetchImpl implements Fetch {
+
+    private static final String SRC_ARG = "src";
+
+    private static final String DEST_ARG = "dest";
 
     private static final String LOG_ARG = "log";
 
-    private final Threads threads;
-
-    private final Object parent;
-
     private final Map<String, Object> args;
-
-    private final String command;
-
-    private final Object log;
 
     private final SshHost host;
 
-    private final Map<String, String> env;
+    private final Object parent;
 
-    private final Map<String, String> sudoEnv;
+    private final Threads threads;
+
+    private final Object log;
 
     @Inject
-    private Cmd cmd;
+    private ScpRunFactory scpRunFactory;
 
     @Inject
-    ShellImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
+    FetchImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log, @Assisted String command) {
+            @Assisted("log") Object log) {
         this.args = new HashMap<String, Object>(args);
+        this.host = host;
         this.parent = parent;
         this.threads = threads;
         this.log = log;
-        this.command = command;
-        this.host = host;
-        this.env = new HashMap<String, String>(getEnv("env", args));
-        this.sudoEnv = new HashMap<String, String>(getEnv("sudoEnv", args));
         setupArgs();
+        checkArgs(this.args);
     }
 
     @Override
     public ProcessTask call() throws AppException {
         try {
-            return cmd.call(args, parent, threads, command);
+            return scpRunFactory.create(args, parent, threads).call();
         } catch (CommandExecException e) {
-            throw new ShellExecException(e, "ssh");
+            throw new ShellExecException(e, "scp");
         }
+    }
+
+    private void checkArgs(Map<String, Object> args) {
+        isTrue(args.containsKey(SRC_ARG), "%s==null", SRC_ARG);
+        notNull(args.get(SRC_ARG), "%s==null", SRC_ARG);
     }
 
     private void setupArgs() {
         args.put(LOG_ARG, log);
-        args.put(ENV_ARGS, env);
-        args.put(SUDO_ENV_ARGS, sudoEnv);
         args.put(SSH_USER, host.getUser());
         args.put(SSH_HOST, host.getHost());
         args.put(SSH_PORT, host.getPort());
         args.put(SSH_KEY, host.getKey());
-    }
-
-    public Shell env(String string) {
-        int i = string.indexOf('=');
-        String key = string.substring(0, i);
-        String value = string.substring(i + 1);
-        env.put(key, value);
-        return this;
-    }
-
-    public Shell env(Map<String, Object> args) {
-        Boolean literally = (Boolean) args.get("literally");
-        String value = args.get("value").toString();
-        String quote = "\'";
-        if (literally != null && !literally) {
-            quote = "\"";
+        String src = args.get(SRC_ARG).toString();
+        args.put(SRC_ARG, new File(src));
+        if (!args.containsKey(DEST_ARG)) {
+            args.put(DEST_ARG, new File("."));
+        } else {
+            String dest = args.get(DEST_ARG).toString();
+            args.put(DEST_ARG, new File(dest));
         }
-        value = String.format("%s%s%s", quote, value, quote);
-        env.put(args.get("name").toString(), value);
-        return this;
-    }
-
-    private Map<String, String> getEnv(String name, Map<String, Object> args) {
-        @SuppressWarnings("unchecked")
-        Map<String, String> env = (Map<String, String>) args.get(name);
-        if (env == null) {
-            env = new HashMap<String, String>();
-        }
-        return env;
     }
 
 }

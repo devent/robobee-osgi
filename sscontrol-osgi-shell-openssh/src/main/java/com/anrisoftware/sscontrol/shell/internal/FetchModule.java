@@ -18,31 +18,27 @@
  */
 package com.anrisoftware.sscontrol.shell.internal;
 
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
-import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
-import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.shell.external.Cmd;
-import com.anrisoftware.sscontrol.shell.internal.SshRun.SshRunFactory;
+import com.anrisoftware.sscontrol.fetch.external.Fetch;
+import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory;
+import com.anrisoftware.sscontrol.shell.internal.ScpRun.ScpRunFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
- * Wrapper around command call method.
  *
- * @author Erwin Müller <erwin.mueller@deventm.de>
- * @version 1.0
+ *
+ * @author Erwin Müller, erwin.mueller@deventm.de
+ * @since 1.0
  */
-public class CmdRunCaller implements Cmd {
-
-    @Inject
-    private SshRunFactory sshRunFactory;
+public class FetchModule extends AbstractModule {
 
     @Override
-    public ProcessTask call(Map<String, Object> args, Object parent,
-            Threads threads, String command) throws CommandExecException {
-        return sshRunFactory.create(args, parent, threads, command).call();
+    protected void configure() {
+        install(new FactoryModuleBuilder()
+                .implement(Fetch.class, FetchImpl.class)
+                .build(FetchFactory.class));
+        install(new FactoryModuleBuilder().implement(ScpRun.class, ScpRun.class)
+                .build(ScpRunFactory.class));
     }
 
 }

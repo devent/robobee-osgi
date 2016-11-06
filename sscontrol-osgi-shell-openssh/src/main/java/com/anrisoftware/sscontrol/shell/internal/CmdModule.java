@@ -20,7 +20,7 @@ package com.anrisoftware.sscontrol.shell.internal;
 
 import com.anrisoftware.sscontrol.shell.internal.ArgsMap.ArgsMapFactory;
 import com.anrisoftware.sscontrol.shell.internal.CmdArgs.CmdArgsFactory;
-import com.anrisoftware.sscontrol.shell.internal.CmdRun.CmdRunFactory;
+import com.anrisoftware.sscontrol.shell.internal.SshRun.SshRunFactory;
 import com.anrisoftware.sscontrol.shell.internal.SshMaster.SshMasterFactory;
 import com.anrisoftware.sscontrol.shell.internal.SshOptions.SshOptionsFactory;
 import com.google.inject.AbstractModule;
@@ -36,8 +36,8 @@ public class CmdModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(CmdRun.class, CmdRun.class)
-                .build(CmdRunFactory.class));
+        install(new FactoryModuleBuilder().implement(SshRun.class, SshRun.class)
+                .build(SshRunFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(SshMaster.class, SshMaster.class)
                 .build(SshMasterFactory.class));

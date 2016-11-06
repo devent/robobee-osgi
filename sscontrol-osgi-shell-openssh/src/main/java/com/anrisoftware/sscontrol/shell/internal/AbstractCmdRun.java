@@ -38,7 +38,7 @@ import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.shell.external.ControlPathCreateDirErrorException;
 
 /**
- * 
+ * Setups the SSH master socket.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
@@ -52,10 +52,10 @@ public abstract class AbstractCmdRun {
     protected final Threads threads;
 
     @Inject
-    private CmdLogger log;
+    protected ScriptExecFactory scriptEx;
 
     @Inject
-    private ScriptExecFactory scriptEx;
+    protected CmdLogger log;
 
     protected AbstractCmdRun(Map<String, Object> args, Object parent,
             Threads threads) {
@@ -64,8 +64,14 @@ public abstract class AbstractCmdRun {
         this.threads = threads;
     }
 
+    /**
+     * Executes the command.
+     */
     public abstract ProcessTask call() throws CommandExecException;
 
+    /**
+     * Creates the master socket directory.
+     */
     protected void createSocketDir(Map<String, Object> args) {
         if (!args.containsKey(SSH_CONTROL_PATH)) {
             return;

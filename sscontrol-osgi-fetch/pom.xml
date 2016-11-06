@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.anrisoftware.sscontrol</groupId>
+        <artifactId>sscontrol-osgi-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../sscontrol-osgi-parent</relativePath>
+    </parent>
+
+    <artifactId>sscontrol-osgi-fetch</artifactId>
+    <packaging>bundle</packaging>
+    <name>sscontrol-osgi - Fetch</name>
+    <description>Defines the public interfaces for the fetch command.</description>
+
+    <properties>
+        <project.custom.bundle.namespace>com.anrisoftware.sscontrol.sscontrol-osgi-fetch</project.custom.bundle.namespace>
+    </properties>
+
+    <dependencies>
+        <!-- own modules -->
+        <dependency>
+            <groupId>com.anrisoftware.sscontrol</groupId>
+            <artifactId>sscontrol-osgi-types</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- compile dependencies -->
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.anrisoftware.globalpom</groupId>
+            <artifactId>globalpomutils-exec</artifactId>
+            <type>bundle</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+                <configuration>
+                    <scanClasses>true</scanClasses>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-scr-scrdescriptor</id>
+                        <goals>
+                            <goal>scr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

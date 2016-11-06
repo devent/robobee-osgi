@@ -32,7 +32,7 @@ import com.anrisoftware.resources.templates.external.Templates;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * 
+ * Executes the SSH shell to create the master.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0

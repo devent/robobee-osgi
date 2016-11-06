@@ -43,6 +43,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 class SshOptions {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     interface SshOptionsFactory {
 
         SshOptions create(@Assisted Map<String, Object> args,
@@ -105,7 +111,7 @@ class SshOptions {
         options.add(o);
     }
 
-    public void addPathOption(String name, String string) {
+    public void addControlPathOption(String name, String string) {
         if (!args.containsKey(name)) {
             return;
         }

@@ -52,6 +52,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 class CmdArgs {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     interface CmdArgsFactory {
 
         CmdArgs create(Map<String, Object> args);
@@ -143,7 +149,7 @@ class CmdArgs {
                 "ssh_control_persist_option");
         sshOptions.addOption(SSH_CONNECTION_TIMEOUT,
                 "ssh_connection_timeout_option");
-        sshOptions.addPathOption(SSH_CONTROL_PATH, "ssh_control_path_option");
+        sshOptions.addControlPathOption(SSH_CONTROL_PATH, "ssh_control_path_option");
     }
 
     private Object getDefaultDuration(ContextProperties p, String property) {

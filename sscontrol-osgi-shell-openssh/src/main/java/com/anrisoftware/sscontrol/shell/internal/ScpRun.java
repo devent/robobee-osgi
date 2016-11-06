@@ -25,24 +25,41 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.shell.external.Cmd;
-import com.anrisoftware.sscontrol.shell.internal.SshRun.SshRunFactory;
+import com.anrisoftware.resources.templates.external.TemplateResource;
+import com.google.inject.assistedinject.Assisted;
 
 /**
- * Wrapper around command call method.
+ * Executes the scp command.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class CmdRunCaller implements Cmd {
+public class ScpRun extends AbstractSshRun {
 
-    @Inject
-    private SshRunFactory sshRunFactory;
+    public interface ScpRunFactory {
 
-    @Override
-    public ProcessTask call(Map<String, Object> args, Object parent,
-            Threads threads, String command) throws CommandExecException {
-        return sshRunFactory.create(args, parent, threads, command).call();
+        ScpRun create(@Assisted Map<String, Object> args,
+                @Assisted Object parent, @Assisted Threads threads);
+
     }
 
+    @Inject
+    ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,
+            @Assisted Threads threads) {
+        super(args, parent, threads);
+    }
+
+    @Override
+    protected String getCmdTemplate(ArgsMap args) {
+        return "scp";
+    }
+
+    @Override
+    protected ProcessTask runCommand(TemplateResource res,
+            Map<String, Object> args) throws CommandExecException {
+        ProcessTask task;
+        task = scriptEx.create(args, parent, threads, res, "scpCmd").call();
+        log.commandFinished(parent, task, args);
+        return task;
+    }
 }

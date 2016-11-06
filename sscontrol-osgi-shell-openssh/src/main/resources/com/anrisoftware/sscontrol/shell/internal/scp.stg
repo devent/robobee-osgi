@@ -1,0 +1,13 @@
+scpCmd(args) ::= <<
+<scpCommand(args)>
+>>
+
+scpCommand(args) ::= <%
+scp
+<\ ><sshArgs(args)>
+<\ ><sshDebug(args)>
+<\ ><sshOptions(args, args.sshDefaultOptions)>
+<\ ><sshOptions(args, args.sshOptions)>
+<\ ><if(args.sshKey)><sshKeyOption(args)><endif>
+<\ ><args.src> <args.dest>
+%>

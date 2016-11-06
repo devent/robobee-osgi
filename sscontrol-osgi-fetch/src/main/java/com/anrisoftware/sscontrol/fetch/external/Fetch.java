@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.shell.external;
+package com.anrisoftware.sscontrol.fetch.external;
 
 import java.util.Map;
 
@@ -24,28 +24,28 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * Shell command.
+ * Fetch command.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface Shell {
+public interface Fetch {
 
     /**
-     * Factory to create the shell command.
+     * Factory to create the fetch command.
      *
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface ShellFactory {
+    public interface FetchFactory {
 
-        Shell create(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
+        Fetch create(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
                 @Assisted("parent") Object parent, @Assisted Threads threads,
-                @Assisted("log") Object log, @Assisted String command);
+                @Assisted("log") Object log);
     }
 
     /**
-     * Executes the shell.
+     * Executes the fetch command.
      * 
      * @throws AppException
      */
