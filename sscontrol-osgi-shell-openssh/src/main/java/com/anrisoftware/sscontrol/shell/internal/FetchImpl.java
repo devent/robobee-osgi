@@ -49,6 +49,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class FetchImpl implements Fetch {
 
+    private static final String PWD_ARG = "pwd";
+
     private static final String SRC_ARG = "src";
 
     private static final String DEST_ARG = "dest";
@@ -91,8 +93,10 @@ public class FetchImpl implements Fetch {
     }
 
     private void checkArgs(Map<String, Object> args) {
-        isTrue(args.containsKey(SRC_ARG), "%s==null", SRC_ARG);
-        notNull(args.get(SRC_ARG), "%s==null", SRC_ARG);
+        isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
+        notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
+        isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
+        notNull(args.get(PWD_ARG), "%s=null", PWD_ARG);
     }
 
     private void setupArgs() {
@@ -104,7 +108,8 @@ public class FetchImpl implements Fetch {
         String src = args.get(SRC_ARG).toString();
         args.put(SRC_ARG, new File(src));
         if (!args.containsKey(DEST_ARG)) {
-            args.put(DEST_ARG, new File("."));
+            File pwd = (File) args.get(PWD_ARG);
+            args.put(DEST_ARG, pwd);
         } else {
             String dest = args.get(DEST_ARG).toString();
             args.put(DEST_ARG, new File(dest));

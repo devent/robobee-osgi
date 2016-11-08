@@ -60,23 +60,24 @@ import com.google.inject.Injector
  * @version 1.0
  */
 @Slf4j
-class FetchImplTest {
+class ScpRunTest {
 
     @Test
     void "test scp with control master"() {
         def defargs = [:]
         defargs.log = log
-        defargs.timeout = Duration.standardSeconds(5)
+        defargs.src = 'src/file.txt'
+        defargs.timeout = Duration.standardSeconds(30)
+        defargs.env = [PATH: './']
         defargs.sshHost = 'localhost'
         defargs.sshControlMaster = 'auto'
         defargs.sshControlPersistDuration = Duration.standardSeconds(10)
         def testCases = [
             [
-                src: 'one command',
-                dest: null,
-                args: [debugLevel: 2],
-                expected: {
-                }
+                name: 'scp_debug_master',
+                args: [debugLevel: 2, dest: 'dest'],
+                commands: ['scp'],
+                expected: [scp: 'scp_debug_master_out_expected.txt'],
             ],
         ]
         def factory = scpRunFactory
@@ -89,9 +90,14 @@ class FetchImplTest {
         log.info '{}. case: {}', k, test
         Map args = new HashMap(defargs)
         args.putAll test.args
+        args.chdir = folder.newFolder String.format('%03d_%s', k, test.name)
+        createEchoCommands args.chdir, test.commands
         def scp = scpFactory.create args, this, threads
         scp()
-        test.expected()
+        Map testExpected = test.expected
+        test.commands.each { String it ->
+            assertStringContent fileToString(new File(args.chdir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
+        }
     }
 
     static Injector injector

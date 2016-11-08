@@ -13,3 +13,11 @@ sshOptions(args, options) ::= <%
 sshKeyOption(args) ::= <%
 -i <args.sshKey>
 %>
+
+sshChdir(chdir) ::= <<
+<if(chdir)>cd "<chdir>"<endif>
+>>
+
+sshEnv(env) ::= <<
+<env.keys:{k | export <k>=<env.(k)>};separator="\n">
+>>

@@ -1,4 +1,6 @@
 scpCmd(args) ::= <<
+<sshChdir(args.chdir)>
+<sshEnv(args.env)>
 <scpCommand(args)>
 >>
 
@@ -6,8 +8,14 @@ scpCommand(args) ::= <%
 scp
 <\ ><sshArgs(args)>
 <\ ><sshDebug(args)>
+<\ ><scpPort(args)>
 <\ ><sshOptions(args, args.sshDefaultOptions)>
 <\ ><sshOptions(args, args.sshOptions)>
 <\ ><if(args.sshKey)><sshKeyOption(args)><endif>
-<\ ><args.src> <args.dest>
+<\ ><args.sshUser>@<args.sshHost>:
+<args.src> <args.dest>
+%>
+
+scpPort(args) ::= <%
+    
 %>
