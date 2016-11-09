@@ -30,10 +30,10 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFac
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.ScriptTestBase
-import com.anrisoftware.sscontrol.shell.internal.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.CmdModule
-import com.anrisoftware.sscontrol.shell.internal.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ShellModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl;
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule;
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller;
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule

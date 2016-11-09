@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.fetch;
 
+import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
 
 import java.util.Map;
@@ -30,45 +31,43 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.shell.external.Cmd;
+import com.anrisoftware.sscontrol.fetch.external.Fetch;
+import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory;
+import com.anrisoftware.sscontrol.fetch.external.FetchService;
 import com.anrisoftware.sscontrol.shell.external.OpenSshShellService;
-import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
-import com.anrisoftware.sscontrol.shell.external.ShellService;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.assistedinject.Assisted;
 
 /**
- * Creates the shell.
+ * Fetch command service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service({ ShellService.class, OpenSshShellService.class })
-public class ShellServiceImpl implements ShellService, OpenSshShellService {
-
-    @Inject
-    private ShellFactory shellFactory;
+@Service(FetchService.class)
+public class FetchServiceImpl implements FetchService {
 
     @Reference
-    private Cmd cmd;
+    private OpenSshShellService shellService;
+
+    @Inject
+    private FetchFactory fetchFactory;
 
     @Override
-    public Shell create(Map<String, Object> args, @Assisted SshHost ssh,
-            Object parent, Threads threads, Object log, String command) {
-        return shellFactory.create(args, ssh, parent, threads, log, command);
+    public Fetch create(Map<String, Object> args, SshHost ssh, Object parent,
+            Threads threads, Object log) {
+        return fetchFactory.create(args, ssh, parent, threads, log);
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new ShellModule(), new AbstractModule() {
+        createInjector(new FetchModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(Cmd.class).toProvider(of(cmd));
+                bind(ShellFactory.class).toProvider(of(shellService));
             }
         }).injectMembers(this);
     }

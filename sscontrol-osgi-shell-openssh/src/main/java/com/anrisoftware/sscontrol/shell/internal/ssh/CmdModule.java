@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import com.anrisoftware.sscontrol.shell.internal.ArgsMap.ArgsMapFactory;
-import com.anrisoftware.sscontrol.shell.internal.CmdArgs.CmdArgsFactory;
-import com.anrisoftware.sscontrol.shell.internal.SshRun.SshRunFactory;
-import com.anrisoftware.sscontrol.shell.internal.SshMaster.SshMasterFactory;
-import com.anrisoftware.sscontrol.shell.internal.SshOptions.SshOptionsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.ArgsMap.ArgsMapFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshOptions.SshOptionsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshRun.SshRunFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 

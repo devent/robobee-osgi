@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARGS;
@@ -40,8 +40,8 @@ import javax.inject.Inject;
 import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.shell.external.ParsePropertiesErrorException;
-import com.anrisoftware.sscontrol.shell.internal.ArgsMap.ArgsMapFactory;
-import com.anrisoftware.sscontrol.shell.internal.SshOptions.SshOptionsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.ArgsMap.ArgsMapFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshOptions.SshOptionsFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**

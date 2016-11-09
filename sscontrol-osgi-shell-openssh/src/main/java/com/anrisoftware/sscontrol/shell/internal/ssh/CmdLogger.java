@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.internal.CmdLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.CmdLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.CmdLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_trace;
 
 import java.util.Map;
 

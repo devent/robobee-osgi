@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARGS;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;

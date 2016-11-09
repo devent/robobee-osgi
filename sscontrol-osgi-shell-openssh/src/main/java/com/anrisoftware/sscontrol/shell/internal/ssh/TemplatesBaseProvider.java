@@ -16,26 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import java.net.URL;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
+import com.anrisoftware.resources.templates.external.Templates;
+import com.anrisoftware.resources.templates.external.TemplatesFactory;
 
 /**
- * Provides the default command properties.
+ * 
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@SuppressWarnings("serial")
-public class PropertiesProvider extends AbstractContextPropertiesProvider {
+public class TemplatesBaseProvider implements Provider<Templates> {
 
-    private static final URL res = PropertiesProvider.class
-            .getResource("/default_cmd.properties");
+    private final Templates templates;
 
-    PropertiesProvider() {
-        super(PropertiesProvider.class, res);
+    @Inject
+    TemplatesBaseProvider(TemplatesFactory templatesFactory) {
+        this.templates = templatesFactory.create("CmdBaseTemplates");
+    }
+
+    @Override
+    public Templates get() {
+        return templates;
     }
 
 }

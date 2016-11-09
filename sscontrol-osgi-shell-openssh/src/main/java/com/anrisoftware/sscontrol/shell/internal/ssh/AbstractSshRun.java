@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY;
 
@@ -17,8 +17,8 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.shell.external.SetupSshKeyException;
-import com.anrisoftware.sscontrol.shell.internal.CmdArgs.CmdArgsFactory;
-import com.anrisoftware.sscontrol.shell.internal.SshMaster.SshMasterFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
 
 /**
  * Setups the SSH key and executes the command.
@@ -62,19 +62,10 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
     protected abstract String getCmdTemplate(ArgsMap args);
 
     private void setupSshKey(ArgsMap args) throws SetupSshKeyException {
-        if (args.containsKey(SSH_KEY)) {
-            setupSshKey0(args);
-        }
-    }
-
-    private void setupSshMaster(ArgsMap args) throws CommandExecException {
-        if (args.useSshMaster()) {
-            sshMasterFactory.create(args, parent, threads).call();
-        }
-    }
-
-    private void setupSshKey0(ArgsMap args) throws SetupSshKeyException {
         URI key = (URI) args.get(SSH_KEY);
+        if (key == null) {
+            return;
+        }
         try {
             File tmp = File.createTempFile("robobee", null);
             IOUtils.copy(key.toURL().openStream(), new FileOutputStream(tmp));
@@ -86,9 +77,15 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
         }
     }
 
+    private void setupSshMaster(ArgsMap args) throws CommandExecException {
+        if (args.useSshMaster()) {
+            sshMasterFactory.create(args, parent, threads).call();
+        }
+    }
+
     private void cleanupCmd(ArgsMap args) {
-        if (args.containsKey(SSH_KEY)) {
-            File sshKey = (File) args.get(SSH_KEY);
+        File sshKey = (File) args.get(SSH_KEY);
+        if (sshKey != null) {
             sshKey.delete();
         }
     }

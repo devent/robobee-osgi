@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH;
@@ -55,7 +55,7 @@ public abstract class AbstractCmdRun {
     protected ScriptExecFactory scriptEx;
 
     @Inject
-    protected CmdLogger log;
+    private CmdLogger log;
 
     protected AbstractCmdRun(Map<String, Object> args, Object parent,
             Threads threads) {

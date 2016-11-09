@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.fetch;
 
 import java.util.Map;
 
@@ -26,6 +26,8 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
+import com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRun;
+import com.anrisoftware.sscontrol.shell.internal.ssh.ArgsMap;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -42,6 +44,9 @@ public class ScpRun extends AbstractSshRun {
                 @Assisted Object parent, @Assisted Threads threads);
 
     }
+
+    @Inject
+    private ScpRunLogger log;
 
     @Inject
     ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,

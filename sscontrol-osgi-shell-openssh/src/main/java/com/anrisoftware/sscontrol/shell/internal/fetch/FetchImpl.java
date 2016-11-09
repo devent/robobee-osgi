@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.fetch;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY;
@@ -36,7 +36,7 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.fetch.external.Fetch;
 import com.anrisoftware.sscontrol.shell.external.ShellExecException;
-import com.anrisoftware.sscontrol.shell.internal.ScpRun.ScpRunFactory;
+import com.anrisoftware.sscontrol.shell.internal.fetch.ScpRun.ScpRunFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;

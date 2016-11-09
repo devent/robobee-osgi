@@ -16,47 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
-
-import static java.lang.String.format;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
+import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.sscontrol.shell.external.Cmd;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshRun.SshRunFactory;
 
 /**
- * 
+ * Wrapper around command call method.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshRun extends AbstractSshRun {
-
-    public interface SshRunFactory {
-
-        SshRun create(@Assisted Map<String, Object> args,
-                @Assisted Object parent, @Assisted Threads threads,
-                @Assisted String command);
-
-    }
+public class CmdRunCaller implements Cmd {
 
     @Inject
-    SshRun(@Assisted Map<String, Object> args, @Assisted Object parent,
-            @Assisted Threads threads, @Assisted String command) {
-        super(args, parent, threads);
-        this.args.put(COMMAND_KEY, command);
-    }
+    private SshRunFactory sshRunFactory;
 
     @Override
-    protected String getCmdTemplate(ArgsMap args) {
-        String sshshell = getShellName(args);
-        String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
-        return template;
+    public ProcessTask call(Map<String, Object> args, Object parent,
+            Threads threads, String command) throws CommandExecException {
+        return sshRunFactory.create(args, parent, threads, command).call();
     }
-
-    private static final String COMMAND_NAME_FORMAT = "%s%s";
 
 }

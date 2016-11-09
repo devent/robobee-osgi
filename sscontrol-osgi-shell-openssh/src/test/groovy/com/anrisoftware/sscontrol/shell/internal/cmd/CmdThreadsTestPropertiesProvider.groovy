@@ -16,26 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.cmd;
 
-import com.anrisoftware.sscontrol.shell.external.Shell;
-import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import groovy.transform.CompileStatic
+
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider
 
 /**
  *
- *
- * @author Erwin Müller, erwin.mueller@deventm.de
+ * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-public class ShellModule extends AbstractModule {
+@CompileStatic
+class CmdThreadsTestPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    @Override
-    protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(Shell.class, ShellImpl.class)
-                .build(ShellFactory.class));
+    private static final URL RES = CmdThreadsTestPropertiesProvider.class.getResource("cmd_threads_test.properties");
+
+    CmdThreadsTestPropertiesProvider() {
+        super('com.anrisoftware.globalpom.threads.properties.internal', RES);
     }
-
 }

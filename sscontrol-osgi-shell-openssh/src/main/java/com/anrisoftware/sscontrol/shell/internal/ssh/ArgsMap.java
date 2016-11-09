@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -37,9 +37,9 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class ArgsMap implements Map<String, Object> {
+public class ArgsMap implements Map<String, Object> {
 
-    interface ArgsMapFactory {
+    public interface ArgsMapFactory {
 
         ArgsMap create(@Assisted Map<String, Object> args);
 
