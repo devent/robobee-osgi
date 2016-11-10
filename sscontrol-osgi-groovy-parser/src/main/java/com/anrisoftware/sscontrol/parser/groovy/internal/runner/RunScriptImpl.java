@@ -45,9 +45,6 @@ public class RunScriptImpl implements RunScript {
 
     private final HostServices repository;
 
-    @Inject
-    private RunScriptImplLogger log;
-
     @AssistedInject
     RunScriptImpl(@Assisted HostServices repository) {
         this.repository = repository;

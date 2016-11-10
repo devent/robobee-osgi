@@ -15,17 +15,17 @@
  */
 package com.anrisoftware.sscontrol.parser.groovy.internal.runner;
 
-import com.anrisoftware.sscontrol.scripts.internal.ScriptsRepositoryImpl.ScriptsRepositoryImplFactory;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+/**
+ * 
+ * @author devent
+ *
+ */
 public class SscontrolParserModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(
-                RunScriptImpl.class, RunScriptImpl.class)
-                .build(ScriptsRepositoryImplFactory.class));
     }
 
 }
