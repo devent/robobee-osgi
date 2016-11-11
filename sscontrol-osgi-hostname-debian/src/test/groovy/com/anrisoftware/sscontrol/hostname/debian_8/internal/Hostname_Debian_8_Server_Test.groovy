@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.external
+package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -25,11 +25,14 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.ScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.CmdImpl
 import com.anrisoftware.sscontrol.shell.internal.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.CmdRunCaller
@@ -47,13 +50,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  */
 @Slf4j
 @CompileStatic
-class Hostname_Debian_8_Test extends ScriptTestBase {
-
-    static final URL sudoOutExpected = Hostname_Debian_8_Test.class.getResource('sudo_out_expected.txt')
-
-    static final URL hostnamectlOutExpected = Hostname_Debian_8_Test.class.getResource('hostnamectl_out_expected.txt')
-
-    static final URL aptgetOutExpected = Hostname_Debian_8_Test.class.getResource('apt-get_out_expected.txt')
+class Hostname_Debian_8_Server_Test extends ScriptTestBase {
 
     @Inject
     HostnameImplFactory hostnameFactory
@@ -76,9 +73,6 @@ service "hostname" with {
 """,
                 expected: { Map args ->
                     File dir = args.dir as File
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(sudoOutExpected)
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(aptgetOutExpected)
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(hostnamectlOutExpected)
                 },
             ],
         ]
@@ -87,22 +81,24 @@ service "hostname" with {
         }
     }
 
+    void putSshService(HostServices services) {
+        services.addService 'ssh', SshFactory.testServer(injector)
+    }
+
     String getServiceName() {
         'hostname'
     }
 
     void createDummyCommands(File dir) {
-        createEchoCommands dir, [
-            'sudo',
-            'apt-get',
-            'hostnamectl'
-        ]
-        createBashCommand dir
     }
 
     void putServices(HostServices services) {
         services.putAvailableService 'hostname', hostnameFactory
         services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
+    }
+
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
+        return script
     }
 
     List getAdditionalModules() {
