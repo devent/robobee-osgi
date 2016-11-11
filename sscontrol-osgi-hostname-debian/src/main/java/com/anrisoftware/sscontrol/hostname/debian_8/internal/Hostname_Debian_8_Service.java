@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.external;
+package com.anrisoftware.sscontrol.hostname.debian_8.internal;
 
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
 import org.apache.felix.scr.annotations.Activate;
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.anrisoftware.sscontrol.types.external.HostServiceScript;
 import com.anrisoftware.sscontrol.types.external.HostServiceScriptService;
@@ -36,6 +39,8 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
+@Component
+@Service(HostServiceScriptService.class)
 public class Hostname_Debian_8_Service implements HostServiceScriptService {
 
     static final String SYSTEM_VERSION = "8";

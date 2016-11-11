@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.external
+package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -25,6 +25,8 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
+import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule

@@ -80,6 +80,13 @@
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>
         </dependency>
+
+        <!-- For maven-scr-plugin -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

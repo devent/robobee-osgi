@@ -16,9 +16,6 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import groovy.transform.CompileDynamic
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -46,15 +43,19 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
-import com.anrisoftware.sscontrol.cmd.external.Cmd
-import com.anrisoftware.sscontrol.cmd.external.Shell.ShellFactory
-import com.anrisoftware.sscontrol.cmd.internal.shell.CmdImpl;
-import com.anrisoftware.sscontrol.cmd.internal.shell.CmdModule;
-import com.anrisoftware.sscontrol.cmd.internal.shell.CmdRunCaller;
-import com.anrisoftware.sscontrol.cmd.internal.shell.ShellModule
+import com.anrisoftware.sscontrol.shell.external.Cmd
+import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.shell.internal.CmdImpl
+import com.anrisoftware.sscontrol.shell.internal.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.CmdRunCaller
+import com.anrisoftware.sscontrol.shell.internal.ShellModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
+
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * 
