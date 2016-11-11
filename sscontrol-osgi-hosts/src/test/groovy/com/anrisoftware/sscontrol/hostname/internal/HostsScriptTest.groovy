@@ -26,9 +26,9 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.propertiesutils.PropertiesUtilsModule
-import com.anrisoftware.sscontrol.hostname.external.Hostname
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
-import com.anrisoftware.sscontrol.hosts.internal.HostnameModule;
+import com.anrisoftware.sscontrol.hosts.external.Hosts
+import com.anrisoftware.sscontrol.hosts.internal.HostsModule
+import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
 import com.anrisoftware.sscontrol.properties.internal.PropertiesModule
 import com.anrisoftware.sscontrol.properties.internal.HostServicePropertiesImpl.HostServicePropertiesImplFactory
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
@@ -49,27 +49,27 @@ import com.google.inject.Guice
  */
 @Slf4j
 @CompileStatic
-class HostnameScriptTest {
+class HostsScriptTest {
 
     @Inject
     HostServicesImplFactory servicesFactory
 
     @Inject
-    HostnameImplFactory hostnameFactory
+    HostsImplFactory hostnameFactory
 
     @Test
     void "hostname service"() {
         def testCases = [
             [
                 input: """
-service "hostname" with {
-    // Sets the hostname.
-    set fqdn: "blog.muellerpublic.de"
+service "hosts" with {
+    ip "192.168.0.52", host: "srv1.ubuntutest.xx"
+    ip "192.168.0.49", host: "srv1.ubuntutest.com", alias: "srv1"
 }
 """,
                 expected: { HostServices services ->
                     assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
+                    Hosts hostname = services.getServices('hostname')[0] as Hosts
                     assert hostname.hostname == 'blog.muellerpublic.de'
                 },
             ],
@@ -79,7 +79,7 @@ service "hostname", fqdn: "blog.muellerpublic.de"
 """,
                 expected: { HostServices services ->
                     assert services.getServices('hostname').size() == 1
-                    Hostname hostname = services.getServices('hostname')[0] as Hostname
+                    Hosts hostname = services.getServices('hostname')[0] as Hosts
                     assert hostname.hostname == 'blog.muellerpublic.de'
                 },
             ],
@@ -98,7 +98,7 @@ service "hostname", fqdn: "blog.muellerpublic.de"
     void setupTest() {
         toStringStyle
         Guice.createInjector(
-                new HostnameModule(),
+                new HostsModule(),
                 new HostServicesModule(),
                 new TargetsModule(),
                 new PropertiesModule(),

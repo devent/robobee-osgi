@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import com.anrisoftware.sscontrol.hosts.internal.HostnamePreScriptImpl.HostnamePreScriptImplFactory;
+import com.anrisoftware.sscontrol.hosts.internal.HostsPreScriptImpl.HostnamePreScriptImplFactory;
 import com.anrisoftware.sscontrol.types.external.PreHost;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -25,12 +25,12 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostnamePreModule extends AbstractModule {
+public class HostsPreModule extends AbstractModule {
 
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder()
-                .implement(PreHost.class, HostnamePreScriptImpl.class)
+                .implement(PreHost.class, HostsPreScriptImpl.class)
                 .build(HostnamePreScriptImplFactory.class));
     }
 

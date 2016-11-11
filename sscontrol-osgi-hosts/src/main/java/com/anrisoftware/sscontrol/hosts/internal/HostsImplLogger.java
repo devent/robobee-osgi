@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import static com.anrisoftware.sscontrol.hosts.internal.HostnameImplLogger._.hostnameSet;
+import static com.anrisoftware.sscontrol.hosts.internal.HostsImplLogger._.hostnameSet;
 
 import javax.inject.Singleton;
 
@@ -23,13 +23,13 @@ import com.anrisoftware.globalpom.log.AbstractLogger;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 
 /**
- * Logging for {@link HostnameImpl}.
+ * Logging for {@link HostsImpl}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class HostnameImplLogger extends AbstractLogger {
+final class HostsImplLogger extends AbstractLogger {
 
     enum _ {
 
@@ -48,10 +48,10 @@ final class HostnameImplLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link HostnameImpl}.
+     * Sets the context of the logger to {@link HostsImpl}.
      */
-    public HostnameImplLogger() {
-        super(HostnameImpl.class);
+    public HostsImplLogger() {
+        super(HostsImpl.class);
     }
 
     public void hostnameSet(Hosts database, String name) {

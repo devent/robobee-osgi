@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import static com.anrisoftware.sscontrol.hosts.internal.HostnameServiceImpl.HOSTNAME_NAME;
+import static com.anrisoftware.sscontrol.hosts.internal.HostsServiceImpl.HOSTNAME_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
@@ -34,31 +34,35 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
- * Hostname service.
+ * Hosts service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class HostnameImpl implements Hosts {
+public class HostsImpl implements Hosts {
 
-    public interface HostnameImplFactory extends HostsService {
+    public interface HostsImplFactory extends HostsService {
 
     }
 
-    private final HostnameImplLogger log;
+    private final HostsImplLogger log;
 
-    private final List<SshHost> targets;
+    private final List<String> aliases;
 
     private final HostServiceProperties serviceProperties;
+
+    private final ArrayList<SshHost> targets;
+
+    private String address;
 
     private String hostname;
 
     @AssistedInject
-    HostnameImpl(HostnameImplLogger log,
-            HostPropertiesService propertiesService,
+    HostsImpl(HostsImplLogger log, HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
         this.targets = new ArrayList<SshHost>();
+        this.aliases = new ArrayList<String>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }

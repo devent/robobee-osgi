@@ -25,7 +25,7 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
-import com.anrisoftware.sscontrol.hosts.internal.HostnameImpl.HostnameImplFactory;
+import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 
@@ -37,12 +37,12 @@ import com.google.inject.Guice;
  */
 @Component
 @Service(HostsService.class)
-public class HostnameServiceImpl implements HostsService {
+public class HostsServiceImpl implements HostsService {
 
     static final String HOSTNAME_NAME = "hostname";
 
     @Inject
-    private HostnameImplFactory hostnameFactory;
+    private HostsImplFactory hostnameFactory;
 
     @Override
     public Hosts create(Map<String, Object> args) {
@@ -51,7 +51,7 @@ public class HostnameServiceImpl implements HostsService {
 
     @Activate
     protected void start() {
-        Guice.createInjector(new HostnameModule(), new AbstractModule() {
+        Guice.createInjector(new HostsModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
