@@ -12,8 +12,12 @@ scp
 <\ ><sshOptions(args, args.sshDefaultOptions)>
 <\ ><sshOptions(args, args.sshOptions)>
 <\ ><if(args.sshKey)><sshKeyOption(args)><endif>
-<\ ><args.sshUser>@<args.sshHost>:
-<args.src> <args.dest>
+<\ ><if(args.remoteSrc)><scpRemote(args, args.src)><else><args.src><endif>
+<\ ><if(args.remoteDest)><scpRemote(args, args.dest)><else><args.dest><endif>
+%>
+
+scpRemote(args, path) ::= <%
+<args.sshUser>@<args.sshHost>:<path>
 %>
 
 scpPort(args) ::= <%

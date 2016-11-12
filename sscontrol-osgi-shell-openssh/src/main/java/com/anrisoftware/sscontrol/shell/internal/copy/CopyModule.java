@@ -19,8 +19,7 @@
 package com.anrisoftware.sscontrol.shell.internal.copy;
 
 import com.anrisoftware.sscontrol.copy.external.Copy;
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory;
-import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -35,10 +34,7 @@ public class CopyModule extends AbstractModule {
     @Override
     protected void configure() {
         install(new FactoryModuleBuilder().implement(Copy.class, CopyImpl.class)
-                .build(FetchFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(CopyRun.class, CopyRun.class)
-                .build(ScpRunFactory.class));
+                .build(CopyFactory.class));
     }
 
 }

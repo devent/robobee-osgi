@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.copy.external;
 
-import com.anrisoftware.sscontrol.copy.external.Copy.FetchFactory;
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory;
 
 /**
  * Copy command service.
@@ -26,6 +26,6 @@ import com.anrisoftware.sscontrol.copy.external.Copy.FetchFactory;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface CopyService extends FetchFactory {
+public interface CopyService extends CopyFactory {
 
 }

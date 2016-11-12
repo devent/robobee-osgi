@@ -67,7 +67,6 @@ class FetchTest extends PartScriptTestBase {
                 args: [
                     src: "aaa.txt",
                     dest: null,
-                    target: null,
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -80,7 +79,6 @@ class FetchTest extends PartScriptTestBase {
                 args: [
                     src: "aaa.txt",
                     dest: "/tmp",
-                    target: null,
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File

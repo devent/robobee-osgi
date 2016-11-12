@@ -27,8 +27,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.sscontrol.fetch.external.Fetch
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules
@@ -49,38 +48,23 @@ class CopyTest extends PartScriptTestBase {
     static Threads threads
 
     @Inject
-    FetchFactory fetchFactory
+    CopyFactory copyFactory
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        fetch_src: CopyTest.class.getResource('fetch_src_expected.txt'),
-        fetch_src_dest: CopyTest.class.getResource('fetch_src_dest_expected.txt'),
+        copy_src_dest: CopyTest.class.getResource('copy_src_dest_expected.txt'),
     ]
 
     @Test
-    void "fetch cases"() {
+    void "copy cases"() {
         def testCases = [
             [
-                name: "fetch_src",
-                args: [
-                    src: "aaa.txt",
-                    dest: null,
-                    target: null,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
-                },
-            ],
-            [
-                name: "fetch_src_dest",
+                name: "copy_src_dest",
                 args: [
                     src: "aaa.txt",
                     dest: "/tmp",
-                    target: null,
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -98,7 +82,7 @@ class CopyTest extends PartScriptTestBase {
     }
 
     def createCmd(Map test, File tmp, int k) {
-        def fetch = fetchFactory.create test.args, test.host, this, threads, log
+        def fetch = copyFactory.create test.args, test.host, this, threads, log
         createEchoCommands tmp, ['scp']
         return fetch
     }
@@ -112,7 +96,7 @@ class CopyTest extends PartScriptTestBase {
     Module[] getAdditionalModules() {
         [
             new CmdModule(),
-            new FetchModule(),
+            new CopyModule(),
             new ScpModule(),
             new UtilsModules(),
         ] as Module[]

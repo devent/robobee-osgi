@@ -80,7 +80,7 @@ public class CopyImpl implements Copy {
         this.threads = threads;
         this.log = log;
         setupArgs();
-        checkArgs(this.args);
+        checkArgs();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CopyImpl implements Copy {
         }
     }
 
-    private void checkArgs(Map<String, Object> args) {
+    private void checkArgs() {
         isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
         notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
         isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
@@ -102,6 +102,8 @@ public class CopyImpl implements Copy {
     }
 
     private void setupArgs() {
+        args.put("remoteSrc", false);
+        args.put("remoteDest", true);
         args.put(LOG_ARG, log);
         args.put(SSH_USER, host.getUser());
         args.put(SSH_HOST, host.getHost());

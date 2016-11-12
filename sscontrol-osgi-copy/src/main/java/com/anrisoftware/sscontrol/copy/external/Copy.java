@@ -37,7 +37,7 @@ public interface Copy {
      * @author Erwin Müller <erwin.mueller@deventm.de>
      * @version 1.0
      */
-    public interface FetchFactory {
+    public interface CopyFactory {
 
         Copy create(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
                 @Assisted("parent") Object parent, @Assisted Threads threads,

@@ -34,8 +34,9 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory;
 import com.anrisoftware.sscontrol.copy.external.CopyService;
-import com.anrisoftware.sscontrol.shell.external.OpenSshShellService;
-import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
+import com.anrisoftware.sscontrol.shell.external.Scp.ScpFactory;
+import com.anrisoftware.sscontrol.shell.external.ScpService;
+import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
 
@@ -50,7 +51,7 @@ import com.google.inject.AbstractModule;
 public class CopyServiceImpl implements CopyService {
 
     @Reference
-    private OpenSshShellService shellService;
+    private ScpService scpService;
 
     @Inject
     private CopyFactory copyFactory;
@@ -63,11 +64,11 @@ public class CopyServiceImpl implements CopyService {
 
     @Activate
     protected void start() {
-        createInjector(new CopyModule(), new AbstractModule() {
+        createInjector(new FetchModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(ShellFactory.class).toProvider(of(shellService));
+                bind(ScpFactory.class).toProvider(of(scpService));
             }
         }).injectMembers(this);
     }
