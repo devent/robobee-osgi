@@ -23,7 +23,6 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
-import javax.inject.Provider
 
 import org.joda.time.Duration
 import org.junit.Before
@@ -32,28 +31,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatModule
-import com.anrisoftware.globalpom.durationsimpleformat.DurationSimpleFormatModule
-import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLineModule
-import com.anrisoftware.globalpom.exec.internal.core.DefaultProcessModule
-import com.anrisoftware.globalpom.exec.internal.logoutputs.LogOutputsModule
-import com.anrisoftware.globalpom.exec.internal.pipeoutputs.PipeOutputsModule
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsModule
-import com.anrisoftware.globalpom.exec.internal.script.ScriptCommandModule
-import com.anrisoftware.globalpom.exec.internal.scriptprocess.ScriptProcessModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
-import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
-import com.anrisoftware.globalpom.threads.properties.internal.PropertiesThreadsModule
-import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsModule
-import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
-import com.anrisoftware.sscontrol.shell.internal.cmd.CmdThreadsTestPropertiesProvider;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller;
-import com.google.inject.AbstractModule
+import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -167,10 +147,6 @@ chmod +w a.txt
 
     static Threads threads
 
-    static PropertiesThreadsFactory threadsFactory
-
-    static Provider<? extends Properties> threadsProperties
-
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
@@ -187,33 +163,8 @@ chmod +w a.txt
         toStringStyle
         this.injector = Guice.createInjector(
                 new CmdModule(),
-                new RunCommandsModule(),
-                new LogOutputsModule(),
-                new PipeOutputsModule(),
-                new DefaultProcessModule(),
-                new DefaultCommandLineModule(),
-                new ScriptCommandModule(),
-                new ScriptProcessModule(),
-                new STDefaultPropertiesModule(),
-                new STWorkerModule(),
-                new TemplatesDefaultMapsModule(),
-                new TemplatesResourcesModule(),
-                new PropertiesThreadsModule(),
-                new DurationSimpleFormatModule(),
-                new DurationFormatModule(),
-                new AbstractModule() {
-                    protected void configure() {
-                    }
-                })
-        this.threadsProperties = injector.getInstance CmdThreadsTestPropertiesProvider
-        this.threadsFactory = injector.getInstance PropertiesThreadsFactory
-        this.threads = createThreads()
-    }
-
-    static Threads createThreads() {
-        PropertiesThreads threads = threadsFactory.create();
-        threads.setProperties threadsProperties.get()
-        threads.setName("script");
-        threads
+                new UtilsModules(),
+                )
+        this.threads = UtilsModules.getThreads(injector)
     }
 }

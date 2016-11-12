@@ -39,7 +39,7 @@ public interface Fetch {
      */
     public interface FetchFactory {
 
-        Fetch create(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
+        Fetch create(@Assisted Map<String, Object> args, @Assisted SshHost host,
                 @Assisted("parent") Object parent, @Assisted Threads threads,
                 @Assisted("log") Object log);
     }

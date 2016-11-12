@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.fetch;
+package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import com.anrisoftware.sscontrol.fetch.external.Fetch;
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory;
-import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun;
+import com.anrisoftware.sscontrol.shell.external.Scp;
+import com.anrisoftware.sscontrol.shell.external.Scp.ScpFactory;
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -31,13 +30,12 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
-public class FetchModule extends AbstractModule {
+public class ScpModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder()
-                .implement(Fetch.class, FetchImpl.class)
-                .build(FetchFactory.class));
+        install(new FactoryModuleBuilder().implement(Scp.class, ScpImpl.class)
+                .build(ScpFactory.class));
         install(new FactoryModuleBuilder().implement(ScpRun.class, ScpRun.class)
                 .build(ScpRunFactory.class));
     }

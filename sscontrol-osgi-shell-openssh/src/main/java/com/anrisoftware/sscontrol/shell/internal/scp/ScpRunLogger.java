@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.shell.internal.fetch;
+package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.shell.internal.fetch.ScpRunLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.fetch.ScpRunLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.fetch.ScpRunLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_trace;
 
 import java.util.Map;
 

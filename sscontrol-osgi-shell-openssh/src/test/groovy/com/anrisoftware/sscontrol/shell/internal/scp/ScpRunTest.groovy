@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.fetch
+package com.anrisoftware.sscontrol.shell.internal.scp
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -32,25 +32,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-import com.anrisoftware.globalpom.durationformat.DurationFormatModule
-import com.anrisoftware.globalpom.durationsimpleformat.DurationSimpleFormatModule
-import com.anrisoftware.globalpom.exec.internal.command.DefaultCommandLineModule
-import com.anrisoftware.globalpom.exec.internal.core.DefaultProcessModule
-import com.anrisoftware.globalpom.exec.internal.logoutputs.LogOutputsModule
-import com.anrisoftware.globalpom.exec.internal.pipeoutputs.PipeOutputsModule
-import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsModule
-import com.anrisoftware.globalpom.exec.internal.script.ScriptCommandModule
-import com.anrisoftware.globalpom.exec.internal.scriptprocess.ScriptProcessModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
-import com.anrisoftware.globalpom.threads.properties.internal.PropertiesThreadsModule
-import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsModule
-import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
-import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
-import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdThreadsTestPropertiesProvider
-import com.anrisoftware.sscontrol.shell.internal.fetch.ScpRun.ScpRunFactory
+import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules;
+import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
@@ -98,8 +85,14 @@ class ScpRunTest {
         scp()
         Map testExpected = test.expected
         test.commands.each { String it ->
-            assertStringContent fileToString(new File(args.chdir, "${it}.out")), resourceToString(ScpRunTest.class.getResource(testExpected[it] as String))
+            assertStringContent fileToString(toFile(args, it)), resourceToString(ScpRunTest.class.getResource(testExpected[it] as String))
         }
+    }
+
+    File toFile(Map args, String name) {
+        def file = new File(args.chdir, "${name}.out")
+        assert file != null
+        return file
     }
 
     static Injector injector
@@ -126,21 +119,8 @@ class ScpRunTest {
         toStringStyle
         this.injector = Guice.createInjector(
                 new CmdModule(),
-                new FetchModule(),
-                new RunCommandsModule(),
-                new LogOutputsModule(),
-                new PipeOutputsModule(),
-                new DefaultProcessModule(),
-                new DefaultCommandLineModule(),
-                new ScriptCommandModule(),
-                new ScriptProcessModule(),
-                new STDefaultPropertiesModule(),
-                new STWorkerModule(),
-                new TemplatesDefaultMapsModule(),
-                new TemplatesResourcesModule(),
-                new PropertiesThreadsModule(),
-                new DurationSimpleFormatModule(),
-                new DurationFormatModule(),
+                new ScpModule(),
+                new UtilsModules(),
                 new AbstractModule() {
                     protected void configure() {
                     }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.fetch;
+package com.anrisoftware.sscontrol.shell.internal.copy;
 
 import static com.google.inject.Guice.createInjector;
 import static com.google.inject.util.Providers.of;
@@ -31,43 +31,43 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.anrisoftware.sscontrol.fetch.external.Fetch;
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory;
-import com.anrisoftware.sscontrol.fetch.external.FetchService;
-import com.anrisoftware.sscontrol.shell.external.Scp.ScpFactory;
-import com.anrisoftware.sscontrol.shell.external.ScpService;
+import com.anrisoftware.sscontrol.copy.external.Copy;
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory;
+import com.anrisoftware.sscontrol.copy.external.CopyService;
+import com.anrisoftware.sscontrol.shell.external.OpenSshShellService;
+import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;
 
 /**
- * Fetch command service.
+ * Copy command service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
  */
 @Component
-@Service(FetchService.class)
-public class FetchServiceImpl implements FetchService {
+@Service(CopyService.class)
+public class CopyServiceImpl implements CopyService {
 
     @Reference
-    private ScpService scpService;
+    private OpenSshShellService shellService;
 
     @Inject
-    private FetchFactory fetchFactory;
+    private CopyFactory copyFactory;
 
     @Override
-    public Fetch create(Map<String, Object> args, SshHost ssh, Object parent,
+    public Copy create(Map<String, Object> args, SshHost ssh, Object parent,
             Threads threads, Object log) {
-        return fetchFactory.create(args, ssh, parent, threads, log);
+        return copyFactory.create(args, ssh, parent, threads, log);
     }
 
     @Activate
     protected void start() {
-        createInjector(new FetchModule(), new AbstractModule() {
+        createInjector(new CopyModule(), new AbstractModule() {
 
             @Override
             protected void configure() {
-                bind(ScpFactory.class).toProvider(of(scpService));
+                bind(ShellFactory.class).toProvider(of(shellService));
             }
         }).injectMembers(this);
     }

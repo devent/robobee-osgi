@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.fetch;
+package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import java.util.Map;
 
@@ -38,6 +38,12 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ScpRun extends AbstractSshRun {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface ScpRunFactory {
 
         ScpRun create(@Assisted Map<String, Object> args,
