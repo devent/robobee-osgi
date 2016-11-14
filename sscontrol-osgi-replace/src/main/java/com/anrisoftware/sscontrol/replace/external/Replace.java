@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.replace.external;
 
 import java.util.Map;
 
+import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -28,6 +30,23 @@ import com.google.inject.assistedinject.Assisted;
  */
 public interface Replace {
 
+    static final String CHARSET_ARG = "charset";
+
+    static final String REPLACE_ARG = "replace";
+
+    static final String SEARCH_ARG = "search";
+
+    static final String END_TOKEN_ARG = "endToken";
+
+    static final String BEGIN_TOKEN_ARG = "beginToken";
+
+    static final String DEST_ARG = "dest";
+
+    /**
+     * Temporary file name.
+     */
+    static final String TMP_ARG = "tmp";
+
     /**
      * Factory to create the replace command.
      *
@@ -36,7 +55,9 @@ public interface Replace {
      */
     public interface ReplaceFactory {
 
-        Replace create(@Assisted Map<String, Object> args);
+        Replace create(@Assisted Map<String, Object> args,
+                @Assisted SshHost host, @Assisted("parent") Object parent,
+                @Assisted Threads threads, @Assisted("log") Object log);
     }
 
     /**

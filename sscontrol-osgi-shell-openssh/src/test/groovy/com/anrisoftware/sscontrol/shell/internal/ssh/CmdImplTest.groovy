@@ -33,7 +33,7 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.shell.external.Cmd
-import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -163,8 +163,8 @@ chmod +w a.txt
         toStringStyle
         this.injector = Guice.createInjector(
                 new CmdModule(),
-                new UtilsModules(),
+                new CmdUtilsModules(),
                 )
-        this.threads = UtilsModules.getThreads(injector)
+        this.threads = CmdUtilsModules.getThreads(injector)
     }
 }

@@ -28,9 +28,9 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
-import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
 import com.google.inject.Injector
@@ -90,7 +90,7 @@ class CopyTest extends PartScriptTestBase {
     @Before
     void setupTest() {
         super.setupTest()
-        this.threads = UtilsModules.getThreads(injector)
+        this.threads = CmdUtilsModules.getThreads(injector)
     }
 
     Module[] getAdditionalModules() {
@@ -98,7 +98,7 @@ class CopyTest extends PartScriptTestBase {
             new CmdModule(),
             new CopyModule(),
             new ScpModule(),
-            new UtilsModules(),
+            new CmdUtilsModules(),
         ] as Module[]
     }
 }

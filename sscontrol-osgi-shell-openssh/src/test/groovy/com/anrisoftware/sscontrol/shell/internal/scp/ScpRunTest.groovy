@@ -35,8 +35,8 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
-import com.anrisoftware.sscontrol.shell.internal.cmd.CmdThreadsTestPropertiesProvider
-import com.anrisoftware.sscontrol.shell.internal.cmd.UtilsModules;
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
+import com.anrisoftware.sscontrol.shell.external.utils.ThreadsTestPropertiesProvider
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
 import com.google.inject.AbstractModule
@@ -63,10 +63,16 @@ class ScpRunTest {
         defargs.sshControlPersistDuration = Duration.standardSeconds(10)
         def testCases = [
             [
-                name: 'scp_debug_master',
-                args: [debugLevel: 2, dest: 'dest'],
+                name: 'scp_debug_master_remote_src',
+                args: [debugLevel: 2, dest: 'dest', remoteSrc: true],
                 commands: ['scp'],
-                expected: [scp: 'scp_debug_master_out_expected.txt'],
+                expected: [scp: 'scp_debug_master_remote_src_out_expected.txt'],
+            ],
+            [
+                name: 'scp_debug_master_dest_src',
+                args: [debugLevel: 2, dest: 'dest', remoteDest: true],
+                commands: ['scp'],
+                expected: [scp: 'scp_debug_master_dest_src_out_expected.txt'],
             ],
         ]
         def factory = scpRunFactory
@@ -120,12 +126,12 @@ class ScpRunTest {
         this.injector = Guice.createInjector(
                 new CmdModule(),
                 new ScpModule(),
-                new UtilsModules(),
+                new CmdUtilsModules(),
                 new AbstractModule() {
                     protected void configure() {
                     }
                 })
-        this.threadsProperties = injector.getInstance CmdThreadsTestPropertiesProvider
+        this.threadsProperties = injector.getInstance ThreadsTestPropertiesProvider
         this.threadsFactory = injector.getInstance PropertiesThreadsFactory
         this.threads = createThreads()
     }

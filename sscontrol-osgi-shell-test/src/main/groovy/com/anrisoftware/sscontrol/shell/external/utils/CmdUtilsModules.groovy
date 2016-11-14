@@ -1,4 +1,4 @@
-package com.anrisoftware.sscontrol.shell.internal.cmd
+package com.anrisoftware.sscontrol.shell.external.utils
 
 import javax.inject.Provider
 
@@ -27,7 +27,7 @@ import com.google.inject.Injector
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class UtilsModules extends AbstractModule {
+class CmdUtilsModules extends AbstractModule {
 
     static Threads threads
 
@@ -38,7 +38,7 @@ class UtilsModules extends AbstractModule {
     static Threads getThreads(Injector injector) {
         def threads = this.threads
         if (threads == null) {
-            this.threadsProperties = injector.getInstance CmdThreadsTestPropertiesProvider
+            this.threadsProperties = injector.getInstance ThreadsTestPropertiesProvider
             this.threadsFactory = injector.getInstance PropertiesThreadsFactory
             threads = threadsFactory.create();
             threads.setProperties threadsProperties.get()

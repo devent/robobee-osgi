@@ -17,6 +17,10 @@ package com.anrisoftware.sscontrol.replace.internal;
 
 import com.anrisoftware.sscontrol.replace.external.Replace;
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory;
+import com.anrisoftware.sscontrol.replace.internal.CreateTempFileWorker.CreateTempFileWorkerFactory;
+import com.anrisoftware.sscontrol.replace.internal.LoadFileWorker.LoadFileWorkerFactory;
+import com.anrisoftware.sscontrol.replace.internal.PushFileWorker.PushFileWorkerFactory;
+import com.anrisoftware.sscontrol.replace.internal.ReplaceWorker.ReplaceWorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -33,6 +37,19 @@ public class ReplaceModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Replace.class, ReplaceImpl.class)
                 .build(ReplaceFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(ReplaceWorker.class, ReplaceWorker.class)
+                .build(ReplaceWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(LoadFileWorker.class, LoadFileWorker.class)
+                .build(LoadFileWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(PushFileWorker.class, PushFileWorker.class)
+                .build(PushFileWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(CreateTempFileWorker.class,
+                        CreateTempFileWorker.class)
+                .build(CreateTempFileWorkerFactory.class));
     }
 
 }

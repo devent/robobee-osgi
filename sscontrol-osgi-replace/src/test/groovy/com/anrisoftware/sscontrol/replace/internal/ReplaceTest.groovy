@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.shell.internal.fetch
+package com.anrisoftware.sscontrol.replace.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -21,17 +21,20 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
-import com.anrisoftware.sscontrol.fetch.external.Fetch
-import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
+import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
+import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
 import com.google.inject.Injector
@@ -44,41 +47,29 @@ import com.google.inject.Module
  * @version 1.0
  */
 @Slf4j
-class FetchTest extends PartScriptTestBase {
+class ReplaceTest extends PartScriptTestBase {
 
     static Threads threads
 
     @Inject
-    FetchFactory fetchFactory
+    ReplaceFactory replaceFactory
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        fetch_src: FetchTest.class.getResource('fetch_src_expected.txt'),
-        fetch_src_dest: FetchTest.class.getResource('fetch_src_dest_expected.txt'),
+        replace_dest_search_replace: ReplaceTest.class.getResource('replace_dest_search_replace_expected.txt'),
     ]
 
     @Test
-    void "fetch cases"() {
+    void "replace cases openssh"() {
         def testCases = [
             [
-                name: "fetch_src",
+                name: "replace_dest_search_replace",
                 args: [
-                    src: "aaa.txt",
-                    dest: null,
-                ],
-                expected: { Map args ->
-                    File dir = args.dir as File
-                    String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
-                },
-            ],
-            [
-                name: "fetch_src_dest",
-                args: [
-                    src: "aaa.txt",
-                    dest: "/tmp",
+                    dest: "/tmp/aaa.txt",
+                    search: /(?m)^test=.*/,
+                    replace: 'test=replaced',
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -88,15 +79,17 @@ class FetchTest extends PartScriptTestBase {
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
             def tmp = folder.newFolder()
+            test.args.tmp = folder.newFile("replace_test.txt")
+            FileUtils.write test.args.tmp, 'test=foo\n'
+            log.info '{}. case: {}', k, test
             test.host = SshFactory.localhost(injector).hosts[0]
             doTest test, tmp, k
         }
     }
 
     def createCmd(Map test, File tmp, int k) {
-        def fetch = fetchFactory.create test.args, test.host, this, threads, log
+        def fetch = replaceFactory.create test.args, test.host, this, threads, log
         createEchoCommands tmp, ['scp']
         return fetch
     }
@@ -109,9 +102,12 @@ class FetchTest extends PartScriptTestBase {
 
     Module[] getAdditionalModules() {
         [
+            new TokensTemplateModule(),
             new CmdModule(),
-            new FetchModule(),
+            new ReplaceModule(),
             new ScpModule(),
+            new CopyModule(),
+            new FetchModule(),
             new CmdUtilsModules(),
         ] as Module[]
     }
