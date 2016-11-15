@@ -16,6 +16,10 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
+import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -43,19 +47,18 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
+import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
-import com.anrisoftware.sscontrol.shell.internal.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.CmdModule
-import com.anrisoftware.sscontrol.shell.internal.CmdRunCaller
-import com.anrisoftware.sscontrol.shell.internal.ShellModule
+import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
-
-import groovy.transform.CompileDynamic
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -247,17 +250,59 @@ class ScriptBaseTest {
         }
     }
 
+    @Test
+    void "fetch"() {
+        def testCases = [
+            [
+                name: 'fetch basic',
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    def run() {
+                        fetch '/etc/postfix/main.cf' call()
+                    }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
+                },
+                expected: {
+                }
+            ],
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            log.info '{}. --- {} --- case: {}', k, test.name, test
+            def script = createScript(test)
+            createEchoCommands script.chdir, ['scp']
+            script.run()
+            Closure expected = test.expected
+            expected()
+        }
+    }
+
     @CompileStatic
     ScriptBase createScript(Map test) {
+        def tmp = folder.newFolder()
         ScriptBase script = test.input as ScriptBase
+        script.env['PATH'] = '.'
+        script.pwd = tmp
+        script.chdir = tmp
         script.target = localhost
         script.shell = shell
+        script.fetch = fetch
         script.threads = threads
         return script
     }
-
-    @Inject
-    ShellFactory shell
 
     static Injector injector
 
@@ -276,6 +321,12 @@ class ScriptBaseTest {
     @Inject
     Localhost localhost
 
+    @Inject
+    ShellFactory shell
+
+    @Inject
+    FetchFactory fetch
+
     @Before
     void setupTest() {
         injector.injectMembers(this)
@@ -286,6 +337,8 @@ class ScriptBaseTest {
         toStringStyle
         this.injector = Guice.createInjector(
                 new ShellModule(),
+                new FetchModule(),
+                new ScpModule(),
                 new CmdModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),

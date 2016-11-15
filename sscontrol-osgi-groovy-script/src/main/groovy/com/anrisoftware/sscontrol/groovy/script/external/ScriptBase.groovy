@@ -24,6 +24,8 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.sscontrol.fetch.external.Fetch
+import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.types.external.HostService
@@ -69,10 +71,16 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     HostServices scriptsRepository
 
     /**
-     * The command service to execute scripts.
+     * Shell command.
      */
     @Inject
     ShellFactory shell
+
+    /**
+     * Fetch service.
+     */
+    @Inject
+    FetchFactory fetch
 
     /**
      * The hosts targets.
@@ -81,10 +89,24 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     @Assisted
     SshHost target
 
+    /**
+     * The current working directory.
+     */
+    File pwd
+
+    /**
+     * The directory from where scripts are run.
+     */
     File chdir
 
+    /**
+     * Environment variables.
+     */
     Map env = [:]
 
+    /**
+     * Environment variables for sudo.
+     */
     Map sudoEnv = [:]
 
     @Override
@@ -119,45 +141,33 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     }
 
     /**
-     * Executes the command.
-     *
-     * @param command the command to execute, can be multi-line.
-     *
-     * @return the process task of the executed command.
+     * Shell command.
      */
     Shell shell(String command) {
         shell([:], command)
     }
 
     /**
-     * Executes the command.
-     *
-     * @param args the arguments.
-     *
-     * @param command the command to execute, can be multi-line.
-     *
-     * @return the process task of the executed command.
+     * Shell command.
      */
     Shell shell(Map args, String command) {
-        Map a = new HashMap(args)
-        def target = this.target
-        if (a.containsKey('target')) {
-            target = a.target
-        }
-        if (!a.containsKey('chdir')) {
-            a.chdir = chdir
-        }
-        if (!a.containsKey('env')) {
-            a.env = env
-        } else {
-            a.env.putAll env
-        }
-        if (!a.containsKey('sudoEnv')) {
-            a.sudoEnv = sudoEnv
-        } else {
-            a.sudoEnv.putAll sudoEnv
-        }
-        shell.create(a, target, this, threads, log, command)
+        def a = setupArgs(args)
+        shell.create(a, a.target, this, threads, log, command)
+    }
+
+    /**
+     * Fetch command.
+     */
+    Fetch fetch(String src) {
+        fetch([src: src])
+    }
+
+    /**
+     * Fetch command.
+     */
+    Fetch fetch(Map args) {
+        def a = setupArgs(args)
+        fetch.create(a, a.target, this, threads, log)
     }
 
     /**
@@ -185,5 +195,33 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     List getPackages() {
         properties.getListProperty "packages", defaultProperties
+    }
+
+    private setupArgs(Map args) {
+        Map a = new HashMap(args)
+        a = replaceMapValues env, a, "env"
+        a.target = this.target
+        if (args.containsKey('target')) {
+            a.target = a.target
+        }
+        if (!a.containsKey('chdir')) {
+            a.chdir = chdir
+        }
+        if (!a.containsKey('pwd')) {
+            a.pwd = pwd
+        }
+        if (!a.containsKey('sudoEnv')) {
+            a.sudoEnv = sudoEnv
+        } else {
+            a.sudoEnv.putAll sudoEnv
+        }
+        return a
+    }
+
+    private replaceMapValues(Map replace, Map args, String key) {
+        def map = new HashMap(replace)
+        map.putAll(args[key] != null ? args[key] : [:])
+        args[key] = map
+        return args
     }
 }
