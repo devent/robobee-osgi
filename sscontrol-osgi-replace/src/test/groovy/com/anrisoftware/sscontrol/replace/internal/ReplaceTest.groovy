@@ -30,6 +30,7 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
+import com.anrisoftware.sscontrol.replace.internal.ParseSedSyntax.ParseSedSyntaxFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
@@ -53,6 +54,9 @@ class ReplaceTest extends PartScriptTestBase {
 
     @Inject
     ReplaceFactory replaceFactory
+
+    @Inject
+    ParseSedSyntaxFactory parseSedSyntaxFactory
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
@@ -85,6 +89,33 @@ class ReplaceTest extends PartScriptTestBase {
             log.info '{}. case: {}', k, test
             test.host = SshFactory.localhost(injector).hosts[0]
             doTest test, tmp, k
+        }
+    }
+
+    @Test
+    void "parse sed syntax"() {
+        def testCases = [
+            [
+                string: "s/(?m)^define\\('DB_NAME', '.*?'\\);/define('DB_NAME', 'db');/",
+                expected: { Map args ->
+                    ParseSedSyntax parser = args.parser as ParseSedSyntax
+                    assert parser.search == "(?m)^define\\('DB_NAME', '.*?'\\);"
+                    assert parser.replace == "define('DB_NAME', 'db');"
+                },
+            ],
+            [
+                string: "s/(?m)^define\\('DB_NAME \\/', '.*?'\\);/define('DB_NAME', 'db');/",
+                expected: { Map args ->
+                    ParseSedSyntax parser = args.parser as ParseSedSyntax
+                    assert parser.search == "(?m)^define\\('DB_NAME \\/', '.*?'\\);"
+                    assert parser.replace == "define('DB_NAME', 'db');"
+                },
+            ],
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            log.info '{}. case: {}', k, test
+            def parser = parseSedSyntaxFactory.create(test.string).parse()
+            test.expected([parser: parser])
         }
     }
 

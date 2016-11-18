@@ -17,6 +17,7 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokenTemplate;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplate;
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.sscontrol.replace.internal.ParseSedSyntax.ParseSedSyntaxFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.google.inject.assistedinject.Assisted;
 
@@ -50,10 +51,11 @@ public class ReplaceWorker implements Callable<TokensTemplate> {
 
     @Inject
     ReplaceWorker(@Assisted Map<String, Object> args, @Assisted String text,
-            PropertiesProvider propertiesProvider) {
+            PropertiesProvider propertiesProvider,
+            ParseSedSyntaxFactory parseSed) {
         this.args = new HashMap<String, Object>(args);
         this.text = text;
-        setupDefaults(propertiesProvider);
+        setupDefaults(propertiesProvider, parseSed);
         checkArgs();
     }
 
@@ -73,8 +75,16 @@ public class ReplaceWorker implements Callable<TokensTemplate> {
         notNull(args.get(SEARCH_ARG), "%s=null", SEARCH_ARG);
     }
 
-    private void setupDefaults(PropertiesProvider propertiesProvider) {
+    private void setupDefaults(PropertiesProvider propertiesProvider,
+            ParseSedSyntaxFactory parseSed) {
         ContextProperties p = propertiesProvider.getProperties();
+        Object replace = args.get(REPLACE_ARG);
+        if (replace == null) {
+            ParseSedSyntax parser = parseSed
+                    .create(args.get(SEARCH_ARG).toString()).parse();
+            args.put(SEARCH_ARG, parser.getSearch());
+            args.put(REPLACE_ARG, parser.getReplace());
+        }
         if (!args.containsKey(BEGIN_TOKEN_ARG)) {
             args.put(BEGIN_TOKEN_ARG, p.getProperty("default_begin_token"));
         }

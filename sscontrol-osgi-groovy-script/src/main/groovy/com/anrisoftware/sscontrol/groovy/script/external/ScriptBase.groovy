@@ -28,6 +28,8 @@ import com.anrisoftware.sscontrol.copy.external.Copy
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
+import com.anrisoftware.sscontrol.replace.external.Replace
+import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
 import com.anrisoftware.sscontrol.shell.external.Shell
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.types.external.HostService
@@ -96,6 +98,12 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     @Inject
     CopyFactory copy
+
+    /**
+     * Replace service.
+     */
+    @Inject
+    ReplaceFactory replace
 
     /**
      * The current working directory.
@@ -193,6 +201,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     Copy copy(Map args) {
         def a = setupArgs(args)
         copy.create(a, a.target, this, threads, log)
+    }
+
+    /**
+     * Copy command.
+     */
+    Replace replace(Map args, String search) {
+        def a = new HashMap(args)
+        a.search = search
+        replace(a)
+    }
+
+    /**
+     * Replace command.
+     */
+    Replace replace(Map args) {
+        def a = setupArgs(args)
+        replace.create(a, a.target, this, threads, log)
     }
 
     /**

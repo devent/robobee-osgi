@@ -39,6 +39,7 @@ import com.anrisoftware.globalpom.exec.internal.pipeoutputs.PipeOutputsModule
 import com.anrisoftware.globalpom.exec.internal.runcommands.RunCommandsModule
 import com.anrisoftware.globalpom.exec.internal.script.ScriptCommandModule
 import com.anrisoftware.globalpom.exec.internal.scriptprocess.ScriptProcessModule
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
@@ -49,6 +50,8 @@ import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesM
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
+import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
+import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
@@ -358,6 +361,35 @@ class ScriptBaseTest {
         }
     }
 
+    @Test
+    void "replace"() {
+        def testCases = [
+            [
+                name: 'replace Named arguments',
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    def run() {
+                        replace "s/(?m)^define\\('DB_NAME', '.*?'\\);/define('DB_NAME', 'db');/", dest: '/var/www/wordpress/wp-config.php' call()
+                    }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
+                },
+                expected: {
+                }
+            ],
         ]
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
@@ -380,6 +412,7 @@ class ScriptBaseTest {
         script.shell = shell
         script.fetch = fetch
         script.copy = copy
+        script.replace = replace
         script.threads = threads
         return script
     }
@@ -410,6 +443,9 @@ class ScriptBaseTest {
     @Inject
     CopyFactory copy
 
+    @Inject
+    ReplaceFactory replace
+
     @Before
     void setupTest() {
         injector.injectMembers(this)
@@ -423,6 +459,8 @@ class ScriptBaseTest {
                 new FetchModule(),
                 new ScpModule(),
                 new CopyModule(),
+                new ReplaceModule(),
+                new TokensTemplateModule(),
                 new CmdModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),
