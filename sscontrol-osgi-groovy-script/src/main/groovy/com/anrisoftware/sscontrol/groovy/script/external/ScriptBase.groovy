@@ -24,6 +24,8 @@ import javax.inject.Inject
 
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+import com.anrisoftware.sscontrol.copy.external.Copy
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.Shell
@@ -71,6 +73,13 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     HostServices scriptsRepository
 
     /**
+     * The hosts targets.
+     */
+    @Inject
+    @Assisted
+    SshHost target
+
+    /**
      * Shell command.
      */
     @Inject
@@ -83,11 +92,10 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     FetchFactory fetch
 
     /**
-     * The hosts targets.
+     * Copy service.
      */
     @Inject
-    @Assisted
-    SshHost target
+    CopyFactory copy
 
     /**
      * The current working directory.
@@ -168,6 +176,23 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     Fetch fetch(Map args) {
         def a = setupArgs(args)
         fetch.create(a, a.target, this, threads, log)
+    }
+
+    /**
+     * Copy command.
+     */
+    Copy copy(Map args, String src) {
+        def a = new HashMap(args)
+        a.src = src
+        copy(a)
+    }
+
+    /**
+     * Copy command.
+     */
+    Copy copy(Map args) {
+        def a = setupArgs(args)
+        copy.create(a, a.target, this, threads, log)
     }
 
     /**

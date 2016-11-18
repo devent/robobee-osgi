@@ -47,9 +47,11 @@ import com.anrisoftware.resources.templates.internal.maps.TemplatesDefaultMapsMo
 import com.anrisoftware.resources.templates.internal.templates.TemplatesResourcesModule
 import com.anrisoftware.resources.templates.internal.worker.STDefaultPropertiesModule
 import com.anrisoftware.resources.templates.internal.worker.STWorkerModule
+import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
@@ -290,6 +292,83 @@ class ScriptBaseTest {
         }
     }
 
+    @Test
+    void "copy"() {
+        def testCases = [
+            [
+                name: 'copy Named arguments syntax.',
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    def run() {
+                        copy src: 'main.cf', dest: '/etc/postfix/main.cf' call()
+                    }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
+                },
+                expected: {
+                }
+            ],
+            [
+                name: 'copy Short syntax.',
+                input: new ScriptBase() {
+
+                    @Override
+                    Properties getDefaultProperties() {
+                    }
+
+                    @Override
+                    def run() {
+                        copy 'main.cf', dest: '/etc/postfix/main.cf' call()
+                    }
+
+                    @Override
+                    String getSystemName() {
+                        ''
+                    }
+
+                    @Override
+                    String getSystemVersion() {
+                        ''
+                    }
+                },
+                expected: {
+                }
+            ],
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            log.info '{}. --- {} --- case: {}', k, test.name, test
+            def script = createScript(test)
+            createEchoCommands script.chdir, ['scp']
+            script.run()
+            Closure expected = test.expected
+            expected()
+        }
+    }
+
+        ]
+        testCases.eachWithIndex { Map test, int k ->
+            log.info '{}. --- {} --- case: {}', k, test.name, test
+            def script = createScript(test)
+            createEchoCommands script.chdir, ['scp']
+            script.run()
+            Closure expected = test.expected
+            expected()
+        }
+    }
+
     @CompileStatic
     ScriptBase createScript(Map test) {
         def tmp = folder.newFolder()
@@ -300,6 +379,7 @@ class ScriptBaseTest {
         script.target = localhost
         script.shell = shell
         script.fetch = fetch
+        script.copy = copy
         script.threads = threads
         return script
     }
@@ -327,6 +407,9 @@ class ScriptBaseTest {
     @Inject
     FetchFactory fetch
 
+    @Inject
+    CopyFactory copy
+
     @Before
     void setupTest() {
         injector.injectMembers(this)
@@ -339,6 +422,7 @@ class ScriptBaseTest {
                 new ShellModule(),
                 new FetchModule(),
                 new ScpModule(),
+                new CopyModule(),
                 new CmdModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),
