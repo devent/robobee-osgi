@@ -29,6 +29,7 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.resources.templates.external.Templates;
+import com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRun;
 import com.google.inject.assistedinject.Assisted;
 
 /**

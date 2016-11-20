@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.internal.cmd;
 
-import com.anrisoftware.sscontrol.shell.internal.ssh.ArgsMap.ArgsMapFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshOptions.SshOptionsFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshRun.SshRunFactory;
+import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgs;
+import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgs.CmdArgsFactory;
+import com.anrisoftware.sscontrol.shell.external.ssh.SshArgs;
+import com.anrisoftware.sscontrol.shell.external.ssh.SshArgs.SshArgsFactory;
+import com.anrisoftware.sscontrol.shell.internal.cmd.SshOptions.SshOptionsFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
@@ -36,20 +36,15 @@ public class CmdModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new FactoryModuleBuilder().implement(SshRun.class, SshRun.class)
-                .build(SshRunFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(SshMaster.class, SshMaster.class)
-                .build(SshMasterFactory.class));
-        install(new FactoryModuleBuilder()
-                .implement(CmdArgs.class, CmdArgs.class)
+                .implement(CmdArgs.class, CmdArgsImpl.class)
                 .build(CmdArgsFactory.class));
         install(new FactoryModuleBuilder()
                 .implement(SshOptions.class, SshOptions.class)
                 .build(SshOptionsFactory.class));
         install(new FactoryModuleBuilder()
-                .implement(ArgsMap.class, ArgsMap.class)
-                .build(ArgsMapFactory.class));
+                .implement(SshArgs.class, SshArgsImpl.class)
+                .build(SshArgsFactory.class));
     }
 
 }

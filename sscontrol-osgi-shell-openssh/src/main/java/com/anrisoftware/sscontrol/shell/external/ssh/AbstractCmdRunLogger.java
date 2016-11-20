@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
-import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.ssh.CmdLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRunLogger._.command_finished_trace;
 
 import java.util.Map;
 
@@ -28,12 +28,12 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link CmdImpl}.
+ * Logging for {@link AbstractCmdRun}.
  *
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
-class CmdLogger extends AbstractLogger {
+class AbstractCmdRunLogger extends AbstractLogger {
 
     enum _ {
 
@@ -56,10 +56,10 @@ class CmdLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link CmdImpl}.
+     * Sets the context of the logger to {@link AbstractCmdRun}.
      */
-    public CmdLogger() {
-        super(CmdImpl.class);
+    public AbstractCmdRunLogger() {
+        super(AbstractCmdRun.class);
     }
 
     void commandFinished(Object parent, ProcessTask task,

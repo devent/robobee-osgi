@@ -1,8 +1,8 @@
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.scp.AbstractFileWorkerLogger._.command_finished_trace;
 
 import java.util.Map;
 
@@ -12,13 +12,13 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ScpRun}.
+ * Logging for {@link AbstractFileWorker}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class ScpRunLogger extends AbstractLogger {
+final class AbstractFileWorkerLogger extends AbstractLogger {
 
     enum _ {
 
@@ -41,10 +41,10 @@ final class ScpRunLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ScpRun}.
+     * Sets the context of the logger to {@link AbstractFileWorker}.
      */
-    public ScpRunLogger() {
-        super(ScpRun.class);
+    public AbstractFileWorkerLogger() {
+        super(AbstractFileWorker.class);
     }
 
     void commandFinished(Object parent, ProcessTask task,

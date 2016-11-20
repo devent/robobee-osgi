@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH_ARG;
@@ -35,8 +35,7 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
-import com.anrisoftware.sscontrol.shell.external.ControlPathCreateDirErrorException;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
+import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgs.CmdArgsFactory;
 
 /**
  * Setups the SSH master socket.
@@ -52,13 +51,13 @@ public abstract class AbstractCmdRun {
 
     protected final Map<String, Object> argsMap;
 
-    protected ArgsMap args;
+    protected SshArgs args;
 
     @Inject
     protected ScriptExecFactory scriptEx;
 
     @Inject
-    private CmdLogger log;
+    private AbstractCmdRunLogger log;
 
     protected AbstractCmdRun(Map<String, Object> args, Object parent,
             Threads threads) {

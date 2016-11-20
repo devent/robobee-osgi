@@ -16,24 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.external;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
-import java.text.ParseException;
-
-import org.apache.commons.lang3.exception.ContextedRuntimeException;
+import com.anrisoftware.sscontrol.shell.external.ShellService;
 
 /**
- * 
+ * Shell command service using the OpenSSH client.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@SuppressWarnings("serial")
-public class ParsePropertiesErrorException extends ContextedRuntimeException {
-
-    public ParsePropertiesErrorException(ParseException e, String property) {
-        super("Error parse profile property", e);
-        addContextValue("property", property);
-    }
+public interface OpenSshShellService extends ShellService {
 
 }

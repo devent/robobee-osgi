@@ -31,8 +31,9 @@ import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.google.inject.Injector
 import com.google.inject.Module
 
@@ -110,6 +111,7 @@ class CopyTest extends PartScriptTestBase {
 
     Module[] getAdditionalModules() {
         [
+            new SshModule(),
             new CmdModule(),
             new CopyModule(),
             new ScpModule(),

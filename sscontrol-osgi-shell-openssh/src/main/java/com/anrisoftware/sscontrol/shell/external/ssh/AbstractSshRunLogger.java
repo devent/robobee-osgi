@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
-import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_debug;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_info;
+import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_trace;
 
 import java.util.Map;
 
@@ -22,11 +22,11 @@ final class AbstractSshRunLogger extends AbstractLogger {
 
     enum _ {
 
-        command_finished_trace("Command finished: {} for {}, {}."),
+        setup_remote_finished_trace("Setup remote finished: {} for {}, {}."),
 
-        command_finished_debug("Command finished: for {}."),
+        setup_remote_finished_debug("Setup remote finished: for {}."),
 
-        command_finished_info("Command finished for '{}'.");
+        setup_remote_finished_info("Setup remote finished for '{}'.");
 
         private String name;
 
@@ -47,14 +47,14 @@ final class AbstractSshRunLogger extends AbstractLogger {
         super(AbstractSshRun.class);
     }
 
-    void commandFinished(Object parent, ProcessTask task,
+    void setupRemoteFinished(Object parent, ProcessTask task,
             Map<String, Object> args) {
         if (isTraceEnabled()) {
-            trace(command_finished_trace, args, parent, task);
+            trace(setup_remote_finished_trace, args, parent, task);
         } else if (isDebugEnabled()) {
-            debug(command_finished_debug, args, parent);
+            debug(setup_remote_finished_debug, args, parent);
         } else {
-            info(command_finished_info, parent);
+            info(setup_remote_finished_info, parent);
         }
     }
 

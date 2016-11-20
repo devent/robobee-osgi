@@ -18,12 +18,8 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.copy.external.Copy.DEST_ARG;
-import static com.anrisoftware.sscontrol.fetch.external.Fetch.SRC_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
-import static java.lang.String.format;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -32,7 +28,10 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
-import com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRun;
+import com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRun;
+import com.anrisoftware.sscontrol.shell.internal.scp.CopyPrivilegedFileWorker.CopyPrivilegedFileWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.CopyUnprivilegedFileWorker.CopyUnprivilegedFileWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.PushPrivilegedFileWorker.PushPrivilegedFileWorkerFactory;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -57,7 +56,13 @@ public class ScpRun extends AbstractSshRun {
     }
 
     @Inject
-    private ScpRunLogger log;
+    private CopyPrivilegedFileWorkerFactory copyPrivileged;
+
+    @Inject
+    private PushPrivilegedFileWorkerFactory pushPrivileged;
+
+    @Inject
+    private CopyUnprivilegedFileWorkerFactory copyUnprivileged;
 
     @Inject
     ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,
@@ -88,48 +93,21 @@ public class ScpRun extends AbstractSshRun {
         ProcessTask task = null;
         boolean remoteSrc = (Boolean) args.get("remoteSrc");
         boolean remoteDest = (Boolean) args.get("remoteDest");
-        String tmp = getRemoteTempDir();
-        String src = args.get(SRC_ARG).toString();
-        String dest = args.get(DEST_ARG).toString();
         if (remoteSrc) {
-            Map<String, Object> a = new HashMap<String, Object>(args);
-            a.put(PRIVILEGED_ARG, true);
-            a.put(COMMAND_ARG, format(getCopyFileCommands(), tmp, src));
-            task = runCmd(a);
-            args.put(SRC_ARG, format("%s/%s", tmp, src));
-            task = runScript(res, args);
+            return copyPrivileged.create(args, parent, threads, templates.get(),
+                    res, getRemoteTempDir(), getCopyFileCommands()).call();
         }
         if (remoteDest) {
-            args.put(DEST_ARG, format("%s/%s", tmp, src));
-            task = runScript(res, args);
-            Map<String, Object> a = new HashMap<String, Object>(args);
-            a.put(PRIVILEGED_ARG, true);
-            a.put(COMMAND_ARG, format(getPushFileCommands(), tmp, src, dest));
-            task = runCmd(a);
+            return pushPrivileged.create(args, parent, threads, templates.get(),
+                    res, getRemoteTempDir(), getPushFileCommands()).call();
         }
         return task;
     }
 
     private ProcessTask runUnprivileged(TemplateResource res,
             Map<String, Object> args) throws CommandExecException {
-        return runScript(res, args);
-    }
-
-    private ProcessTask runScript(TemplateResource res,
-            Map<String, Object> args) throws CommandExecException {
-        ProcessTask task;
-        task = scriptEx.create(args, parent, threads, res, "scpCmd").call();
-        log.commandFinished(parent, task, args);
-        return task;
-    }
-
-    private ProcessTask runCmd(Map<String, Object> args)
-            throws CommandExecException {
-        TemplateResource res = templates.get().getResource("ssh_wrap_bash");
-        ProcessTask task;
-        task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
-        log.commandFinished(parent, task, args);
-        return task;
+        return copyUnprivileged
+                .create(args, parent, threads, templates.get(), res).call();
     }
 
 }

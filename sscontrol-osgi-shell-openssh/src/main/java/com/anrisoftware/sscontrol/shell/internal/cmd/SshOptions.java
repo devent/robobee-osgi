@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.internal.cmd;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL_ARG;
 import static java.lang.String.format;
@@ -33,6 +33,8 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
 import com.anrisoftware.propertiesutils.ContextProperties;
+import com.anrisoftware.sscontrol.shell.internal.ssh.DurationAttributeFormat;
+import com.anrisoftware.sscontrol.shell.internal.ssh.PropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**

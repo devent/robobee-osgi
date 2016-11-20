@@ -32,8 +32,9 @@ import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.google.inject.Injector
 import com.google.inject.Module
 
@@ -129,6 +130,7 @@ class FetchTest extends PartScriptTestBase {
     Module[] getAdditionalModules() {
         [
             new CmdModule(),
+            new SshModule(),
             new FetchModule(),
             new ScpModule(),
             new CmdUtilsModules(),

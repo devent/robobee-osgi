@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.internal.cmd;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 
 import com.anrisoftware.sscontrol.shell.external.Cmd;
+import com.anrisoftware.sscontrol.shell.external.ssh.SshArgs;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -37,24 +38,20 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class ArgsMap implements Map<String, Object> {
-
-    public interface ArgsMapFactory {
-
-        ArgsMap create(@Assisted Map<String, Object> args);
-
-    }
+public class SshArgsImpl implements SshArgs {
 
     private final Map<String, Object> args;
 
     @Inject
-    ArgsMap(@Assisted Map<String, Object> args) {
+    SshArgsImpl(@Assisted Map<String, Object> args) {
         this.args = args;
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public boolean useSshMaster() {
-        String master = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_MASTER_ARG));
+        String master = ObjectUtils
+                .toString(args.get(Cmd.SSH_CONTROL_MASTER_ARG));
         String path = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_PATH_ARG));
         return "auto".equals(master) && !isBlank(path);
     }

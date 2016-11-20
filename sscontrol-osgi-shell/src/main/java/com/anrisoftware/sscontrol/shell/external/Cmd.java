@@ -65,6 +65,8 @@ public interface Cmd {
 
     static final String SSH_KEY_ARG = "sshKey";
 
+    static final String COMMAND_ARG = "command";
+
     /**
      * Runs the specified command.
      *

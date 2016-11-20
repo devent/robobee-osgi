@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.external;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
-import com.anrisoftware.sscontrol.types.external.AppException;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshRun.SshRunFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 /**
  * 
@@ -27,12 +29,15 @@ import com.anrisoftware.sscontrol.types.external.AppException;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-@SuppressWarnings("serial")
-public class ShellExecException extends AppException {
+public class SshModule extends AbstractModule {
 
-    public ShellExecException(CommandExecException e, String command) {
-        super("Executing error", e);
-        addContextValue("command", command);
+    @Override
+    protected void configure() {
+        install(new FactoryModuleBuilder().implement(SshRun.class, SshRun.class)
+                .build(SshRunFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(SshMaster.class, SshMaster.class)
+                .build(SshMasterFactory.class));
     }
 
 }

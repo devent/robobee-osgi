@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.internal.cmd;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARG;
@@ -40,9 +40,12 @@ import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.durationformat.DurationFormatFactory;
 import com.anrisoftware.propertiesutils.ContextProperties;
-import com.anrisoftware.sscontrol.shell.external.ParsePropertiesErrorException;
-import com.anrisoftware.sscontrol.shell.internal.ssh.ArgsMap.ArgsMapFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.SshOptions.SshOptionsFactory;
+import com.anrisoftware.sscontrol.shell.external.ssh.CmdArgs;
+import com.anrisoftware.sscontrol.shell.external.ssh.ParsePropertiesErrorException;
+import com.anrisoftware.sscontrol.shell.external.ssh.SshArgs;
+import com.anrisoftware.sscontrol.shell.external.ssh.SshArgs.SshArgsFactory;
+import com.anrisoftware.sscontrol.shell.internal.cmd.SshOptions.SshOptionsFactory;
+import com.anrisoftware.sscontrol.shell.internal.ssh.PropertiesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -51,21 +54,9 @@ import com.google.inject.assistedinject.Assisted;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-class CmdArgs {
+class CmdArgsImpl implements CmdArgs {
 
-    /**
-     * 
-     *
-     * @author Erwin Müller <erwin.mueller@deventm.de>
-     * @version 1.0
-     */
-    interface CmdArgsFactory {
-
-        CmdArgs create(Map<String, Object> args);
-
-    }
-
-    private final ArgsMap args;
+    private final SshArgs args;
 
     @Inject
     private PropertiesProvider propertiesProvider;
@@ -77,11 +68,13 @@ class CmdArgs {
     private SshOptionsFactory sshOptionsFactory;
 
     @Inject
-    CmdArgs(@Assisted Map<String, Object> args, ArgsMapFactory argsMapFactory) {
+    CmdArgsImpl(@Assisted Map<String, Object> args,
+            SshArgsFactory argsMapFactory) {
         this.args = argsMapFactory.create(new HashMap<String, Object>(args));
     }
 
-    public ArgsMap getArgs() {
+    @Override
+    public SshArgs getArgs() {
         setupDefaults();
         setupSshDefaultArgs();
         return args;

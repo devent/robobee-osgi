@@ -37,9 +37,9 @@ import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreads
 import com.anrisoftware.globalpom.threads.properties.external.PropertiesThreadsFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.ThreadsTestPropertiesProvider
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
-import com.google.inject.AbstractModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -128,12 +128,9 @@ class ScpRunTest {
         toStringStyle
         this.injector = Guice.createInjector(
                 new CmdModule(),
+                new SshModule(),
                 new ScpModule(),
-                new CmdUtilsModules(),
-                new AbstractModule() {
-                    protected void configure() {
-                    }
-                })
+                new CmdUtilsModules())
         this.threadsProperties = injector.getInstance ThreadsTestPropertiesProvider
         this.threadsFactory = injector.getInstance PropertiesThreadsFactory
         this.threads = createThreads()

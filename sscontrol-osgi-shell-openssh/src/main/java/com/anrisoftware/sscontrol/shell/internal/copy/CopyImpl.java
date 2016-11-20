@@ -35,7 +35,7 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.copy.external.Copy;
-import com.anrisoftware.sscontrol.shell.external.ShellExecException;
+import com.anrisoftware.sscontrol.shell.external.ssh.ShellExecException;
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;

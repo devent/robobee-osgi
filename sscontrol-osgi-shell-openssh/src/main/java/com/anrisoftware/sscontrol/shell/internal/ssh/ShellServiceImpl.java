@@ -31,9 +31,9 @@ import org.apache.felix.scr.annotations.Service;
 
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.sscontrol.shell.external.Cmd;
-import com.anrisoftware.sscontrol.shell.external.OpenSshShellService;
 import com.anrisoftware.sscontrol.shell.external.Shell;
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory;
+import com.anrisoftware.sscontrol.shell.external.ssh.OpenSshShellService;
 import com.anrisoftware.sscontrol.shell.external.ShellService;
 import com.anrisoftware.sscontrol.types.external.SshHost;
 import com.google.inject.AbstractModule;

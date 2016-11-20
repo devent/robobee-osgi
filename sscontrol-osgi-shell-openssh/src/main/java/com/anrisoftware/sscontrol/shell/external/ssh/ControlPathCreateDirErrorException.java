@@ -16,14 +16,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.external;
+package com.anrisoftware.sscontrol.shell.external.ssh;
+
+import java.io.File;
+
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
 /**
- * Shell command service using the OpenSSH client.
+ * 
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public interface OpenSshShellService extends ShellService {
+@SuppressWarnings("serial")
+public class ControlPathCreateDirErrorException
+        extends ContextedRuntimeException {
+
+    public ControlPathCreateDirErrorException(File dir) {
+        super("Error create control path directory");
+        addContextValue("directory", dir);
+    }
 
 }

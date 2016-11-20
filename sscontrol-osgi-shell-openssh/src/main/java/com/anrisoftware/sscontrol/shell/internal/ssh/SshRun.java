@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import com.anrisoftware.globalpom.threads.external.core.Threads;
+import com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRun;
 import com.google.inject.assistedinject.Assisted;
 
 /**

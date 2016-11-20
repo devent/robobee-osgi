@@ -20,6 +20,9 @@ package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import com.anrisoftware.sscontrol.shell.external.Scp;
 import com.anrisoftware.sscontrol.shell.external.Scp.ScpFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.CopyPrivilegedFileWorker.CopyPrivilegedFileWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.CopyUnprivilegedFileWorker.CopyUnprivilegedFileWorkerFactory;
+import com.anrisoftware.sscontrol.shell.internal.scp.PushPrivilegedFileWorker.PushPrivilegedFileWorkerFactory;
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -38,6 +41,18 @@ public class ScpModule extends AbstractModule {
                 .build(ScpFactory.class));
         install(new FactoryModuleBuilder().implement(ScpRun.class, ScpRun.class)
                 .build(ScpRunFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(CopyPrivilegedFileWorker.class,
+                        CopyPrivilegedFileWorker.class)
+                .build(CopyPrivilegedFileWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(PushPrivilegedFileWorker.class,
+                        PushPrivilegedFileWorker.class)
+                .build(PushPrivilegedFileWorkerFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(CopyUnprivilegedFileWorker.class,
+                        CopyUnprivilegedFileWorker.class)
+                .build(CopyUnprivilegedFileWorkerFactory.class));
     }
 
 }

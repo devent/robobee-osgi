@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.external;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
-import java.io.File;
+import java.text.ParseException;
 
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
@@ -29,12 +29,11 @@ import org.apache.commons.lang3.exception.ContextedRuntimeException;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public class ControlPathCreateDirErrorException
-        extends ContextedRuntimeException {
+public class ParsePropertiesErrorException extends ContextedRuntimeException {
 
-    public ControlPathCreateDirErrorException(File dir) {
-        super("Error create control path directory");
-        addContextValue("directory", dir);
+    public ParsePropertiesErrorException(ParseException e, String property) {
+        super("Error parse profile property", e);
+        addContextValue("property", property);
     }
 
 }
