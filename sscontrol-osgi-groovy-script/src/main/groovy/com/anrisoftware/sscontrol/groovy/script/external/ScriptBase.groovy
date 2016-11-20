@@ -116,6 +116,11 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     File chdir
 
     /**
+     * The directory from where sudo is run.
+     */
+    File sudoChdir
+
+    /**
      * Environment variables.
      */
     Map env = [:]
@@ -256,6 +261,9 @@ abstract class ScriptBase extends Script implements HostServiceScript {
         }
         if (!a.containsKey('chdir')) {
             a.chdir = chdir
+        }
+        if (!a.containsKey('sudoChdir')) {
+            a.sudoChdir = sudoChdir
         }
         if (!a.containsKey('pwd')) {
             a.pwd = pwd

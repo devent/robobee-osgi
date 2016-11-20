@@ -54,13 +54,14 @@ import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.Shell.ShellFactory
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
 import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
@@ -249,6 +250,7 @@ class ScriptBaseTest {
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
             def script = createScript(test)
+            createEchoCommands script.chdir, ['sudo']
             script.run()
             Closure expected = test.expected
             expected()
@@ -288,7 +290,7 @@ class ScriptBaseTest {
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
             def script = createScript(test)
-            createEchoCommands script.chdir, ['scp']
+            createEchoCommands script.chdir, ['scp', 'sudo']
             script.run()
             Closure expected = test.expected
             expected()
@@ -354,7 +356,7 @@ class ScriptBaseTest {
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
             def script = createScript(test)
-            createEchoCommands script.chdir, ['scp']
+            createEchoCommands script.chdir, ['scp', 'sudo']
             script.run()
             Closure expected = test.expected
             expected()
@@ -394,7 +396,7 @@ class ScriptBaseTest {
         testCases.eachWithIndex { Map test, int k ->
             log.info '{}. --- {} --- case: {}', k, test.name, test
             def script = createScript(test)
-            createEchoCommands script.chdir, ['scp']
+            createEchoCommands script.chdir, ['scp', 'sudo']
             script.run()
             Closure expected = test.expected
             expected()
@@ -406,8 +408,10 @@ class ScriptBaseTest {
         def tmp = folder.newFolder()
         ScriptBase script = test.input as ScriptBase
         script.env['PATH'] = '.'
+        script.sudoEnv['PATH'] = '.'
         script.pwd = tmp
         script.chdir = tmp
+        script.sudoChdir = tmp
         script.target = localhost
         script.shell = shell
         script.fetch = fetch
@@ -456,12 +460,13 @@ class ScriptBaseTest {
         toStringStyle
         this.injector = Guice.createInjector(
                 new ShellModule(),
+                new CmdModule(),
                 new FetchModule(),
                 new ScpModule(),
                 new CopyModule(),
                 new ReplaceModule(),
                 new TokensTemplateModule(),
-                new CmdModule(),
+                new SshModule(),
                 new RunCommandsModule(),
                 new LogOutputsModule(),
                 new PipeOutputsModule(),
