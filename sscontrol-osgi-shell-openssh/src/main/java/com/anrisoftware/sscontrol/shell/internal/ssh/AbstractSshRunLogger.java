@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.shell.internal.scp;
+package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_debug;
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_info;
-import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.command_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.ssh.AbstractSshRunLogger._.command_finished_trace;
 
 import java.util.Map;
 
@@ -12,13 +12,13 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link ScpRun}.
+ * Logging for {@link AbstractSshRun}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class ScpRunLogger extends AbstractLogger {
+final class AbstractSshRunLogger extends AbstractLogger {
 
     enum _ {
 
@@ -41,10 +41,10 @@ final class ScpRunLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link ScpRun}.
+     * Sets the context of the logger to {@link AbstractSshRun}.
      */
-    public ScpRunLogger() {
-        super(ScpRun.class);
+    public AbstractSshRunLogger() {
+        super(AbstractSshRun.class);
     }
 
     void commandFinished(Object parent, ProcessTask task,

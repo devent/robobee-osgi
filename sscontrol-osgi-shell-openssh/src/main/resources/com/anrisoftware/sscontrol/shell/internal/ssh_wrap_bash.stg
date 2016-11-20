@@ -2,6 +2,7 @@ sshCmd(args) ::= <<
 #!/bin/bash
 <sshCommand(args)>
 <if(args.privileged)>
+<sshChdir(args.sudoChdir)>
 <sshEnv(args.sudoEnv)>
 sudo <args.shell> \<\< \eof2
 <theCommand(args)>

@@ -58,6 +58,7 @@ class ScpRunTest {
         defargs.src = 'src/file.txt'
         defargs.timeout = Duration.standardSeconds(30)
         defargs.env = [PATH: './']
+        defargs.sudoEnv = [PATH: './']
         defargs.sshHost = 'localhost'
         defargs.sshControlMaster = 'auto'
         defargs.sshControlPersistDuration = Duration.standardSeconds(10)
@@ -86,6 +87,8 @@ class ScpRunTest {
         Map args = new HashMap(defargs)
         args.putAll test.args
         args.chdir = folder.newFolder String.format('%03d_%s', k, test.name)
+        args.sudoChdir = args.chdir
+        createEchoCommands args.chdir, ['sudo']
         createEchoCommands args.chdir, test.commands
         def scp = scpFactory.create args, this, threads
         scp()

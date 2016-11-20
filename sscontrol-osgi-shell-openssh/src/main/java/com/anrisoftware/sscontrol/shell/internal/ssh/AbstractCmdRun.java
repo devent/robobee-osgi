@@ -18,8 +18,8 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH_ARG;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
 import java.io.File;
@@ -36,6 +36,7 @@ import com.anrisoftware.globalpom.exec.external.scriptprocess.ScriptExecFactory;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.shell.external.ControlPathCreateDirErrorException;
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
 
 /**
  * Setups the SSH master socket.
@@ -45,11 +46,13 @@ import com.anrisoftware.sscontrol.shell.external.ControlPathCreateDirErrorExcept
  */
 public abstract class AbstractCmdRun {
 
-    protected final Map<String, Object> args;
-
     protected final Object parent;
 
     protected final Threads threads;
+
+    protected final Map<String, Object> argsMap;
+
+    protected ArgsMap args;
 
     @Inject
     protected ScriptExecFactory scriptEx;
@@ -59,9 +62,14 @@ public abstract class AbstractCmdRun {
 
     protected AbstractCmdRun(Map<String, Object> args, Object parent,
             Threads threads) {
-        this.args = new HashMap<String, Object>(args);
+        this.argsMap = new HashMap<String, Object>(args);
         this.parent = parent;
         this.threads = threads;
+    }
+
+    @Inject
+    void createArgs(CmdArgsFactory argsFactory) {
+        this.args = argsFactory.create(argsMap).getArgs();
     }
 
     /**
@@ -73,10 +81,10 @@ public abstract class AbstractCmdRun {
      * Creates the master socket directory.
      */
     protected void createSocketDir(Map<String, Object> args) {
-        if (!args.containsKey(SSH_CONTROL_PATH)) {
+        if (!args.containsKey(SSH_CONTROL_PATH_ARG)) {
             return;
         }
-        String path = args.get(SSH_CONTROL_PATH).toString();
+        String path = args.get(SSH_CONTROL_PATH_ARG).toString();
         File dir = new File(path).getParentFile();
         if (dir == null) {
             return;
@@ -91,7 +99,7 @@ public abstract class AbstractCmdRun {
     }
 
     protected String getShellName(Map<String, Object> args) {
-        String shell = args.get(SHELL).toString();
+        String shell = args.get(SHELL_ARG).toString();
         shell = StringUtils.split(shell)[0];
         return getBaseName(shell);
     }
@@ -104,6 +112,6 @@ public abstract class AbstractCmdRun {
         return task;
     }
 
-    protected static final String COMMAND_KEY = "command";
+    protected static final String COMMAND_ARG = "command";
 
 }

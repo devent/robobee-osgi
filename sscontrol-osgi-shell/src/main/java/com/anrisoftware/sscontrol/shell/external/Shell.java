@@ -39,7 +39,7 @@ public interface Shell {
      */
     public interface ShellFactory {
 
-        Shell create(@Assisted Map<String, Object> args, @Assisted SshHost ssh,
+        Shell create(@Assisted Map<String, Object> args, @Assisted SshHost host,
                 @Assisted("parent") Object parent, @Assisted Threads threads,
                 @Assisted("log") Object log, @Assisted String command);
     }

@@ -33,7 +33,7 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.shell.external.Cmd
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.google.inject.Guice
 import com.google.inject.Injector
 
@@ -52,6 +52,7 @@ class CmdImplTest {
         defargs.timeout = Duration.standardSeconds(5)
         defargs.sshHost = 'localhost'
         defargs.env = [PATH: './']
+        defargs.sudoEnv = [PATH: './']
         defargs.sshControlMaster = 'auto'
         defargs.sshControlPersistDuration = Duration.standardSeconds(10)
         def testCases = [
@@ -84,7 +85,7 @@ chmod +w a.txt
             ],
         ]
         def cmd = cmdRunCaller
-        (0..20).each { runTestCases testCases, defargs, cmd, it }
+        (0..2).each { runTestCases testCases, defargs, cmd, it }
     }
 
     @Test
@@ -94,6 +95,7 @@ chmod +w a.txt
         defargs.timeout = Duration.standardSeconds(8)
         defargs.sshHost = 'localhost'
         defargs.env = [PATH: './']
+        defargs.sudoEnv = [PATH: './']
         def testCases = [
             [
                 name: 'one command',
@@ -134,6 +136,8 @@ chmod +w a.txt
             Map args = new HashMap(defargs)
             args.putAll test.args
             args.chdir = folder.newFolder String.format('%03d_%03d_%s', i, k, test.name)
+            args.sudoChdir = args.chdir
+            createEchoCommands args.chdir, ['sudo']
             createEchoCommands args.chdir, test.commands
             cmd args, this, threads, command
             Map testExpected = test.expected

@@ -31,6 +31,14 @@ import com.google.inject.assistedinject.Assisted;
  */
 public interface Copy {
 
+    static final String PWD_ARG = "pwd";
+
+    static final String SRC_ARG = "src";
+
+    static final String DEST_ARG = "dest";
+
+    static final String LOG_ARG = "log";
+
     /**
      * Factory to create the copy command.
      *

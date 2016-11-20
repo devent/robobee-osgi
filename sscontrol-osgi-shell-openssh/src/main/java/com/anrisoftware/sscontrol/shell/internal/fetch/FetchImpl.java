@@ -43,14 +43,6 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class FetchImpl implements Fetch {
 
-    private static final String PWD_ARG = "pwd";
-
-    private static final String SRC_ARG = "src";
-
-    private static final String DEST_ARG = "dest";
-
-    private static final String LOG_ARG = "log";
-
     private final Map<String, Object> args;
 
     private final SshHost host;

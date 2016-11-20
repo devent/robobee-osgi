@@ -33,35 +33,37 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
  */
 public interface Cmd {
 
-    static final String SSH_CONNECTION_TIMEOUT = "sshConnectionTimeout";
+    static final String SSH_CONNECTION_TIMEOUT_ARG = "sshConnectionTimeout";
 
-    static final String SSH_CONTROL_PATH = "sshControlPath";
+    static final String SSH_CONTROL_PATH_ARG = "sshControlPath";
 
-    static final String SSH_CONTROL_PERSIST_DURATION = "sshControlPersistDuration";
+    static final String SSH_CONTROL_PERSIST_DURATION_ARG = "sshControlPersistDuration";
 
-    static final String SSH_CONTROL_MASTER = "sshControlMaster";
+    static final String SSH_CONTROL_MASTER_ARG = "sshControlMaster";
 
-    static final String SSH_USER = "sshUser";
+    static final String SSH_USER_ARG = "sshUser";
 
     static final String SSH_HOST = "sshHost";
 
-    static final String SHELL = "shell";
+    static final String SHELL_ARG = "shell";
 
-    static final String SSH_PORT = "sshPort";
+    static final String SSH_PORT_ARG = "sshPort";
 
-    static final String DEBUG_LEVEL = "debugLevel";
+    static final String DEBUG_LEVEL_ARG = "debugLevel";
 
-    static final String SSH_ARGS = "sshArgs";
+    static final String SSH_ARG = "sshArgs";
 
-    static final String ENV_ARGS = "env";
+    static final String ENV_ARG = "env";
 
-    static final String SUDO_ENV_ARGS = "sudoEnv";
+    static final String SUDO_ENV_ARG = "sudoEnv";
 
-    static final String CHDIR_ARGS = "chdir";
+    static final String SUDO_CHDIR_ARG = "sudoChdir";
 
-    static final String PRIVILEGED_ARGS = "privileged";
+    static final String CHDIR_ARG = "chdir";
 
-    static final String SSH_KEY = "sshKey";
+    static final String PRIVILEGED_ARG = "privileged";
+
+    static final String SSH_KEY_ARG = "sshKey";
 
     /**
      * Runs the specified command.

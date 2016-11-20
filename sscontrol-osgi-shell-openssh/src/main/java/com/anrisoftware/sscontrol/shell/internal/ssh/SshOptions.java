@@ -18,7 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL_ARG;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.repeat;
@@ -82,13 +82,13 @@ class SshOptions {
     }
 
     public void addDebug() {
-        Integer level = (Integer) args.get(DEBUG_LEVEL);
+        Integer level = (Integer) args.get(DEBUG_LEVEL_ARG);
         String debug = "";
         if (level > 0) {
             debug = format("-%s",
                     repeat(p.getProperty("ssh_verbose_option"), level));
         }
-        args.put(DEBUG_LEVEL, debug);
+        args.put(DEBUG_LEVEL_ARG, debug);
     }
 
     public void addOption(String name, String option) {

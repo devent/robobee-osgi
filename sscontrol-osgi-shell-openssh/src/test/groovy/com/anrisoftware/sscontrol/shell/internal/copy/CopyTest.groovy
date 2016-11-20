@@ -28,7 +28,7 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
@@ -54,17 +54,31 @@ class CopyTest extends PartScriptTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        copy_src_dest: CopyTest.class.getResource('copy_src_dest_expected.txt'),
+        dest_src: CopyTest.class.getResource('dest_src_expected.txt'),
+        privileged_src: CopyTest.class.getResource('privileged_src_expected.txt'),
     ]
 
     @Test
     void "copy cases"() {
         def testCases = [
             [
-                name: "copy_src_dest",
+                name: "dest_src",
                 args: [
                     src: "aaa.txt",
                     dest: "/tmp",
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
+                },
+            ],
+            [
+                name: "privileged_src",
+                args: [
+                    src: "aaa.txt",
+                    dest: "/tmp",
+                    privileged: true,
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -83,6 +97,7 @@ class CopyTest extends PartScriptTestBase {
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = copyFactory.create test.args, test.host, this, threads, log
+        createEchoCommands tmp, ['sudo']
         createEchoCommands tmp, ['scp']
         return fetch
     }

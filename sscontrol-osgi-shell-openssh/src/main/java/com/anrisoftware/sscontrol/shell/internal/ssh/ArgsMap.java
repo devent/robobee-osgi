@@ -54,8 +54,8 @@ public class ArgsMap implements Map<String, Object> {
 
     @SuppressWarnings("deprecation")
     public boolean useSshMaster() {
-        String master = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_MASTER));
-        String path = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_PATH));
+        String master = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_MASTER_ARG));
+        String path = ObjectUtils.toString(args.get(Cmd.SSH_CONTROL_PATH_ARG));
         return "auto".equals(master) && !isBlank(path);
     }
 

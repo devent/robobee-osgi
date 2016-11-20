@@ -29,7 +29,7 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules;
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
@@ -55,15 +55,19 @@ class FetchTest extends PartScriptTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        fetch_src: FetchTest.class.getResource('fetch_src_expected.txt'),
-        fetch_src_dest: FetchTest.class.getResource('fetch_src_dest_expected.txt'),
+        src_scp: FetchTest.class.getResource('src_scp_expected.txt'),
+        src_sudo: FetchTest.class.getResource('src_sudo_expected.txt'),
+        dest_src_scp: FetchTest.class.getResource('dest_src_scp_expected.txt'),
+        dest_src_sudo: FetchTest.class.getResource('dest_src_sudo_expected.txt'),
+        privileged_src_scp: FetchTest.class.getResource('privileged_src_scp_expected.txt'),
+        privileged_src_sudo: FetchTest.class.getResource('privileged_src_sudo_expected.txt'),
     ]
 
     @Test
     void "fetch cases"() {
         def testCases = [
             [
-                name: "fetch_src",
+                name: "src",
                 args: [
                     src: "aaa.txt",
                     dest: null,
@@ -71,11 +75,12 @@ class FetchTest extends PartScriptTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
                 },
             ],
             [
-                name: "fetch_src_dest",
+                name: "dest_src",
                 args: [
                     src: "aaa.txt",
                     dest: "/tmp",
@@ -83,7 +88,20 @@ class FetchTest extends PartScriptTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                },
+            ],
+            [
+                name: "privileged_src",
+                args: [
+                    src: "aaa.txt",
+                    dest: "/tmp",
+                    privileged: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 },
             ],
         ]
@@ -97,6 +115,7 @@ class FetchTest extends PartScriptTestBase {
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = fetchFactory.create test.args, test.host, this, threads, log
+        createEchoCommands tmp, ['sudo']
         createEchoCommands tmp, ['scp']
         return fetch
     }

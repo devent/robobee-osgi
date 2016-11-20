@@ -28,6 +28,9 @@ abstract class PartScriptTestBase {
         test.args["chdir"] = tmp
         test.args["env"] = [:]
         test.args["env"]["PATH"] = "./"
+        test.args["sudoEnv"] = [:]
+        test.args["sudoEnv"]["PATH"] = "./"
+        test.args["sudoChdir"] = tmp
         def host = SshFactory.localhost(injector).hosts[0]
         def parent = this
         def cmd = createCmd test, tmp, k

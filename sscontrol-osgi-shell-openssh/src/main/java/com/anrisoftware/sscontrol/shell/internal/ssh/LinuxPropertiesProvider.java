@@ -18,45 +18,40 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static java.lang.String.format;
+import java.net.URL;
 
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import com.anrisoftware.globalpom.threads.external.core.Threads;
-import com.google.inject.assistedinject.Assisted;
+import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 
 /**
- * 
+ * Provides the command properties for a Linux system.
  *
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class SshRun extends AbstractSshRun {
+@SuppressWarnings("serial")
+public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
 
-    public interface SshRunFactory {
+    private static final URL res = LinuxPropertiesProvider.class
+            .getResource("/linux_cmd.properties");
 
-        SshRun create(@Assisted Map<String, Object> args,
-                @Assisted Object parent, @Assisted Threads threads,
-                @Assisted String command);
-
+    LinuxPropertiesProvider() {
+        super(LinuxPropertiesProvider.class, res);
     }
 
-    @Inject
-    SshRun(@Assisted Map<String, Object> args, @Assisted Object parent,
-            @Assisted Threads threads, @Assisted String command) {
-        super(args, parent, threads);
-        argsMap.put(COMMAND_ARG, command);
+    public String getRemoteTempDir() {
+        return get().getProperty("ssh_remote_temp_directory");
     }
 
-    @Override
-    protected String getCmdTemplate() {
-        String sshshell = getShellName(args);
-        String template = format(COMMAND_NAME_FORMAT, "ssh_wrap_", sshshell);
-        return template;
+    public String getSetupCommands() {
+        return get().getProperty("ssh_setup_commands");
     }
 
-    private static final String COMMAND_NAME_FORMAT = "%s%s";
+    public String getCopyFileCommands() {
+        return get().getProperty("ssh_copy_file_commands");
+    }
+
+    public String getPushFileCommands() {
+        return get().getProperty("ssh_push_file_commands");
+    }
 
 }

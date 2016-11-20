@@ -19,9 +19,9 @@
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_HOST;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
 import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -98,10 +98,10 @@ public class ScpImpl implements Scp {
 
     private void setupArgs() {
         args.put(LOG_ARG, log);
-        args.put(SSH_USER, host.getUser());
+        args.put(SSH_USER_ARG, host.getUser());
         args.put(SSH_HOST, host.getHost());
-        args.put(SSH_PORT, host.getPort());
-        args.put(SSH_KEY, host.getKey());
+        args.put(SSH_PORT_ARG, host.getPort());
+        args.put(SSH_KEY_ARG, host.getKey());
     }
 
 }

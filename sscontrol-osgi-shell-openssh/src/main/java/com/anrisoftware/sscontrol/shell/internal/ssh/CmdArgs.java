@@ -18,16 +18,17 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARGS;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_ARGS;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONNECTION_TIMEOUT;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_MASTER;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PERSIST_DURATION;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT;
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.DEBUG_LEVEL_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.ENV_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONNECTION_TIMEOUT_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_MASTER_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PERSIST_DURATION_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_PORT_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_USER_ARG;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SUDO_ENV_ARG;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -87,53 +88,57 @@ class CmdArgs {
     }
 
     private void setupDefaults() {
-        Object arg = args.get(SHELL);
+        Object arg = args.get(SHELL_ARG);
         ContextProperties p = propertiesProvider.get().withSystemReplacements();
         if (arg == null) {
             String shell = p.getProperty("default_shell");
-            args.put(SHELL, shell);
+            args.put(SHELL_ARG, shell);
         }
-        arg = args.get(SSH_USER);
+        arg = args.get(SSH_USER_ARG);
         if (arg == null) {
-            args.put(SSH_USER, p.getProperty("default_ssh_user"));
+            args.put(SSH_USER_ARG, p.getProperty("default_ssh_user"));
         }
-        arg = args.get(SSH_PORT);
+        arg = args.get(SSH_PORT_ARG);
         if (arg == null) {
-            args.put(SSH_PORT,
+            args.put(SSH_PORT_ARG,
                     p.getNumberProperty("default_ssh_port").intValue());
         }
-        arg = args.get(SSH_ARGS);
+        arg = args.get(SSH_ARG);
         if (arg == null) {
-            args.put(SSH_ARGS, p.getListProperty("default_ssh_args", ";"));
+            args.put(SSH_ARG, p.getListProperty("default_ssh_args", ";"));
         }
-        arg = args.get(SSH_CONTROL_MASTER);
+        arg = args.get(SSH_CONTROL_MASTER_ARG);
         if (arg == null) {
-            args.put(SSH_CONTROL_MASTER,
+            args.put(SSH_CONTROL_MASTER_ARG,
                     p.getProperty("default_ssh_control_master"));
         }
-        arg = args.get(SSH_CONTROL_PERSIST_DURATION);
+        arg = args.get(SSH_CONTROL_PERSIST_DURATION_ARG);
         if (arg == null) {
-            args.put(SSH_CONTROL_PERSIST_DURATION, getDefaultDuration(p,
+            args.put(SSH_CONTROL_PERSIST_DURATION_ARG, getDefaultDuration(p,
                     "default_ssh_control_persist_duration"));
         }
-        arg = args.get(SSH_CONTROL_PATH);
+        arg = args.get(SSH_CONTROL_PATH_ARG);
         if (arg == null) {
-            args.put(SSH_CONTROL_PATH,
+            args.put(SSH_CONTROL_PATH_ARG,
                     p.getProperty("default_ssh_control_path"));
         }
-        arg = args.get(SSH_CONNECTION_TIMEOUT);
+        arg = args.get(SSH_CONNECTION_TIMEOUT_ARG);
         if (arg == null) {
-            args.put(SSH_CONNECTION_TIMEOUT,
+            args.put(SSH_CONNECTION_TIMEOUT_ARG,
                     getDefaultDuration(p, "default_ssh_connect_timeout"));
         }
-        arg = args.get(DEBUG_LEVEL);
+        arg = args.get(DEBUG_LEVEL_ARG);
         if (arg == null) {
-            args.put(DEBUG_LEVEL,
+            args.put(DEBUG_LEVEL_ARG,
                     p.getNumberProperty("default_ssh_debug_level").intValue());
         }
-        arg = args.get(ENV_ARGS);
+        arg = args.get(ENV_ARG);
         if (arg == null) {
-            args.put(ENV_ARGS, new HashMap<String, String>());
+            args.put(ENV_ARG, new HashMap<String, String>());
+        }
+        arg = args.get(SUDO_ENV_ARG);
+        if (arg == null) {
+            args.put(SUDO_ENV_ARG, new HashMap<String, String>());
         }
     }
 
@@ -143,13 +148,14 @@ class CmdArgs {
         SshOptions sshOptions = sshOptionsFactory.create(args, options);
         sshOptions.addDefaultOptions();
         sshOptions.addDebug();
-        sshOptions.addStringOption(SSH_CONTROL_MASTER,
+        sshOptions.addStringOption(SSH_CONTROL_MASTER_ARG,
                 "ssh_control_master_option");
-        sshOptions.addOption(SSH_CONTROL_PERSIST_DURATION,
+        sshOptions.addOption(SSH_CONTROL_PERSIST_DURATION_ARG,
                 "ssh_control_persist_option");
-        sshOptions.addOption(SSH_CONNECTION_TIMEOUT,
+        sshOptions.addOption(SSH_CONNECTION_TIMEOUT_ARG,
                 "ssh_connection_timeout_option");
-        sshOptions.addControlPathOption(SSH_CONTROL_PATH, "ssh_control_path_option");
+        sshOptions.addControlPathOption(SSH_CONTROL_PATH_ARG,
+                "ssh_control_path_option");
     }
 
     private Object getDefaultDuration(ContextProperties p, String property) {

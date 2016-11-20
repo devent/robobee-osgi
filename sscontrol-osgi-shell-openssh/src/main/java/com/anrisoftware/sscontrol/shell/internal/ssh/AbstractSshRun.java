@@ -18,12 +18,14 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.ssh;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY;
+import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
+import static java.lang.String.format;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -35,7 +37,6 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.sscontrol.shell.external.SetupSshKeyException;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdArgs.CmdArgsFactory;
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
 
 /**
@@ -47,13 +48,16 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
 public abstract class AbstractSshRun extends AbstractCmdRun {
 
     @Inject
-    private CmdArgsFactory argsFactory;
+    protected TemplatesProvider templates;
 
     @Inject
-    private TemplatesProvider templates;
+    private AbstractSshRunLogger log;
 
     @Inject
     private SshMasterFactory sshMasterFactory;
+
+    @Inject
+    protected LinuxPropertiesProvider linuxPropertiesProvider;
 
     protected AbstractSshRun(Map<String, Object> args, Object parent,
             Threads threads) {
@@ -62,25 +66,50 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
 
     @Override
     public ProcessTask call() throws CommandExecException {
-        ArgsMap args = argsFactory.create(this.args).getArgs();
-        setupSshKey(args);
-        setupSshMaster(args);
-        String template = getCmdTemplate(args);
+        setupSshKey();
+        setupSshMaster();
+        setupRemote();
         try {
+            String template = getCmdTemplate();
             TemplateResource res = templates.get().getResource(template);
             return runCommand(res, args);
         } finally {
-            cleanupCmd(args);
+            cleanupCmd();
         }
     }
 
     /**
      * Returns the command template that is executed by SSH.
      */
-    protected abstract String getCmdTemplate(ArgsMap args);
+    protected abstract String getCmdTemplate();
 
-    private void setupSshKey(ArgsMap args) throws SetupSshKeyException {
-        URI key = (URI) args.get(SSH_KEY);
+    protected String getRemoteTempDir() {
+        return linuxPropertiesProvider.getRemoteTempDir();
+    }
+
+    protected String getCopyFileCommands() {
+        return linuxPropertiesProvider.getCopyFileCommands();
+    }
+
+    protected String getPushFileCommands() {
+        return linuxPropertiesProvider.getPushFileCommands();
+    }
+
+    private void setupRemote() throws CommandExecException {
+        ProcessTask task;
+        String template = "ssh_wrap_bash";
+        TemplateResource res = templates.get().getResource(template);
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.putAll(this.args);
+        args.put("privileged", true);
+        args.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
+                linuxPropertiesProvider.getRemoteTempDir()));
+        task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
+        log.commandFinished(parent, task, args);
+    }
+
+    private void setupSshKey() throws SetupSshKeyException {
+        URI key = (URI) args.get(SSH_KEY_ARG);
         if (key == null) {
             return;
         }
@@ -89,20 +118,20 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
             IOUtils.copy(key.toURL().openStream(), new FileOutputStream(tmp));
             tmp.setReadable(false, false);
             tmp.setReadable(true, true);
-            args.put(SSH_KEY, tmp);
+            args.put(SSH_KEY_ARG, tmp);
         } catch (IOException e) {
             throw new SetupSshKeyException(e, key);
         }
     }
 
-    private void setupSshMaster(ArgsMap args) throws CommandExecException {
+    private void setupSshMaster() throws CommandExecException {
         if (args.useSshMaster()) {
-            sshMasterFactory.create(args, parent, threads).call();
+            sshMasterFactory.create(argsMap, parent, threads).call();
         }
     }
 
-    private void cleanupCmd(ArgsMap args) {
-        File sshKey = (File) args.get(SSH_KEY);
+    private void cleanupCmd() {
+        File sshKey = (File) args.get(SSH_KEY_ARG);
         if (sshKey != null) {
             sshKey.delete();
         }
