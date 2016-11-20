@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.replace.internal;
 
 import static org.apache.commons.lang3.Validate.isTrue;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,8 +88,9 @@ public class ReplaceImpl implements Replace {
 
     private void setupDefaults(PropertiesProvider propertiesProvider) {
         ContextProperties p = propertiesProvider.getProperties();
-        Charset charset = (Charset) args.get(CHARSET_ARG);
-        if (charset == null) {
+        args.put("basepath", true);
+        Object arg = args.get(CHARSET_ARG);
+        if (arg == null) {
             args.put(CHARSET_ARG, p.getCharsetProperty("default_charset"));
         }
     }
