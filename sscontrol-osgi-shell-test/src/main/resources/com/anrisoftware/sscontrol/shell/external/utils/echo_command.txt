@@ -6,6 +6,6 @@ if [ "$#" -gt 0 ]; then
     cmd=($1)
     cmd=${cmd[0]}
     if command -v -- "$cmd">/dev/null; then
-        $@
+       $@
     fi
 fi

@@ -105,7 +105,7 @@ abstract class ScriptTestBase {
             }
         }
         Closure expected = test.expected
-        expected services: services, dir: dir
+        expected test: test, services: services, dir: dir
     }
 
     abstract String getServiceName()
@@ -121,10 +121,9 @@ abstract class ScriptTestBase {
     }
 
     HostServiceScript setupScript(Map args, HostServiceScript script) {
-        def chdir = args.dir as File
-        script.chdir = chdir
-        script.sudoEnv.PATH = chdir
-        script.env.PATH = chdir
+        script.chdir = args.dir
+        script.sudoEnv.PATH = args.dir
+        script.env.PATH = args.dir
         return script
     }
 

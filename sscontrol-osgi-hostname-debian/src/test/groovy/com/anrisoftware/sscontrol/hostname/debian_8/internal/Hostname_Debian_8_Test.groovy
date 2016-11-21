@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
@@ -25,17 +24,22 @@ import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
+import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
-import com.anrisoftware.sscontrol.hostname.debian_8.internal.Hostname_Debian_8
 import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
 import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.ScriptTestBase
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdModule;
-import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller;
-import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule;
+import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
+import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
+import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
+import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdImpl
+import com.anrisoftware.sscontrol.shell.internal.ssh.CmdRunCaller
+import com.anrisoftware.sscontrol.shell.internal.ssh.ShellModule
+import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
@@ -48,14 +52,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  * @version 1.0
  */
 @Slf4j
-@CompileStatic
 class Hostname_Debian_8_Test extends ScriptTestBase {
-
-    static final URL sudoOutExpected = Hostname_Debian_8_Test.class.getResource('sudo_out_expected.txt')
-
-    static final URL hostnamectlOutExpected = Hostname_Debian_8_Test.class.getResource('hostnamectl_out_expected.txt')
-
-    static final URL aptgetOutExpected = Hostname_Debian_8_Test.class.getResource('apt-get_out_expected.txt')
 
     @Inject
     HostnameImplFactory hostnameFactory
@@ -66,10 +63,17 @@ class Hostname_Debian_8_Test extends ScriptTestBase {
     @Inject
     CmdRunCaller cmdRunCaller
 
+    static Map expectedResources = [
+        fqdn_sudo: Hostname_Debian_8_Test.class.getResource('fqdn_sudo_expected.txt'),
+        fqdn_apt_get: Hostname_Debian_8_Test.class.getResource('fqdn_apt_get_expected.txt'),
+        fqdn_hostnamectl: Hostname_Debian_8_Test.class.getResource('fqdn_hostnamectl_expected.txt'),
+    ]
+
     @Test
     void "hostname script"() {
         def testCases = [
             [
+                name: "fqdn",
                 input: """
 service "hostname" with {
     // Sets the hostname.
@@ -77,10 +81,10 @@ service "hostname" with {
 }
 """,
                 expected: { Map args ->
-                    File dir = args.dir as File
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(sudoOutExpected)
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(aptgetOutExpected)
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(hostnamectlOutExpected)
+                    File dir = args.dir
+                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
+                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
+                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
                 },
             ],
         ]
@@ -95,11 +99,13 @@ service "hostname" with {
 
     void createDummyCommands(File dir) {
         createEchoCommands dir, [
+            'mkdir',
+            'chown',
+            'chmod',
             'sudo',
             'apt-get',
             'hostnamectl'
         ]
-        createBashCommand dir
     }
 
     void putServices(HostServices services) {
@@ -112,7 +118,13 @@ service "hostname" with {
             new HostnameModule(),
             new HostServicesModule(),
             new ShellModule(),
+            new SshModule(),
             new CmdModule(),
+            new ScpModule(),
+            new CopyModule(),
+            new FetchModule(),
+            new ReplaceModule(),
+            new TokensTemplateModule(),
             new AbstractModule() {
 
                 @Override
