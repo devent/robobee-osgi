@@ -15,11 +15,12 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import static com.anrisoftware.sscontrol.hosts.internal.HostsImplLogger._.hostnameSet;
+import static com.anrisoftware.sscontrol.hosts.internal.HostsImplLogger._.hostAdded;
 
 import javax.inject.Singleton;
 
 import com.anrisoftware.globalpom.log.AbstractLogger;
+import com.anrisoftware.sscontrol.hosts.external.Host;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 
 /**
@@ -33,7 +34,7 @@ final class HostsImplLogger extends AbstractLogger {
 
     enum _ {
 
-        hostnameSet("Hostname '{}' set for {}");
+        hostAdded("Host {} added to {}");
 
         private String name;
 
@@ -54,8 +55,8 @@ final class HostsImplLogger extends AbstractLogger {
         super(HostsImpl.class);
     }
 
-    public void hostnameSet(Hosts database, String name) {
-        debug(hostnameSet, name, database);
+    public void hostAdded(Hosts hosts, Host h) {
+        debug(hostAdded, h, hosts);
     }
 
 }

@@ -15,17 +15,21 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
-import static com.anrisoftware.sscontrol.hosts.internal.HostsServiceImpl.HOSTNAME_NAME;
+import static com.anrisoftware.sscontrol.hosts.internal.HostsServiceImpl.HOSTS_NAME;
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.anrisoftware.globalpom.arrays.ToList;
+import com.anrisoftware.sscontrol.hosts.external.Host;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
+import com.anrisoftware.sscontrol.hosts.internal.HostImpl.HostImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostPropertiesService;
 import com.anrisoftware.sscontrol.types.external.HostServiceProperties;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -41,49 +45,64 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class HostsImpl implements Hosts {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface HostsImplFactory extends HostsService {
 
     }
 
     private final HostsImplLogger log;
 
-    private final List<String> aliases;
+    private final List<Host> hosts;
 
     private final HostServiceProperties serviceProperties;
 
-    private final ArrayList<SshHost> targets;
+    private final List<SshHost> targets;
 
-    private String address;
-
-    private String hostname;
+    private final HostImplFactory hostFactory;
 
     @AssistedInject
-    HostsImpl(HostsImplLogger log, HostPropertiesService propertiesService,
+    HostsImpl(HostsImplLogger log, HostImplFactory hostFactory,
+            HostPropertiesService propertiesService,
             @Assisted Map<String, Object> args) {
         this.log = log;
+        this.hostFactory = hostFactory;
         this.targets = new ArrayList<SshHost>();
-        this.aliases = new ArrayList<String>();
+        this.hosts = new ArrayList<Host>();
         this.serviceProperties = propertiesService.create();
         parseArgs(args);
     }
 
-    public void set(Map<String, Object> args) {
-        parseArgs(args);
+    public void ip(Map<String, Object> args, String address) {
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put("ip", address);
+        ip(a);
     }
 
-    public void setFqdn(String fqdn) {
-        this.hostname = fqdn;
-        log.hostnameSet(this, fqdn);
+    public void ip(Map<String, Object> args) {
+        String address = args.get("ip").toString();
+        String host = args.get("host").toString();
+        List<String> aliases = new ArrayList<String>();
+        if (args.get("alias") != null) {
+            aliases = ToList.toList(args.get("alias"));
+        }
+        Host h = hostFactory.create(address, host, aliases);
+        log.hostAdded(this, h);
+        hosts.add(h);
     }
 
     @Override
     public String getName() {
-        return HOSTNAME_NAME;
+        return HOSTS_NAME;
     }
 
     @Override
-    public String getHostname() {
-        return hostname;
+    public List<Host> getHosts() {
+        return hosts;
     }
 
     @Override
@@ -109,8 +128,7 @@ public class HostsImpl implements Hosts {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("name", getName())
-                .append("hostname", hostname).append("hosts", targets)
-                .toString();
+                .append("hosts", hosts).append("targets", targets).toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -119,9 +137,8 @@ public class HostsImpl implements Hosts {
         if (v != null) {
             targets.addAll((List<SshHost>) v);
         }
-        v = args.get("fqdn");
-        if (v != null) {
-            setFqdn(v.toString());
+        if (args.get("ip") != null) {
+            ip(args);
         }
     }
 

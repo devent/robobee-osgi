@@ -15,10 +15,12 @@
  */
 package com.anrisoftware.sscontrol.hosts.external;
 
+import java.util.List;
+
 import com.anrisoftware.sscontrol.types.external.HostService;
 
 /**
- * Hostname service.
+ * Hosts service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -26,9 +28,7 @@ import com.anrisoftware.sscontrol.types.external.HostService;
 public interface Hosts extends HostService {
 
     /**
-     * Returns the host name.
-     *
-     * @return the host name.
+     * Returns the hosts.
      */
-    String getHostname();
+    List<Host> getHosts();
 }

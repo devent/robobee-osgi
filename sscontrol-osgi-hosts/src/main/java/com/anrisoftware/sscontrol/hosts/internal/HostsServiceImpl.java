@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
+import static com.google.inject.Guice.createInjector;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -26,11 +28,9 @@ import org.apache.felix.scr.annotations.Service;
 import com.anrisoftware.sscontrol.hosts.external.Hosts;
 import com.anrisoftware.sscontrol.hosts.external.HostsService;
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 
 /**
- * Creates the hostname service.
+ * Creates the hosts service.
  *
  * @author Erwin Müller, erwin.mueller@deventm.de
  * @since 1.0
@@ -39,23 +39,18 @@ import com.google.inject.Guice;
 @Service(HostsService.class)
 public class HostsServiceImpl implements HostsService {
 
-    static final String HOSTNAME_NAME = "hostname";
+    static final String HOSTS_NAME = "hosts";
 
     @Inject
-    private HostsImplFactory hostnameFactory;
+    private HostsImplFactory hostsFactory;
 
     @Override
     public Hosts create(Map<String, Object> args) {
-        return (Hosts) hostnameFactory.create(args);
+        return (Hosts) hostsFactory.create(args);
     }
 
     @Activate
     protected void start() {
-        Guice.createInjector(new HostsModule(), new AbstractModule() {
-
-            @Override
-            protected void configure() {
-            }
-        }).injectMembers(this);
+        createInjector(new HostsModule()).injectMembers(this);
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.anrisoftware.sscontrol.hosts.internal;
 
+import com.anrisoftware.sscontrol.hosts.external.Host;
+import com.anrisoftware.sscontrol.hosts.internal.HostImpl.HostImplFactory;
 import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory;
 import com.anrisoftware.sscontrol.types.external.HostService;
 import com.google.inject.AbstractModule;
@@ -33,6 +35,8 @@ public class HostsModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(HostService.class, HostsImpl.class)
                 .build(HostsImplFactory.class));
+        install(new FactoryModuleBuilder().implement(Host.class, HostImpl.class)
+                .build(HostImplFactory.class));
     }
 
 }
