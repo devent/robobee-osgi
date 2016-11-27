@@ -29,7 +29,7 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
@@ -44,7 +44,7 @@ import com.google.inject.Module
  * @version 1.0
  */
 @Slf4j
-class CopyTest extends PartScriptTestBase {
+class CopyTest extends AbstractCmdTestBase {
 
     static Threads threads
 

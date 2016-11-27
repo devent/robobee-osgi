@@ -30,7 +30,7 @@ import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
@@ -45,7 +45,7 @@ import com.google.inject.Module
  * @version 1.0
  */
 @Slf4j
-class FetchTest extends PartScriptTestBase {
+class FetchTest extends AbstractCmdTestBase {
 
     static Threads threads
 

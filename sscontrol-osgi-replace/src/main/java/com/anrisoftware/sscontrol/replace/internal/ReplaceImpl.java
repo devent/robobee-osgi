@@ -102,10 +102,9 @@ public class ReplaceImpl implements Replace {
     public Replace call() throws AppException {
         String text = load.create(args, host, parent, threads, cmdLog).call();
         if (lines.size() == 0) {
-            text = setupReplaceArg(text);
-        } else {
-            text = setupReplaceLines(text);
+            lines.add(lineFactory.create(args));
         }
+        text = setupReplaceLines(text);
         push.create(args, host, parent, threads, cmdLog, text).call();
         return this;
     }
@@ -116,12 +115,6 @@ public class ReplaceImpl implements Replace {
             TokensTemplate tokens = replace.create(a, text).call();
             text = tokens.getText();
         }
-        return text;
-    }
-
-    private String setupReplaceArg(String text) throws AppException {
-        TokensTemplate tokens = replace.create(args, text).call();
-        text = tokens.getText();
         return text;
     }
 

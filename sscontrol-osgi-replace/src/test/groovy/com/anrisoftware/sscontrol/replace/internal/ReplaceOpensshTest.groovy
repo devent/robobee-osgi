@@ -63,8 +63,9 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        dest_search_replace_scp: ReplaceOpensshTest.class.getResource('dest_search_replace_scp_expected.txt'),
-        privileged_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('privileged_dest_search_replace_scp_expected.txt'),
+        args_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_search_replace_scp_expected.txt'),
+        args_privileged_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_scp_expected.txt'),
+        args_dest_sed_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_sed_replace_scp_expected.txt'),
     ]
 
     @Test
@@ -72,7 +73,7 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
         def testCases = [
             [
                 enabled: true,
-                name: "dest_search_replace",
+                name: "args_dest_search_replace",
                 args: [
                     dest: "/tmp/aaa.txt",
                     search: /(?m)^test=.*/,
@@ -86,12 +87,25 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
             ],
             [
                 enabled: true,
-                name: "privileged_dest_search_replace",
+                name: "args_privileged_dest_search_replace",
                 args: [
                     dest: "/tmp/aaa.txt",
                     search: /(?m)^test=.*/,
                     replace: 'test=replaced',
                     privileged: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                },
+            ],
+            [
+                enabled: true,
+                name: "args_dest_sed_replace",
+                args: [
+                    dest: "/tmp/aaa.txt",
+                    replace: 's/(?m)^test=.*/test=replaced/',
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -141,8 +155,14 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = replaceFactory.create test.args, test.host, this, threads, log
-        createEchoCommands tmp, ['sudo']
-        createEchoCommands tmp, ['scp']
+        createEchoCommands tmp, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'cp',
+            'sudo',
+            'scp'
+        ]
         return fetch
     }
 
