@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.shell.internal.fetch
 
 import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -29,14 +28,15 @@ import org.junit.rules.TemporaryFolder
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.fetch.external.Fetch
 import com.anrisoftware.sscontrol.fetch.external.Fetch.FetchFactory
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
-import com.google.inject.Injector
 import com.google.inject.Module
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -58,6 +58,8 @@ class FetchTest extends AbstractCmdTestBase {
     static Map expectedResources = [
         src_scp: FetchTest.class.getResource('src_scp_expected.txt'),
         src_sudo: FetchTest.class.getResource('src_sudo_expected.txt'),
+        directory_src_scp: FetchTest.class.getResource('directory_src_scp_expected.txt'),
+        directory_src_sudo: FetchTest.class.getResource('directory_src_sudo_expected.txt'),
         dest_src_scp: FetchTest.class.getResource('dest_src_scp_expected.txt'),
         dest_src_sudo: FetchTest.class.getResource('dest_src_sudo_expected.txt'),
         privileged_src_scp: FetchTest.class.getResource('privileged_src_scp_expected.txt'),
@@ -68,6 +70,7 @@ class FetchTest extends AbstractCmdTestBase {
     void "fetch cases"() {
         def testCases = [
             [
+                enabled: true,
                 name: "src",
                 args: [
                     src: "aaa.txt",
@@ -81,6 +84,22 @@ class FetchTest extends AbstractCmdTestBase {
                 },
             ],
             [
+                enabled: true,
+                name: "directory_src",
+                args: [
+                    src: "/var/wordpress",
+                    dest: null,
+                    recursive: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                },
+            ],
+            [
+                enabled: true,
                 name: "dest_src",
                 args: [
                     src: "aaa.txt",
@@ -93,6 +112,7 @@ class FetchTest extends AbstractCmdTestBase {
                 },
             ],
             [
+                enabled: true,
                 name: "privileged_src",
                 args: [
                     src: "aaa.txt",
@@ -107,17 +127,25 @@ class FetchTest extends AbstractCmdTestBase {
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
-            def tmp = folder.newFolder()
-            test.host = SshFactory.localhost(injector).hosts[0]
-            doTest test, tmp, k
+            if (test.enabled) {
+                log.info '{}. case: {}', k, test
+                def tmp = folder.newFolder()
+                test.host = SshFactory.localhost(injector).hosts[0]
+                doTest test, tmp, k
+            }
         }
     }
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = fetchFactory.create test.args, test.host, this, threads, log
-        createEchoCommands tmp, ['sudo']
-        createEchoCommands tmp, ['scp']
+        createEchoCommands tmp, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'cp',
+            'sudo',
+            'scp',
+        ]
         return fetch
     }
 

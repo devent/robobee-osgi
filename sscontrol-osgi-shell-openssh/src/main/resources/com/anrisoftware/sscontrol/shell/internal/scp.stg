@@ -6,6 +6,7 @@ scpCmd(args) ::= <<
 
 scpCommand(args) ::= <%
 scp
+<\ ><scpRecursive(args)>
 <\ ><sshArgs(args)>
 <\ ><sshDebug(args)>
 <\ ><scpPort(args)>
@@ -22,4 +23,8 @@ scpRemote(args, path) ::= <%
 
 scpPort(args) ::= <%
     
+%>
+
+scpRecursive(args) ::= <%
+<if(args.recursive)>-r<endif>
 %>
