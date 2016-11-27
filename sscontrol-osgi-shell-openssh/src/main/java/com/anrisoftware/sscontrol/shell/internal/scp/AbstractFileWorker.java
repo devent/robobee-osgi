@@ -78,4 +78,9 @@ public class AbstractFileWorker {
         return task;
     }
 
+    protected boolean isFileOnly() {
+        Boolean fileOnly = (Boolean) args.get("fileOnly");
+        return fileOnly != null ? fileOnly : false;
+    }
+
 }

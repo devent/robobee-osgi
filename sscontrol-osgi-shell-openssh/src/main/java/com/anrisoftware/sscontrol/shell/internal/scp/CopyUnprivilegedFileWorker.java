@@ -1,9 +1,13 @@
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
+import static com.anrisoftware.sscontrol.fetch.external.Fetch.SRC_ARG;
+
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+
+import org.apache.commons.io.FilenameUtils;
 
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
@@ -41,6 +45,11 @@ public class CopyUnprivilegedFileWorker extends AbstractFileWorker
 
     @Override
     public ProcessTask call() throws CommandExecException {
+        if (isFileOnly()) {
+            String src = getSrc();
+            src = FilenameUtils.getName(src);
+            args.put(SRC_ARG, src);
+        }
         return runScript(scriptRes, args);
     }
 

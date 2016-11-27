@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
@@ -64,9 +66,11 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
         a.put(PRIVILEGED_ARG, true);
         a.put(COMMAND_ARG, format(copyFileCommands, tmp, src));
         task = runCmd(a);
+        if (isFileOnly()) {
+            src = FilenameUtils.getName(src);
+        }
         args.put(SRC_ARG, format("%s/%s", tmp, src));
         task = runScript(scriptRes, args);
         return task;
     }
-
 }

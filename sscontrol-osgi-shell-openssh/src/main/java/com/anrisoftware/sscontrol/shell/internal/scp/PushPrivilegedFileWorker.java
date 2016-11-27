@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
@@ -60,11 +62,15 @@ public class PushPrivilegedFileWorker extends AbstractFileWorker
         ProcessTask task = null;
         String tmp = remoteTempDir;
         String dest = getDest();
-        args.put(DEST_ARG, format("%s/%s", remoteTempDir, dest));
+        String tmpDest = dest;
+        if (isFileOnly()) {
+            tmpDest = FilenameUtils.getName(tmpDest);
+        }
+        args.put(DEST_ARG, format("%s/%s", remoteTempDir, tmpDest));
         task = runScript(scriptRes, args);
         Map<String, Object> a = new HashMap<String, Object>(args);
         a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(pushFileCommands, tmp, dest));
+        a.put(COMMAND_ARG, format(pushFileCommands, tmp, tmpDest, dest));
         task = runCmd(a);
         return task;
     }
