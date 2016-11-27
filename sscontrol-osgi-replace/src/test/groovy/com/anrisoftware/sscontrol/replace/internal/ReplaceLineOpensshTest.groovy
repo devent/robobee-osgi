@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.replace.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -31,16 +30,17 @@ import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.replace.external.Replace.ReplaceFactory
 import com.anrisoftware.sscontrol.replace.internal.ParseSedSyntax.ParseSedSyntaxFactory
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
-import com.anrisoftware.sscontrol.shell.external.utils.PartScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
-import com.google.inject.Injector
 import com.google.inject.Module
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -49,7 +49,7 @@ import com.google.inject.Module
  * @version 1.0
  */
 @Slf4j
-class ReplaceTest extends PartScriptTestBase {
+class ReplaceLineOpensshTest extends AbstractCmdTestBase {
 
     static Threads threads
 
@@ -63,18 +63,20 @@ class ReplaceTest extends PartScriptTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        dest_search_replace_scp: ReplaceTest.class.getResource('dest_search_replace_scp_expected.txt'),
-        privileged_dest_search_replace_scp: ReplaceTest.class.getResource('privileged_dest_search_replace_scp_expected.txt'),
+        line_search_replace_scp: ReplaceLineOpensshTest.class.getResource('line_search_replace_scp_expected.txt'),
+        line_sed_replace_scp: ReplaceLineOpensshTest.class.getResource('line_sed_replace_scp_expected.txt'),
     ]
 
     @Test
-    void "replace cases openssh"() {
+    void "replace line"() {
         def testCases = [
             [
                 enabled: true,
-                name: "dest_search_replace",
+                name: "line_search_replace",
                 args: [
                     dest: "/tmp/aaa.txt",
+                ],
+                lines: [
                     search: /(?m)^test=.*/,
                     replace: 'test=replaced',
                 ],
@@ -86,12 +88,12 @@ class ReplaceTest extends PartScriptTestBase {
             ],
             [
                 enabled: true,
-                name: "privileged_dest_search_replace",
+                name: "line_sed_replace",
                 args: [
                     dest: "/tmp/aaa.txt",
-                    search: /(?m)^test=.*/,
-                    replace: 'test=replaced',
-                    privileged: true,
+                ],
+                lines: [
+                    replace: 's/(?m)^test=.*/test=replaced/',
                 ],
                 expected: { Map args ->
                     File dir = args.dir as File
@@ -112,38 +114,17 @@ class ReplaceTest extends PartScriptTestBase {
         }
     }
 
-    @Test
-    void "parse sed syntax"() {
-        def testCases = [
-            [
-                string: "s/(?m)^define\\('DB_NAME', '.*?'\\);/define('DB_NAME', 'db');/",
-                expected: { Map args ->
-                    ParseSedSyntax parser = args.parser as ParseSedSyntax
-                    assert parser.search == "(?m)^define\\('DB_NAME', '.*?'\\);"
-                    assert parser.replace == "define('DB_NAME', 'db');"
-                },
-            ],
-            [
-                string: "s/(?m)^define\\('DB_NAME \\/', '.*?'\\);/define('DB_NAME', 'db');/",
-                expected: { Map args ->
-                    ParseSedSyntax parser = args.parser as ParseSedSyntax
-                    assert parser.search == "(?m)^define\\('DB_NAME \\/', '.*?'\\);"
-                    assert parser.replace == "define('DB_NAME', 'db');"
-                },
-            ],
-        ]
-        testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
-            def parser = parseSedSyntaxFactory.create(test.string).parse()
-            test.expected([parser: parser])
-        }
-    }
-
     def createCmd(Map test, File tmp, int k) {
-        def fetch = replaceFactory.create test.args, test.host, this, threads, log
-        createEchoCommands tmp, ['sudo']
-        createEchoCommands tmp, ['scp']
-        return fetch
+        def replace = replaceFactory.create test.args, test.host, this, threads, log
+        replace.line test.lines
+        createEchoCommands tmp, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'sudo',
+            'scp',
+        ]
+        return replace
     }
 
     @Before

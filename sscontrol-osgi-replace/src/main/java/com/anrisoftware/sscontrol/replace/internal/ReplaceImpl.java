@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.replace.internal;
 
 import static org.apache.commons.lang3.Validate.isTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -28,6 +30,7 @@ import com.anrisoftware.propertiesutils.ContextProperties;
 import com.anrisoftware.sscontrol.replace.external.Replace;
 import com.anrisoftware.sscontrol.replace.internal.LoadFileWorker.LoadFileWorkerFactory;
 import com.anrisoftware.sscontrol.replace.internal.PushFileWorker.PushFileWorkerFactory;
+import com.anrisoftware.sscontrol.replace.internal.ReplaceLine.ReplaceLineFactory;
 import com.anrisoftware.sscontrol.replace.internal.ReplaceWorker.ReplaceWorkerFactory;
 import com.anrisoftware.sscontrol.types.external.AppException;
 import com.anrisoftware.sscontrol.types.external.SshHost;
@@ -43,13 +46,18 @@ public class ReplaceImpl implements Replace {
 
     private final Map<String, Object> args;
 
+    private final List<ReplaceLine> lines;
+
     private final SshHost host;
 
     private final Object parent;
 
     private final Threads threads;
 
-    private final Object log;
+    private final Object cmdLog;
+
+    @Inject
+    private ReplaceImplLogger log;
 
     @Inject
     private ReplaceWorkerFactory replace;
@@ -61,25 +69,60 @@ public class ReplaceImpl implements Replace {
     private PushFileWorkerFactory push;
 
     @Inject
+    private ReplaceLineFactory lineFactory;
+
+    @Inject
     ReplaceImpl(@Assisted Map<String, Object> args, @Assisted SshHost host,
             @Assisted("parent") Object parent, @Assisted Threads threads,
-            @Assisted("log") Object log,
+            @Assisted("log") Object cmdLog,
             PropertiesProvider propertiesProvider) {
         this.args = new HashMap<String, Object>(args);
+        this.lines = new ArrayList<ReplaceLine>();
         this.host = host;
         this.parent = parent;
         this.threads = threads;
-        this.log = log;
+        this.cmdLog = cmdLog;
         setupDefaults(propertiesProvider);
         checkArgs();
     }
 
+    public void line(String replace) {
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("replace", replace);
+        line(args);
+    }
+
+    public void line(Map<String, Object> args) {
+        ReplaceLine line = lineFactory.create(args);
+        log.lineAdded(this, line);
+        lines.add(line);
+    }
+
     @Override
     public Replace call() throws AppException {
-        String text = load.create(args, host, parent, threads, log).call();
-        TokensTemplate tokens = replace.create(args, text).call();
-        push.create(args, host, tokens, threads, log, text).call();
+        String text = load.create(args, host, parent, threads, cmdLog).call();
+        if (lines.size() == 0) {
+            text = setupReplaceArg(text);
+        } else {
+            text = setupReplaceLines(text);
+        }
+        push.create(args, host, parent, threads, cmdLog, text).call();
         return this;
+    }
+
+    private String setupReplaceLines(String text) throws AppException {
+        for (ReplaceLine line : lines) {
+            Map<String, Object> a = line.getArgs(args);
+            TokensTemplate tokens = replace.create(a, text).call();
+            text = tokens.getText();
+        }
+        return text;
+    }
+
+    private String setupReplaceArg(String text) throws AppException {
+        TokensTemplate tokens = replace.create(args, text).call();
+        text = tokens.getText();
+        return text;
     }
 
     private void checkArgs() {

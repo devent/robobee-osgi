@@ -21,6 +21,7 @@ import com.anrisoftware.sscontrol.replace.internal.CreateTempFileWorker.CreateTe
 import com.anrisoftware.sscontrol.replace.internal.LoadFileWorker.LoadFileWorkerFactory;
 import com.anrisoftware.sscontrol.replace.internal.ParseSedSyntax.ParseSedSyntaxFactory;
 import com.anrisoftware.sscontrol.replace.internal.PushFileWorker.PushFileWorkerFactory;
+import com.anrisoftware.sscontrol.replace.internal.ReplaceLine.ReplaceLineFactory;
 import com.anrisoftware.sscontrol.replace.internal.ReplaceWorker.ReplaceWorkerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -54,6 +55,9 @@ public class ReplaceModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(ParseSedSyntax.class, ParseSedSyntax.class)
                 .build(ParseSedSyntaxFactory.class));
+        install(new FactoryModuleBuilder()
+                .implement(ReplaceLine.class, ReplaceLine.class)
+                .build(ReplaceLineFactory.class));
     }
 
 }
