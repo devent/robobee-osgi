@@ -37,35 +37,29 @@ public class PushPrivilegedFileWorker extends AbstractFileWorker
 
         PushPrivilegedFileWorker create(Map<String, Object> args, Object parent,
                 Threads threads, Templates templates,
-                TemplateResource scriptRes,
-                @Assisted("remoteTempDir") String remoteTempDir,
-                @Assisted("pushFileCommands") String pushFileCommands);
+                TemplateResource scriptRes);
 
     }
-
-    @Inject
-    @Assisted("remoteTempDir")
-    private String remoteTempDir;
-
-    @Inject
-    @Assisted("pushFileCommands")
-    private String pushFileCommands;
 
     @Inject
     @Assisted
     private TemplateResource scriptRes;
 
+    @Inject
+    private LinuxPropertiesProvider linuxPropertiesProvider;
+
     @Override
     public ProcessTask call() throws CommandExecException {
         ProcessTask task = null;
-        String tmp = remoteTempDir;
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String cmd = linuxPropertiesProvider.getPushFileCommands();
         String src = getSrc();
         String dest = getDest();
         args.put(DEST_ARG, tmp);
         task = runScript(scriptRes, args);
         Map<String, Object> a = new HashMap<String, Object>(args);
         a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(pushFileCommands, tmp, src, dest));
+        a.put(COMMAND_ARG, format(cmd, tmp, src, dest));
         task = runCmd(a);
         return task;
     }

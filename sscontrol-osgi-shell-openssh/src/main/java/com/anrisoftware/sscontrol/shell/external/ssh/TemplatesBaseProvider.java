@@ -16,19 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+package com.anrisoftware.sscontrol.shell.external.ssh;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.stringtemplate.v4.STGroup;
-
-import com.anrisoftware.resources.templates.external.SerializiableGroup;
 import com.anrisoftware.resources.templates.external.Templates;
 import com.anrisoftware.resources.templates.external.TemplatesFactory;
 
@@ -38,19 +30,13 @@ import com.anrisoftware.resources.templates.external.TemplatesFactory;
  * @author Erwin Müller <erwin.mueller@deventm.de>
  * @version 1.0
  */
-public class TemplatesProvider implements Provider<Templates> {
+public class TemplatesBaseProvider implements Provider<Templates> {
 
     private final Templates templates;
 
     @Inject
-    TemplatesProvider(TemplatesBaseProvider baseProvider,
-            TemplatesFactory templatesFactory) {
-        Map<Serializable, Serializable> attr = new HashMap<Serializable, Serializable>();
-        ArrayList<Serializable> parents = new ArrayList<Serializable>();
-        parents.add(new SerializiableGroup((STGroup) baseProvider.get()
-                .getResource("ssh_base").getTemplate()));
-        attr.put("imports", parents);
-        this.templates = templatesFactory.create("CmdTemplates", attr);
+    TemplatesBaseProvider(TemplatesFactory templatesFactory) {
+        this.templates = templatesFactory.create("CmdBaseTemplates");
     }
 
     @Override

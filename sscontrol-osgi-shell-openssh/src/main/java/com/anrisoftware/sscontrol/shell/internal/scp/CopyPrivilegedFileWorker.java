@@ -39,38 +39,52 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
 
         CopyPrivilegedFileWorker create(Map<String, Object> args, Object parent,
                 Threads threads, Templates templates,
-                TemplateResource scriptRes,
-                @Assisted("remoteTempDir") String remoteTempDir,
-                @Assisted("copyFileCommands") String copyFileCommands);
+                TemplateResource scriptRes);
 
     }
-
-    @Inject
-    @Assisted("remoteTempDir")
-    private String remoteTempDir;
-
-    @Inject
-    @Assisted("copyFileCommands")
-    private String copyFileCommands;
 
     @Inject
     @Assisted
     private TemplateResource scriptRes;
 
+    @Inject
+    private LinuxPropertiesProvider linuxPropertiesProvider;
+
     @Override
     public ProcessTask call() throws CommandExecException {
         ProcessTask task = null;
-        String tmp = remoteTempDir;
+        task = copyFiles();
+        task = fetchFiles();
+        task = cleanFiles();
+        return task;
+    }
+
+    private ProcessTask cleanFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String cmd = linuxPropertiesProvider.getCleanFileCommands();
         String src = getSrc();
         Map<String, Object> a = new HashMap<String, Object>(args);
-        a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(copyFileCommands, tmp, src));
-        task = runCmd(a);
+        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        return runCmd(a);
+    }
+
+    private ProcessTask fetchFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String src = getSrc();
         if (isFileOnly()) {
             src = FilenameUtils.getName(src);
         }
         args.put(SRC_ARG, format("%s/%s", tmp, src));
-        task = runScript(scriptRes, args);
-        return task;
+        return runScript(scriptRes, args);
+    }
+
+    private ProcessTask copyFiles() throws CommandExecException {
+        String tmp = linuxPropertiesProvider.getRemoteTempDir();
+        String cmd = linuxPropertiesProvider.getCopyFileCommands();
+        String src = getSrc();
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put(PRIVILEGED_ARG, true);
+        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        return runCmd(a);
     }
 }

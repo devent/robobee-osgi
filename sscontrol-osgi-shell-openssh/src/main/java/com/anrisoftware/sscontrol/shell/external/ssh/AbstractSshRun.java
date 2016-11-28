@@ -19,13 +19,11 @@
 package com.anrisoftware.sscontrol.shell.external.ssh;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_KEY_ARG;
-import static java.lang.String.format;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -36,9 +34,7 @@ import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
-import com.anrisoftware.sscontrol.shell.internal.ssh.LinuxPropertiesProvider;
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshMaster.SshMasterFactory;
-import com.anrisoftware.sscontrol.shell.internal.ssh.TemplatesProvider;
 
 /**
  * Setups the SSH key and executes the command.
@@ -52,13 +48,7 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
     protected TemplatesProvider templates;
 
     @Inject
-    private AbstractSshRunLogger log;
-
-    @Inject
     private SshMasterFactory sshMasterFactory;
-
-    @Inject
-    protected LinuxPropertiesProvider linuxPropertiesProvider;
 
     protected AbstractSshRun(Map<String, Object> args, Object parent,
             Threads threads) {
@@ -80,34 +70,17 @@ public abstract class AbstractSshRun extends AbstractCmdRun {
     }
 
     /**
+     * Setups the remote before executing a command.
+     * 
+     * @throws CommandExecException
+     */
+    protected void setupRemote() throws CommandExecException {
+    }
+
+    /**
      * Returns the command template that is executed by SSH.
      */
     protected abstract String getCmdTemplate();
-
-    protected String getRemoteTempDir() {
-        return linuxPropertiesProvider.getRemoteTempDir();
-    }
-
-    protected String getCopyFileCommands() {
-        return linuxPropertiesProvider.getCopyFileCommands();
-    }
-
-    protected String getPushFileCommands() {
-        return linuxPropertiesProvider.getPushFileCommands();
-    }
-
-    private void setupRemote() throws CommandExecException {
-        ProcessTask task;
-        String template = "ssh_wrap_bash";
-        TemplateResource res = templates.get().getResource(template);
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.putAll(this.args);
-        args.put("privileged", true);
-        args.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
-                linuxPropertiesProvider.getRemoteTempDir()));
-        task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
-        log.setupRemoteFinished(parent, task, args);
-    }
 
     private void setupSshKey() throws SetupSshKeyException {
         URI key = (URI) args.get(SSH_KEY_ARG);

@@ -30,6 +30,7 @@ import com.anrisoftware.globalpom.threads.external.core.Threads;
 import com.anrisoftware.resources.templates.external.TemplateResource;
 import com.anrisoftware.resources.templates.external.Templates;
 import com.anrisoftware.sscontrol.shell.external.ssh.AbstractCmdRun;
+import com.anrisoftware.sscontrol.shell.external.ssh.TemplatesProvider;
 import com.google.inject.assistedinject.Assisted;
 
 /**

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with sscontrol-osgi-shell-openssh. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.anrisoftware.sscontrol.shell.internal.ssh;
+package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import java.net.URL;
 
@@ -32,26 +32,30 @@ import com.anrisoftware.propertiesutils.AbstractContextPropertiesProvider;
 public class LinuxPropertiesProvider extends AbstractContextPropertiesProvider {
 
     private static final URL res = LinuxPropertiesProvider.class
-            .getResource("/linux_cmd.properties");
+            .getResource("/scp_commands_linux.properties");
 
     LinuxPropertiesProvider() {
         super(LinuxPropertiesProvider.class, res);
     }
 
     public String getRemoteTempDir() {
-        return get().getProperty("ssh_remote_temp_directory");
+        return get().getProperty("remote_temp_directory");
     }
 
     public String getSetupCommands() {
-        return get().getProperty("ssh_setup_commands");
+        return get().getProperty("setup_commands");
     }
 
     public String getCopyFileCommands() {
-        return get().getProperty("ssh_copy_file_commands");
+        return get().getProperty("copy_file_commands");
     }
 
     public String getPushFileCommands() {
-        return get().getProperty("ssh_push_file_commands");
+        return get().getProperty("push_file_commands");
+    }
+
+    public String getCleanFileCommands() {
+        return get().getProperty("clean_file_commands");
     }
 
 }

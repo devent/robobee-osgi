@@ -1,8 +1,8 @@
-package com.anrisoftware.sscontrol.shell.external.ssh;
+package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_debug;
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_info;
-import static com.anrisoftware.sscontrol.shell.external.ssh.AbstractSshRunLogger._.setup_remote_finished_trace;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.setup_remote_finished_debug;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.setup_remote_finished_info;
+import static com.anrisoftware.sscontrol.shell.internal.scp.ScpRunLogger._.setup_remote_finished_trace;
 
 import java.util.Map;
 
@@ -12,13 +12,13 @@ import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.log.AbstractLogger;
 
 /**
- * Logging for {@link AbstractSshRun}.
+ * Logging for {@link ScpRun}.
  * 
  * @author Erwin Mueller, erwin.mueller@deventm.org
  * @since 1.0
  */
 @Singleton
-final class AbstractSshRunLogger extends AbstractLogger {
+final class ScpRunLogger extends AbstractLogger {
 
     enum _ {
 
@@ -41,10 +41,10 @@ final class AbstractSshRunLogger extends AbstractLogger {
     }
 
     /**
-     * Sets the context of the logger to {@link AbstractSshRun}.
+     * Sets the context of the logger to {@link ScpRun}.
      */
-    public AbstractSshRunLogger() {
-        super(AbstractSshRun.class);
+    public ScpRunLogger() {
+        super(ScpRun.class);
     }
 
     void setupRemoteFinished(Object parent, ProcessTask task,

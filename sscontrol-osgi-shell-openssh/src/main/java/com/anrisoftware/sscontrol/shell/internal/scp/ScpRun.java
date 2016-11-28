@@ -19,7 +19,9 @@
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
 import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
+import static java.lang.String.format;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -56,6 +58,9 @@ public class ScpRun extends AbstractSshRun {
     }
 
     @Inject
+    private ScpRunLogger log;
+
+    @Inject
     private CopyPrivilegedFileWorkerFactory copyPrivileged;
 
     @Inject
@@ -65,9 +70,26 @@ public class ScpRun extends AbstractSshRun {
     private CopyUnprivilegedFileWorkerFactory copyUnprivileged;
 
     @Inject
+    private LinuxPropertiesProvider linuxPropertiesProvider;
+
+    @Inject
     ScpRun(@Assisted Map<String, Object> args, @Assisted Object parent,
             @Assisted Threads threads) {
         super(args, parent, threads);
+    }
+
+    @Override
+    protected void setupRemote() throws CommandExecException {
+        ProcessTask task;
+        String template = "ssh_wrap_bash";
+        TemplateResource res = templates.get().getResource(template);
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.putAll(this.args);
+        args.put("privileged", true);
+        args.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
+                linuxPropertiesProvider.getRemoteTempDir()));
+        task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
+        log.setupRemoteFinished(parent, task, args);
     }
 
     @Override
@@ -95,11 +117,11 @@ public class ScpRun extends AbstractSshRun {
         boolean remoteDest = (Boolean) args.get("remoteDest");
         if (remoteSrc) {
             return copyPrivileged.create(args, parent, threads, templates.get(),
-                    res, getRemoteTempDir(), getCopyFileCommands()).call();
+                    res).call();
         }
         if (remoteDest) {
             return pushPrivileged.create(args, parent, threads, templates.get(),
-                    res, getRemoteTempDir(), getPushFileCommands()).call();
+                    res).call();
         }
         return task;
     }
