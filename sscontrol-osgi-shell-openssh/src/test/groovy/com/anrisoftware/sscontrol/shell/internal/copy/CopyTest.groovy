@@ -17,7 +17,6 @@ package com.anrisoftware.sscontrol.shell.internal.copy
 
 import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -28,14 +27,15 @@ import org.junit.rules.TemporaryFolder
 
 import com.anrisoftware.globalpom.threads.external.core.Threads
 import com.anrisoftware.sscontrol.copy.external.Copy.CopyFactory
-import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractCmdTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.scp.ScpModule
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
-import com.google.inject.Injector
 import com.google.inject.Module
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -55,14 +55,17 @@ class CopyTest extends AbstractCmdTestBase {
     public TemporaryFolder folder = new TemporaryFolder()
 
     static Map expectedResources = [
-        dest_src: CopyTest.class.getResource('dest_src_expected.txt'),
-        privileged_src: CopyTest.class.getResource('privileged_src_expected.txt'),
+        dest_src_scp: CopyTest.class.getResource('dest_src_scp_expected.txt'),
+        privileged_src_scp: CopyTest.class.getResource('privileged_src_scp_expected.txt'),
+        privileged_src_cp: CopyTest.class.getResource('privileged_src_cp_expected.txt'),
+        privileged_src_rm: CopyTest.class.getResource('privileged_src_rm_expected.txt'),
     ]
 
     @Test
     void "copy cases"() {
         def testCases = [
             [
+                enabled: true,
                 name: "dest_src",
                 args: [
                     src: "aaa.txt",
@@ -71,10 +74,11 @@ class CopyTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 },
             ],
             [
+                enabled: true,
                 name: "privileged_src",
                 args: [
                     src: "aaa.txt",
@@ -84,22 +88,33 @@ class CopyTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources[name] as URL)
+                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToString(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                    assertStringContent fileToString(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
-            def tmp = folder.newFolder()
-            test.host = SshFactory.localhost(injector).hosts[0]
-            doTest test, tmp, k
+            if (test.enabled) {
+                log.info '\n######### {}. case: {}', k, test
+                def tmp = folder.newFolder()
+                test.host = SshFactory.localhost(injector).hosts[0]
+                doTest test, tmp, k
+            }
         }
     }
 
     def createCmd(Map test, File tmp, int k) {
         def fetch = copyFactory.create test.args, test.host, this, threads, log
-        createEchoCommands tmp, ['sudo']
-        createEchoCommands tmp, ['scp']
+        createEchoCommands tmp, [
+            'mkdir',
+            'chown',
+            'chmod',
+            'cp',
+            'rm',
+            'sudo',
+            'scp',
+        ]
         return fetch
     }
 

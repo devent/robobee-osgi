@@ -1,0 +1,1 @@
+-C -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no -o ControlMaster=auto -o ControlPersist=60s -o ConnectTimeout=10 -o ControlPath=/tmp/robobee-localhost-22-devent/ssh/robobee-localhost-22-devent aaa.txt devent@localhost:/var/lib/robobee/tmp
