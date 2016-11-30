@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.shell.external.utils
 
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -56,6 +55,8 @@ import com.google.inject.AbstractModule
 import com.google.inject.Guice
 import com.google.inject.Injector
 
+import groovy.util.logging.Slf4j
+
 /**
  * Extend this class to test service scripts.
  *
@@ -63,7 +64,7 @@ import com.google.inject.Injector
  * @version 1.0
  */
 @Slf4j
-abstract class ScriptTestBase {
+abstract class AbstractScriptTestBase {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder()
@@ -97,7 +98,7 @@ abstract class ScriptTestBase {
                     List<SshHost> targets = s.targets.size() == 0 ? all : s.targets
                     targets.each { SshHost host ->
                         log.info '{}. {} {} {}', i, name, s, host
-                        HostServiceScript script = services.getAvailableScriptService('hostname/debian/8').create(services, s, host, threads)
+                        HostServiceScript script = services.getAvailableScriptService(scriptServiceName).create(services, s, host, threads)
                         script = setupScript script, dir: dir
                         script.run()
                     }
@@ -110,6 +111,8 @@ abstract class ScriptTestBase {
 
     abstract String getServiceName()
 
+    abstract String getScriptServiceName()
+
     abstract void createDummyCommands(File dir)
 
     abstract void putServices(HostServices services)
@@ -121,8 +124,11 @@ abstract class ScriptTestBase {
     }
 
     HostServiceScript setupScript(Map args, HostServiceScript script) {
-        script.chdir = args.dir
+        script.setChdir args.dir
+        script.setPwd args.dir
+        script.setSudoEnv [:]
         script.sudoEnv.PATH = args.dir
+        script.setEnv [:]
         script.env.PATH = args.dir
         return script
     }

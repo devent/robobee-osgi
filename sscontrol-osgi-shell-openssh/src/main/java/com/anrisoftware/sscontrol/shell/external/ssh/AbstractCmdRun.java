@@ -18,6 +18,7 @@
  */
 package com.anrisoftware.sscontrol.shell.external.ssh;
 
+import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SHELL_ARG;
 import static com.anrisoftware.sscontrol.shell.external.Cmd.SSH_CONTROL_PATH_ARG;
 import static org.apache.commons.io.FilenameUtils.getBaseName;
@@ -109,6 +110,11 @@ public abstract class AbstractCmdRun {
         task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
         log.commandFinished(parent, task, args);
         return task;
+    }
+
+    protected Boolean isPrivileged(Map<String, Object> args) {
+        Boolean privileged = (Boolean) args.get(PRIVILEGED_ARG);
+        return privileged != null && privileged;
     }
 
     protected static final String COMMAND_ARG = "command";

@@ -61,6 +61,11 @@ public class AbstractFileWorker {
         return args.get(SRC_ARG).toString();
     }
 
+    protected Boolean isRecursive() {
+        Boolean recursive = (Boolean) args.get("recursive");
+        return recursive != null && recursive;
+    }
+
     protected ProcessTask runScript(TemplateResource res,
             Map<String, Object> args) throws CommandExecException {
         ProcessTask task;

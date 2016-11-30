@@ -18,7 +18,6 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.scp;
 
-import static com.anrisoftware.sscontrol.shell.external.Cmd.PRIVILEGED_ARG;
 import static java.lang.String.format;
 
 import java.util.HashMap;
@@ -80,16 +79,19 @@ public class ScpRun extends AbstractSshRun {
 
     @Override
     protected void setupRemote() throws CommandExecException {
+        if (!isPrivileged(args)) {
+            return;
+        }
         ProcessTask task;
         String template = "ssh_wrap_bash";
         TemplateResource res = templates.get().getResource(template);
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.putAll(this.args);
-        args.put("privileged", true);
-        args.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
+        Map<String, Object> a = new HashMap<String, Object>();
+        a.putAll(args);
+        a.put("privileged", true);
+        a.put(COMMAND_ARG, format(linuxPropertiesProvider.getSetupCommands(),
                 linuxPropertiesProvider.getRemoteTempDir()));
-        task = scriptEx.create(args, parent, threads, res, "sshCmd").call();
-        log.setupRemoteFinished(parent, task, args);
+        task = scriptEx.create(a, parent, threads, res, "sshCmd").call();
+        log.setupRemoteFinished(parent, task, a);
     }
 
     @Override
@@ -101,10 +103,9 @@ public class ScpRun extends AbstractSshRun {
     protected ProcessTask runCommand(TemplateResource res,
             Map<String, Object> args) throws CommandExecException {
         ProcessTask task = null;
-        Boolean privileged = (Boolean) args.get(PRIVILEGED_ARG);
-        if (privileged == null || !privileged) {
+        if (!isPrivileged(args)) {
             task = runUnprivileged(res, args);
-        } else if (privileged != null || privileged) {
+        } else {
             task = runPrivileged(res, args);
         }
         return task;
@@ -116,12 +117,12 @@ public class ScpRun extends AbstractSshRun {
         boolean remoteSrc = (Boolean) args.get("remoteSrc");
         boolean remoteDest = (Boolean) args.get("remoteDest");
         if (remoteSrc) {
-            return copyPrivileged.create(args, parent, threads, templates.get(),
-                    res).call();
+            return copyPrivileged
+                    .create(args, parent, threads, templates.get(), res).call();
         }
         if (remoteDest) {
-            return pushPrivileged.create(args, parent, threads, templates.get(),
-                    res).call();
+            return pushPrivileged
+                    .create(args, parent, threads, templates.get(), res).call();
         }
         return task;
     }

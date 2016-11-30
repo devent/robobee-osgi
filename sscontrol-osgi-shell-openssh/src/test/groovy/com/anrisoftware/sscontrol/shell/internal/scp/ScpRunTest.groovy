@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.shell.internal.scp
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -42,6 +41,8 @@ import com.anrisoftware.sscontrol.shell.internal.scp.ScpRun.ScpRunFactory
 import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.google.inject.Guice
 import com.google.inject.Injector
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -94,7 +95,7 @@ class ScpRunTest {
         scp()
         Map testExpected = test.expected
         test.commands.each { String it ->
-            assertStringContent fileToString(toFile(args, it)), resourceToString(ScpRunTest.class.getResource(testExpected[it] as String))
+            assertStringContent fileToStringReplace(toFile(args, it)), resourceToString(ScpRunTest.class.getResource(testExpected[it] as String))
         }
     }
 

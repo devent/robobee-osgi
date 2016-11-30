@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.copy
 
-import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
+import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
@@ -56,9 +56,15 @@ class CopyTest extends AbstractCmdTestBase {
 
     static Map expectedResources = [
         dest_src_scp: CopyTest.class.getResource('dest_src_scp_expected.txt'),
+        recursive_dest_src_scp: CopyTest.class.getResource('recursive_dest_src_scp_expected.txt'),
         privileged_src_scp: CopyTest.class.getResource('privileged_src_scp_expected.txt'),
+        privileged_src_sudo: CopyTest.class.getResource('privileged_src_sudo_expected.txt'),
         privileged_src_cp: CopyTest.class.getResource('privileged_src_cp_expected.txt'),
         privileged_src_rm: CopyTest.class.getResource('privileged_src_rm_expected.txt'),
+        privileged_recursive_src_scp: CopyTest.class.getResource('privileged_recursive_src_scp_expected.txt'),
+        privileged_recursive_src_sudo: CopyTest.class.getResource('privileged_recursive_src_sudo_expected.txt'),
+        privileged_recursive_src_cp: CopyTest.class.getResource('privileged_recursive_src_cp_expected.txt'),
+        privileged_recursive_src_rm: CopyTest.class.getResource('privileged_recursive_src_rm_expected.txt'),
     ]
 
     @Test
@@ -74,7 +80,27 @@ class CopyTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
+                },
+            ],
+            [
+                enabled: true,
+                name: "recursive_dest_src",
+                args: [
+                    src: "/home/devent",
+                    dest: "/tmp",
+                    recursive: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
                 },
             ],
             [
@@ -88,9 +114,28 @@ class CopyTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToString(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
-                    assertStringContent fileToString(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
+                },
+            ],
+            [
+                enabled: true,
+                name: "privileged_recursive_src",
+                args: [
+                    src: "/home/devent",
+                    dest: "/tmp",
+                    privileged: true,
+                    recursive: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
                 },
             ],
         ]

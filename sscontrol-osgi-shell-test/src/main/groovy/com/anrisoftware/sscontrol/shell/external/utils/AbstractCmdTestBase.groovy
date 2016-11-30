@@ -19,7 +19,7 @@ import com.google.inject.Module
  * @version 1.0
  */
 @Slf4j
-abstract class PartScriptTestBase {
+abstract class AbstractCmdTestBase {
 
     Injector injector
 

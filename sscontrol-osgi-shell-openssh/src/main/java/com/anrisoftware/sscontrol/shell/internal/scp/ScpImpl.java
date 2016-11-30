@@ -48,7 +48,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class ScpImpl implements Scp {
 
-    private static final String PWD_ARG = "pwd";
+    private static final String DEST_ARG = "dest";
 
     private static final String SRC_ARG = "src";
 
@@ -92,8 +92,8 @@ public class ScpImpl implements Scp {
     private void checkArgs(Map<String, Object> args) {
         isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
         notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
-        isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
-        notNull(args.get(PWD_ARG), "%s=null", PWD_ARG);
+        isTrue(args.containsKey(DEST_ARG), "%s=null", DEST_ARG);
+        notNull(args.get(DEST_ARG), "%s=null", DEST_ARG);
     }
 
     private void setupArgs() {

@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.replace.internal
 
-import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
+import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
@@ -83,7 +83,7 @@ class ReplaceLineOpensshTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 },
             ],
             [
@@ -98,7 +98,7 @@ class ReplaceLineOpensshTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 },
             ],
         ]

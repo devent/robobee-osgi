@@ -124,7 +124,6 @@ public class ReplaceImpl implements Replace {
 
     private void setupDefaults(PropertiesProvider propertiesProvider) {
         ContextProperties p = propertiesProvider.getProperties();
-        args.put("fileOnly", true);
         Object arg = args.get(CHARSET_ARG);
         if (arg == null) {
             args.put(CHARSET_ARG, p.getCharsetProperty("default_charset"));

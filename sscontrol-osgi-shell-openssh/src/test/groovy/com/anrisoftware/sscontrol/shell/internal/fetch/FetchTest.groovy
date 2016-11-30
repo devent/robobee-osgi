@@ -15,7 +15,7 @@
  */
 package com.anrisoftware.sscontrol.shell.internal.fetch
 
-import static com.anrisoftware.globalpom.utils.TestUtils.assertStringContent
+import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
@@ -57,13 +57,15 @@ class FetchTest extends AbstractCmdTestBase {
 
     static Map expectedResources = [
         src_scp: FetchTest.class.getResource('src_scp_expected.txt'),
-        src_sudo: FetchTest.class.getResource('src_sudo_expected.txt'),
         directory_src_scp: FetchTest.class.getResource('directory_src_scp_expected.txt'),
-        directory_src_sudo: FetchTest.class.getResource('directory_src_sudo_expected.txt'),
         dest_src_scp: FetchTest.class.getResource('dest_src_scp_expected.txt'),
         dest_src_sudo: FetchTest.class.getResource('dest_src_sudo_expected.txt'),
         privileged_src_scp: FetchTest.class.getResource('privileged_src_scp_expected.txt'),
         privileged_src_sudo: FetchTest.class.getResource('privileged_src_sudo_expected.txt'),
+        privileged_dir_src_scp: FetchTest.class.getResource('privileged_dir_src_scp_expected.txt'),
+        privileged_dir_src_sudo: FetchTest.class.getResource('privileged_dir_src_sudo_expected.txt'),
+        privileged_dir_src_cp: FetchTest.class.getResource('privileged_dir_src_cp_expected.txt'),
+        privileged_dir_src_rm: FetchTest.class.getResource('privileged_dir_src_rm_expected.txt'),
     ]
 
     @Test
@@ -79,8 +81,10 @@ class FetchTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
                 },
             ],
             [
@@ -94,8 +98,10 @@ class FetchTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
                 },
             ],
             [
@@ -108,7 +114,7 @@ class FetchTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
                 },
             ],
             [
@@ -122,7 +128,25 @@ class FetchTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                },
+            ],
+            [
+                enabled: true,
+                name: "privileged_dir_src",
+                args: [
+                    src: "/var/wordpress",
+                    dest: null,
+                    recursive: true,
+                    privileged: true,
+                ],
+                expected: { Map args ->
+                    File dir = args.dir as File
+                    String name = args.name as String
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
                 },
             ],
         ]

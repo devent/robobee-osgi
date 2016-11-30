@@ -65,6 +65,9 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
     static Map expectedResources = [
         args_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_search_replace_scp_expected.txt'),
         args_privileged_dest_search_replace_scp: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_scp_expected.txt'),
+        args_privileged_dest_search_replace_sudo: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_sudo_expected.txt'),
+        args_privileged_dest_search_replace_cp: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_cp_expected.txt'),
+        args_privileged_dest_search_replace_rm: ReplaceOpensshTest.class.getResource('args_privileged_dest_search_replace_rm_expected.txt'),
         args_dest_sed_replace_scp: ReplaceOpensshTest.class.getResource('args_dest_sed_replace_scp_expected.txt'),
     ]
 
@@ -82,7 +85,10 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
                 },
             ],
             [
@@ -97,7 +103,10 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'sudo.out')), resourceToString(expectedResources["${name}_sudo"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'cp.out')), resourceToString(expectedResources["${name}_cp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'rm.out')), resourceToString(expectedResources["${name}_rm"] as URL)
                 },
             ],
             [
@@ -110,7 +119,10 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
                 expected: { Map args ->
                     File dir = args.dir as File
                     String name = args.name as String
-                    assertStringContent fileToString(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assertStringContent fileToStringReplace(new File(dir, 'scp.out')), resourceToString(expectedResources["${name}_scp"] as URL)
+                    assert new File(dir, 'sudo.out').isFile() == false
+                    assert new File(dir, 'cp.out').isFile() == false
+                    assert new File(dir, 'rm.out').isFile() == false
                 },
             ],
         ]
@@ -119,7 +131,7 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
                 def tmp = folder.newFolder()
                 test.args.tmp = folder.newFile("replace_test.txt")
                 FileUtils.write test.args.tmp, 'test=foo\n'
-                log.info '{}. case: {}', k, test
+                log.info '\n######### {}. case: {}', k, test
                 test.host = SshFactory.localhost(injector).hosts[0]
                 doTest test, tmp, k
             }
@@ -160,6 +172,7 @@ class ReplaceOpensshTest extends AbstractCmdTestBase {
             'chown',
             'chmod',
             'cp',
+            'rm',
             'sudo',
             'scp'
         ]

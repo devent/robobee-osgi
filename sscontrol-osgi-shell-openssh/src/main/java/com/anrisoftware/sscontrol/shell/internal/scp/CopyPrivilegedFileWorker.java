@@ -62,7 +62,7 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
     private ProcessTask cleanFiles() throws CommandExecException {
         String tmp = linuxPropertiesProvider.getRemoteTempDir();
         String cmd = linuxPropertiesProvider.getCleanFileCommands();
-        String src = getSrc();
+        String src = FilenameUtils.getName(getSrc());
         Map<String, Object> a = new HashMap<String, Object>(args);
         a.put(COMMAND_ARG, format(cmd, tmp, src));
         return runCmd(a);
@@ -70,21 +70,20 @@ public class CopyPrivilegedFileWorker extends AbstractFileWorker
 
     private ProcessTask fetchFiles() throws CommandExecException {
         String tmp = linuxPropertiesProvider.getRemoteTempDir();
-        String src = getSrc();
-        if (isFileOnly()) {
-            src = FilenameUtils.getName(src);
-        }
-        args.put(SRC_ARG, format("%s/%s", tmp, src));
-        return runScript(scriptRes, args);
+        String src = FilenameUtils.getName(getSrc());
+        Map<String, Object> a = new HashMap<String, Object>(args);
+        a.put(SRC_ARG, format("%s/%s", tmp, src));
+        return runScript(scriptRes, a);
     }
 
     private ProcessTask copyFiles() throws CommandExecException {
         String tmp = linuxPropertiesProvider.getRemoteTempDir();
         String cmd = linuxPropertiesProvider.getCopyFileCommands();
         String src = getSrc();
+        String recursive = isRecursive() ? "-r " : "";
         Map<String, Object> a = new HashMap<String, Object>(args);
         a.put(PRIVILEGED_ARG, true);
-        a.put(COMMAND_ARG, format(cmd, tmp, src));
+        a.put(COMMAND_ARG, format(cmd, recursive, tmp, src));
         return runCmd(a);
     }
 }

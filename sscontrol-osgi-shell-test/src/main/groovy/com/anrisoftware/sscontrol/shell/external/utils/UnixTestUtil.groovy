@@ -15,10 +15,10 @@
  */
 package com.anrisoftware.sscontrol.shell.external.utils
 
-import groovy.transform.CompileStatic
-
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
+
+import groovy.transform.CompileStatic
 
 
 /**
@@ -53,9 +53,10 @@ class UnixTestUtil {
         bashDest.setExecutable true
     }
 
-    static String fileToString(File file) {
+    static String fileToStringReplace(File file) {
         String str = FileUtils.readFileToString file
-        str.replaceAll(/junit\d+/, 'junit')
+        str = str.replaceAll(/junit\d+/, 'junit')
+        str.replaceAll(/replace\d+/, 'replace')
     }
 
     static String resourceToString(URL resource) {

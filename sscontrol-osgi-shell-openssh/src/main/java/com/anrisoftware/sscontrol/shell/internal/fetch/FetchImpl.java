@@ -77,8 +77,6 @@ public class FetchImpl implements Fetch {
     private void checkArgs() {
         isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
         notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
-        isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
-        notNull(args.get(PWD_ARG), "%s=null", PWD_ARG);
     }
 
     private void setupArgs() {
@@ -88,6 +86,8 @@ public class FetchImpl implements Fetch {
         args.put(LOG_ARG, log);
         args.put(SRC_ARG, new File(src));
         if (args.get(DEST_ARG) == null) {
+            isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
+            notNull(args.get(PWD_ARG), "%s=null", PWD_ARG);
             File pwd = (File) args.get(PWD_ARG);
             args.put(DEST_ARG, pwd);
         } else {

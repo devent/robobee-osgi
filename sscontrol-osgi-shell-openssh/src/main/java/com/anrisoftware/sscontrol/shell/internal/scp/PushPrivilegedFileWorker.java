@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.anrisoftware.globalpom.exec.external.core.CommandExecException;
 import com.anrisoftware.globalpom.exec.external.core.ProcessTask;
 import com.anrisoftware.globalpom.threads.external.core.Threads;
@@ -53,7 +55,7 @@ public class PushPrivilegedFileWorker extends AbstractFileWorker
         ProcessTask task = null;
         String tmp = linuxPropertiesProvider.getRemoteTempDir();
         String cmd = linuxPropertiesProvider.getPushFileCommands();
-        String src = getSrc();
+        String src = FilenameUtils.getName(getSrc());
         String dest = getDest();
         args.put(DEST_ARG, tmp);
         task = runScript(scriptRes, args);

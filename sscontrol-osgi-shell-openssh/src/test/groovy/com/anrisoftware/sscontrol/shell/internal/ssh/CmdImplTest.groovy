@@ -20,7 +20,6 @@ package com.anrisoftware.sscontrol.shell.internal.ssh
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -37,6 +36,8 @@ import com.anrisoftware.sscontrol.shell.external.utils.CmdUtilsModules
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.google.inject.Guice
 import com.google.inject.Injector
+
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -143,7 +144,7 @@ chmod +w a.txt
             cmd args, this, threads, command
             Map testExpected = test.expected
             test.commands.each { String it ->
-                assertStringContent fileToString(new File(args.chdir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
+                assertStringContent fileToStringReplace(new File(args.chdir, "${it}.out")), resourceToString(CmdImplTest.class.getResource(testExpected[it] as String))
             }
         }
     }

@@ -87,8 +87,6 @@ public class CopyImpl implements Copy {
     private void checkArgs() {
         isTrue(args.containsKey(SRC_ARG), "%s=null", SRC_ARG);
         notNull(args.get(SRC_ARG), "%s=null", SRC_ARG);
-        isTrue(args.containsKey(PWD_ARG), "%s=null", PWD_ARG);
-        notNull(args.get(PWD_ARG), "%s=null", PWD_ARG);
         isTrue(args.containsKey(DEST_ARG), "%s=null", DEST_ARG);
         notNull(args.get(DEST_ARG), "%s=null", DEST_ARG);
     }

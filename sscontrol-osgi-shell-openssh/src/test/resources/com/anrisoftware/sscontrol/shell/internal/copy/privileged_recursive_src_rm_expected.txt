@@ -1,0 +1,1 @@
+-rf /var/lib/robobee/tmp/devent
