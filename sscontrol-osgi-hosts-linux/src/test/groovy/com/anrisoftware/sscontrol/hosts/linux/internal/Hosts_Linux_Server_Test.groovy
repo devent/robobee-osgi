@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anrisoftware.sscontrol.hostname.debian_8.internal
+package com.anrisoftware.sscontrol.hosts.linux.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
@@ -24,13 +24,14 @@ import org.junit.Before
 import org.junit.Test
 
 import com.anrisoftware.globalpom.textmatch.tokentemplate.TokensTemplateModule
-import com.anrisoftware.sscontrol.hostname.debian_8.external.Hostname_Debian_8_Factory
-import com.anrisoftware.sscontrol.hostname.internal.HostnameModule
-import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFactory
+import com.anrisoftware.sscontrol.hosts.internal.HostsModule
+import com.anrisoftware.sscontrol.hosts.internal.HostsImpl.HostsImplFactory
+import com.anrisoftware.sscontrol.hosts.linux.external.Hosts_Linux_Factory
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
 import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
 import com.anrisoftware.sscontrol.shell.internal.fetch.FetchModule
@@ -42,8 +43,8 @@ import com.anrisoftware.sscontrol.shell.internal.ssh.SshModule
 import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
-import com.google.inject.assistedinject.FactoryModuleBuilder
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
@@ -53,39 +54,30 @@ import groovy.util.logging.Slf4j
  * @version 1.0
  */
 @Slf4j
-class Hostname_Debian_8_Test extends AbstractScriptTestBase {
+@CompileStatic
+class Hosts_Linux_Server_Test extends AbstractScriptTestBase {
 
     @Inject
-    HostnameImplFactory hostnameFactory
+    HostsImplFactory hostsFactory
 
     @Inject
-    Hostname_Debian_8_Factory hostnameDebianFactory
+    Hosts_Linux_Factory hostsLinuxFactory
 
     @Inject
     CmdRunCaller cmdRunCaller
 
-    static Map expectedResources = [
-        fqdn_sudo: Hostname_Debian_8_Test.class.getResource('fqdn_sudo_expected.txt'),
-        fqdn_apt_get: Hostname_Debian_8_Test.class.getResource('fqdn_apt_get_expected.txt'),
-        fqdn_hostnamectl: Hostname_Debian_8_Test.class.getResource('fqdn_hostnamectl_expected.txt'),
-    ]
-
     @Test
-    void "hostname script"() {
+    void "hosts script"() {
         def testCases = [
             [
-                name: "fqdn",
                 input: """
-service "hostname" with {
-    // Sets the hostname.
-    set fqdn: "blog.muellerpublic.de"
+service "hosts" with {
+    ip "192.168.0.52", host: "srv1.ubuntutest.com"
+    ip "192.168.0.49", host: "srv1.ubuntutest.de", alias: "srv1"
 }
 """,
                 expected: { Map args ->
-                    File dir = args.dir
-                    assertStringContent fileToString(new File(dir, 'sudo.out')), resourceToString(expectedResources["${args.test.name}_sudo"])
-                    assertStringContent fileToString(new File(dir, 'apt-get.out')), resourceToString(expectedResources["${args.test.name}_apt_get"])
-                    assertStringContent fileToString(new File(dir, 'hostnamectl.out')), resourceToString(expectedResources["${args.test.name}_hostnamectl"])
+                    File dir = args.dir as File
                 },
             ],
         ]
@@ -94,33 +86,34 @@ service "hostname" with {
         }
     }
 
+    void putSshService(HostServices services) {
+        services.addService 'ssh', SshFactory.testServer(injector)
+    }
+
     String getServiceName() {
-        'hostname'
+        'hosts'
     }
 
     String getScriptServiceName() {
-        'hostname/debian/8'
+        'hosts/linux/0'
     }
 
     void createDummyCommands(File dir) {
-        createEchoCommands dir, [
-            'mkdir',
-            'chown',
-            'chmod',
-            'sudo',
-            'apt-get',
-            'hostnamectl'
-        ]
     }
 
     void putServices(HostServices services) {
-        services.putAvailableService 'hostname', hostnameFactory
-        services.putAvailableScriptService 'hostname/debian/8', hostnameDebianFactory
+        services.putAvailableService 'hosts', hostsFactory
+        services.putAvailableScriptService 'hosts/linux/0', hostsLinuxFactory
+    }
+
+    HostServiceScript setupScript(Map args, HostServiceScript script) {
+        return script
     }
 
     List getAdditionalModules() {
         [
-            new HostnameModule(),
+            new HostsModule(),
+            new Hosts_Linux_Module(),
             new HostServicesModule(),
             new ShellModule(),
             new SshModule(),
@@ -135,7 +128,6 @@ service "hostname" with {
                 @Override
                 protected void configure() {
                     bind Cmd to CmdImpl
-                    install(new FactoryModuleBuilder().implement(HostServiceScript, Hostname_Debian_8).build(Hostname_Debian_8_Factory))
                 }
             }
         ]

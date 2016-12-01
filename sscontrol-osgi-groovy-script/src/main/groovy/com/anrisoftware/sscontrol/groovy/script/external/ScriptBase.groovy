@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.groovy.script.external
 
 import static org.apache.commons.lang3.Validate.*
-import groovy.util.logging.Slf4j
 
 import java.util.concurrent.ExecutorService
 
@@ -38,6 +37,8 @@ import com.anrisoftware.sscontrol.types.external.HostServiceScript
 import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.assistedinject.Assisted
+
+import groovy.util.logging.Slf4j
 
 /**
  * Base of all scripts that provides utilities functions and basic properties.
@@ -250,6 +251,32 @@ abstract class ScriptBase extends Script implements HostServiceScript {
      */
     List getPackages() {
         properties.getListProperty "packages", defaultProperties
+    }
+
+    /**
+     * Returns the configuration file of the service.
+     *
+     * <ul>
+     * <li>profile property {@code config_file}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getConfigFile() {
+        properties.getFileProperty "config_file", configDir, defaultProperties
+    }
+
+    /**
+     * Returns the configuration directory of the service.
+     *
+     * <ul>
+     * <li>profile property {@code config_dir}</li>
+     * </ul>
+     *
+     * @see #getDefaultProperties()
+     */
+    File getConfigDir() {
+        properties.getFileProperty "config_dir", defaultProperties
     }
 
     private setupArgs(Map args) {

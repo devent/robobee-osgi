@@ -34,31 +34,21 @@ public class ReplaceLine {
         this.args = new HashMap<String, Object>(args);
     }
 
-    public Map<String, Object> getArgs(Map<String, Object> args) {
-        Map<String, Object> a = new HashMap<String, Object>(args);
-        if (this.args.get("search") == null) {
+    public Map<String, Object> getArgs(Map<String, Object> a) {
+        a = new HashMap<String, Object>(a);
+        if (args.get("search") == null) {
             ParseSedSyntax sed;
-            sed = sedFactory.create(this.args.get("replace").toString());
+            sed = sedFactory.create(args.get("replace").toString());
             sed.parse();
             a.put("search", sed.getSearch());
             a.put("replace", sed.getReplace());
         }
-        putIfNotNull(a, "search");
-        putIfNotNull(a, "replace");
-        putIfNotNull(a, "flags");
         return a;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(args).toString();
-    }
-
-    private void putIfNotNull(Map<String, Object> a, String name) {
-        Object v = args.get(name);
-        if (v != null) {
-            a.put(name, v);
-        }
     }
 
 }

@@ -1,0 +1,2 @@
+/etc/hosts /var/lib/robobee/tmp
+-r /var/lib/robobee/tmp/replace.dest /etc/hosts

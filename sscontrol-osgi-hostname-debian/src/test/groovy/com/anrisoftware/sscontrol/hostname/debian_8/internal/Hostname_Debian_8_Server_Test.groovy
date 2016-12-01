@@ -17,8 +17,6 @@ package com.anrisoftware.sscontrol.hostname.debian_8.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
 import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -32,7 +30,7 @@ import com.anrisoftware.sscontrol.hostname.internal.HostnameImpl.HostnameImplFac
 import com.anrisoftware.sscontrol.replace.internal.ReplaceModule
 import com.anrisoftware.sscontrol.services.internal.HostServicesModule
 import com.anrisoftware.sscontrol.shell.external.Cmd
-import com.anrisoftware.sscontrol.shell.external.utils.ScriptTestBase
+import com.anrisoftware.sscontrol.shell.external.utils.AbstractScriptTestBase
 import com.anrisoftware.sscontrol.shell.external.utils.SshFactory
 import com.anrisoftware.sscontrol.shell.internal.cmd.CmdModule
 import com.anrisoftware.sscontrol.shell.internal.copy.CopyModule
@@ -47,6 +45,9 @@ import com.anrisoftware.sscontrol.types.external.HostServices
 import com.google.inject.AbstractModule
 import com.google.inject.assistedinject.FactoryModuleBuilder
 
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
+
 /**
  * 
  *
@@ -55,7 +56,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder
  */
 @Slf4j
 @CompileStatic
-class Hostname_Debian_8_Server_Test extends ScriptTestBase {
+class Hostname_Debian_8_Server_Test extends AbstractScriptTestBase {
 
     @Inject
     HostnameImplFactory hostnameFactory
@@ -92,6 +93,10 @@ service "hostname" with {
 
     String getServiceName() {
         'hostname'
+    }
+
+    String getScriptServiceName() {
+        'hostname/debian/8'
     }
 
     void createDummyCommands(File dir) {
