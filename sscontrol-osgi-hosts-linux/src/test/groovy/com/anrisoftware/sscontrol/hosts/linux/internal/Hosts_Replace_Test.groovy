@@ -42,7 +42,7 @@ class Hosts_Replace_Test {
 
     @Test
     void "replace hosts"() {
-        def search = "^.*(srv1.ubuntutest.com).*"
+        def search = /.*(srv1.ubuntutest.com).*/
         def replace = "192.168.0.52 srv1.ubuntutest.com "
         def tokens = new TokenMarker("#ROBOBEE_BEGIN", "#ROBOBEE_END\n")
         def text =
@@ -70,8 +70,8 @@ ff02::2 ip6-allrouters
 #ROBOBEE_END
 """
         //
-        search = "^.*(srv1.ubuntutest.de).*"
-        replace = "192.168.0.49 srv1.ubuntutest.de srv1"
+        search = /.*(srv1\.ubuntutest\.de).*/
+        replace = "192.168.0.49 srv2.ubuntutest.de srv2 "
         tokens = new TokenMarker("#ROBOBEE_BEGIN", "#ROBOBEE_END\n")
         template = new TokenTemplate(search, replace)
         text = worker.text
@@ -89,7 +89,30 @@ ff02::2 ip6-allrouters
 192.168.0.52 srv1.ubuntutest.com 
 #ROBOBEE_END
 #ROBOBEE_BEGIN
-192.168.0.49 srv1.ubuntutest.de srv1
+192.168.0.49 srv2.ubuntutest.de srv2 
+#ROBOBEE_END
+"""
+        //
+        search = /.*(srv2.ubuntutest.de).*/
+        replace = "192.168.0.49 srv2.ubuntutest.de srv2"
+        tokens = new TokenMarker("#ROBOBEE_BEGIN", "#ROBOBEE_END\n")
+        template = new TokenTemplate(search, replace)
+        text = worker.text
+        worker = factory.create tokens, template, text
+        worker.replace()
+        assertStringContent worker.text,
+                """127.0.0.1       localhost
+127.0.1.1       master.muellerpublic.de master
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+#ROBOBEE_BEGIN
+192.168.0.52 srv1.ubuntutest.com 
+#ROBOBEE_END
+#ROBOBEE_BEGIN
+192.168.0.49 srv2.ubuntutest.de srv2
 #ROBOBEE_END
 """
     }

@@ -10,10 +10,24 @@ import java.util.List;
  */
 public interface Host {
 
+    /**
+     * Returns the host IP address.
+     */
     String getAddress();
 
+    /**
+     * Returns the name of the host.
+     */
     String getHost();
 
+    /**
+     * Returns the aliases of the host.
+     */
     List<String> getAliases();
+
+    /**
+     * Returns on what the host should be identified.
+     */
+    String getIdentifier();
 
 }

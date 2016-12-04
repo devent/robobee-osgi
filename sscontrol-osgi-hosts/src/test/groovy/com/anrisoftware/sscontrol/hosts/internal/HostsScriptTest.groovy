@@ -16,9 +16,6 @@
 package com.anrisoftware.sscontrol.hosts.internal
 
 import static com.anrisoftware.globalpom.utils.TestUtils.*
-import static com.google.inject.util.Providers.of
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 
@@ -40,6 +37,9 @@ import com.anrisoftware.sscontrol.types.external.HostServices
 import com.anrisoftware.sscontrol.types.external.TargetsService
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * 
@@ -75,10 +75,12 @@ service "hosts" with {
                     assert h.address == "192.168.0.52"
                     assert h.host == "srv1.ubuntutest.com"
                     assert h.aliases.size() == 0
+                    assert h.identifier == "host"
                     h = hosts.hosts[1]
                     assert h.address == "192.168.0.49"
                     assert h.host == "srv1.ubuntutest.de"
                     assert h.aliases.containsAll(["srv1"])
+                    assert h.identifier == "host"
                 },
             ],
             [
@@ -93,11 +95,27 @@ service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1"
                     assert h.address == "192.168.0.52"
                     assert h.host == "srv1.ubuntutest.com"
                     assert h.aliases.containsAll(["srv1"])
+                    assert h.identifier == "host"
+                },
+            ],
+            [
+                input: """
+service "hosts", ip: "192.168.0.52", host: "srv1.ubuntutest.com", alias: "srv1", on: "address"
+""",
+                expected: { HostServices services ->
+                    assert services.getServices('hosts').size() == 1
+                    Hosts hosts = services.getServices('hosts')[0] as Hosts
+                    assert hosts.hosts.size() == 1
+                    Host h = hosts.hosts[0]
+                    assert h.address == "192.168.0.52"
+                    assert h.host == "srv1.ubuntutest.com"
+                    assert h.aliases.containsAll(["srv1"])
+                    assert h.identifier == "address"
                 },
             ],
         ]
         testCases.eachWithIndex { Map test, int k ->
-            log.info '{}. case: {}', k, test
+            log.info '\n#### {}. case: {}', k, test
             def services = servicesFactory.create()
             services.putAvailableService 'hosts', hostnameFactory
             Eval.me 'service', services, test.input as String

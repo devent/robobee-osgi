@@ -282,9 +282,8 @@ abstract class ScriptBase extends Script implements HostServiceScript {
     private setupArgs(Map args) {
         Map a = new HashMap(args)
         a = replaceMapValues env, a, "env"
-        a.target = this.target
-        if (args.containsKey('target')) {
-            a.target = a.target
+        if (!args.containsKey('target')) {
+            a.target = target
         }
         if (!a.containsKey('chdir')) {
             a.chdir = chdir

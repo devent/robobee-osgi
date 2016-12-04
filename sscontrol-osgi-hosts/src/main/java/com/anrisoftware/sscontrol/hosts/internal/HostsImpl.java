@@ -84,13 +84,19 @@ public class HostsImpl implements Hosts {
     }
 
     public void ip(Map<String, Object> args) {
-        String address = args.get("ip").toString();
-        String host = args.get("host").toString();
+        Map<String, Object> a = new HashMap<String, Object>(args);
         List<String> aliases = new ArrayList<String>();
-        if (args.get("alias") != null) {
+        a.put("address", a.get("ip"));
+        a.put("aliases", aliases);
+        if (a.get("alias") != null) {
             aliases = ToList.toList(args.get("alias"));
+            a.put("aliases", aliases);
         }
-        Host h = hostFactory.create(address, host, aliases);
+        a.put("identifier", a.get("on"));
+        if (a.get("on") == null) {
+            a.put("identifier", "host");
+        }
+        Host h = hostFactory.create(a);
         log.hostAdded(this, h);
         hosts.add(h);
     }

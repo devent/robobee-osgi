@@ -2,6 +2,7 @@ package com.anrisoftware.sscontrol.hosts.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -26,8 +27,7 @@ public class HostImpl implements Host {
      */
     public interface HostImplFactory {
 
-        Host create(@Assisted("address") String address,
-                @Assisted("host") String host, @Assisted List<String> aliases);
+        Host create(Map<String, Object> args);
 
     }
 
@@ -37,46 +37,49 @@ public class HostImpl implements Host {
 
     private final String host;
 
+    private final String identifier;
+
+    @SuppressWarnings("unchecked")
     @Inject
-    HostImpl(@Assisted("address") String address, @Assisted("host") String host,
-            @Assisted List<String> aliases) {
-        this.address = address;
-        this.host = host;
-        this.aliases = new ArrayList<String>(aliases);
+    HostImpl(@Assisted Map<String, Object> args) {
+        this.address = args.get("address").toString();
+        this.host = args.get("host").toString();
+        this.aliases = new ArrayList<String>(
+                (List<String>) args.get("aliases"));
+        this.identifier = args.get("identifier").toString();
     }
 
-    /**
-     * Returns the host IP address.
-     */
     @Override
     public String getAddress() {
         return address;
     }
 
-    /**
-     * Returns the name of the host.
-     */
     @Override
     public String getHost() {
         return host;
     }
 
-    /**
-     * Returns the aliases of the host.
-     */
     @Override
     public List<String> getAliases() {
         return aliases;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
     }
 
     private static final String ALIASES = "aliases";
 
     private static final String HOST = "host";
 
+    private static final String IDENTIFIER = "identifier";
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).append(address).append(HOST, host)
-                .append(ALIASES, aliases).toString();
+                .append(ALIASES, aliases).append(IDENTIFIER, identifier)
+                .toString();
     }
 
 }

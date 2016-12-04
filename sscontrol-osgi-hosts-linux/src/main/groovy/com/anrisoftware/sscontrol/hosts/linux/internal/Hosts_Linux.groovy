@@ -57,7 +57,14 @@ class Hosts_Linux extends ScriptBase {
                 def address = h.address
                 def host = h.host
                 def aliases = h.aliases.join(' ')
-                line "s/^.*($host).*/$address $host $aliases/"
+                switch (h.identifier) {
+                    case 'host':
+                        line "s/.*($host).*/$address $host $aliases/"
+                        break
+                    case 'address':
+                        line "s/.*($address).*/$address $host $aliases/"
+                        break
+                }
             }
             it
         }()
