@@ -52,6 +52,8 @@ import com.google.inject.assistedinject.AssistedInject;
  */
 public class HostServicesImpl implements HostServices {
 
+    private static final String DEFAULT_TARGETS_NAME = "default";
+
     /**
      * 
      *
@@ -227,7 +229,7 @@ public class HostServicesImpl implements HostServices {
     }
 
     private Map<String, Object> parseArgs(Map<String, Object> args) {
-        Map<String, Object> result = new HashMap<String, Object>(args);
+        Map<String, Object> result = new HashMap<>(args);
         result.put("targets", parseTarget(args));
         return unmodifiableMap(result);
     }
@@ -238,7 +240,7 @@ public class HostServicesImpl implements HostServices {
             String name = object.toString();
             return targets.getHosts(name);
         } else {
-            return new ArrayList<SshHost>();
+            return targets.getHosts(DEFAULT_TARGETS_NAME);
         }
     }
 

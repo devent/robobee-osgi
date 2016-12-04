@@ -83,6 +83,11 @@ public class HostnameImpl implements Hostname {
     }
 
     @Override
+    public SshHost getTarget() {
+        return getTargets().get(0);
+    }
+
+    @Override
     public List<SshHost> getTargets() {
         return targets;
     }

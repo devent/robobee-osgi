@@ -237,6 +237,11 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
+    public SshHost getTarget() {
+        return getTargets().get(0);
+    }
+
+    @Override
     public List<SshHost> getTargets() {
         return targets;
     }

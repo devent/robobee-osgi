@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.services.internal
 
-import groovy.transform.ToString
-
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.HostService
@@ -24,6 +22,8 @@ import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.assistedinject.Assisted
+
+import groovy.transform.ToString
 
 /**
  * 
@@ -74,6 +74,11 @@ class HostnameStub implements HostService {
 
     void set(String name) {
         this.name = name
+    }
+
+    @Override
+    SshHost getTarget() {
+        targets[0]
     }
 
     @Override

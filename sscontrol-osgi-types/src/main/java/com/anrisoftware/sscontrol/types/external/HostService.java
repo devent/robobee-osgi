@@ -27,6 +27,8 @@ public interface HostService {
 
     String getName();
 
+    SshHost getTarget();
+
     List<SshHost> getTargets();
 
     HostServiceProperties getServiceProperties();

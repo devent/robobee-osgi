@@ -89,6 +89,11 @@ public class DhclientImpl extends AbstractDeclaration implements Dhclient {
     }
 
     @Override
+    public SshHost getTarget() {
+        return getTargets().get(0);
+    }
+
+    @Override
     public List<SshHost> getTargets() {
         return targets;
     }

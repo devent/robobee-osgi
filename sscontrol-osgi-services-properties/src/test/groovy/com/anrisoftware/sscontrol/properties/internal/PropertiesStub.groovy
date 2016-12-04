@@ -16,7 +16,6 @@
 package com.anrisoftware.sscontrol.properties.internal
 
 import static com.anrisoftware.sscontrol.types.external.StringListPropertyUtil.stringListStatement
-import groovy.transform.ToString
 
 import javax.inject.Inject
 
@@ -26,6 +25,8 @@ import com.anrisoftware.sscontrol.types.external.HostServiceProperties
 import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.assistedinject.Assisted
+
+import groovy.transform.ToString
 
 /**
  * 
@@ -70,6 +71,11 @@ class PropertiesStub implements HostService {
     @Inject
     PropertiesStub(HostPropertiesService propertiesService, @Assisted Map<String, Object> args) {
         this.serviceProperties = propertiesService.create();
+    }
+
+    @Override
+    SshHost getTarget() {
+        targets[0]
     }
 
     @Override

@@ -15,9 +15,9 @@
  */
 package com.anrisoftware.sscontrol.groovy.script.external
 
-import groovy.transform.ToString
-
 import com.anrisoftware.sscontrol.types.external.SshHost
+
+import groovy.transform.ToString
 
 /**
  * 
@@ -45,5 +45,10 @@ class Localhost implements SshHost {
 
     @Override
     URI getKey() {
+    }
+
+    @Override
+    String getHostAddress() {
+        '127.0.0.1'
     }
 }

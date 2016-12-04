@@ -15,8 +15,6 @@
  */
 package com.anrisoftware.sscontrol.services.internal
 
-import groovy.transform.ToString
-
 import javax.inject.Inject
 
 import com.anrisoftware.sscontrol.types.external.DebugLogging
@@ -26,6 +24,8 @@ import com.anrisoftware.sscontrol.types.external.HostServiceService
 import com.anrisoftware.sscontrol.types.external.Ssh
 import com.anrisoftware.sscontrol.types.external.SshHost
 import com.google.inject.assistedinject.Assisted
+
+import groovy.transform.ToString
 
 /**
  * 
@@ -99,6 +99,11 @@ class SshStub implements Ssh {
     @Override
     List<SshHost> getHosts() {
         hosts
+    }
+
+    @Override
+    SshHost getTarget() {
+        targets[0]
     }
 
     @Override

@@ -158,6 +158,11 @@ public class SshImpl implements Ssh {
     }
 
     @Override
+    public SshHost getTarget() {
+        return getTargets().get(0);
+    }
+
+    @Override
     public List<SshHost> getTargets() {
         return Collections.unmodifiableList(targets);
     }

@@ -112,6 +112,11 @@ public class HostsImpl implements Hosts {
     }
 
     @Override
+    public SshHost getTarget() {
+        return getTargets().get(0);
+    }
+
+    @Override
     public List<SshHost> getTargets() {
         return targets;
     }

@@ -17,7 +17,9 @@ package com.anrisoftware.sscontrol.ssh.internal;
 
 import static org.apache.commons.lang3.StringUtils.split;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -36,6 +38,12 @@ import com.anrisoftware.sscontrol.types.external.SshHost;
  */
 public class SshHostImpl implements SshHost {
 
+    /**
+     * 
+     *
+     * @author Erwin Müller <erwin.mueller@deventm.de>
+     * @version 1.0
+     */
     public interface SshHostImplFactory {
 
         SshHostImpl create();
@@ -94,6 +102,11 @@ public class SshHostImpl implements SshHost {
     @Override
     public URI getKey() {
         return key;
+    }
+
+    @Override
+    public String getHostAddress() throws UnknownHostException {
+        return InetAddress.getByName(host).getHostAddress();
     }
 
     @Override

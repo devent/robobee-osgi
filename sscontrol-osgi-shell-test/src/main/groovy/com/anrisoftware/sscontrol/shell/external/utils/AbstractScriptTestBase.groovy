@@ -19,6 +19,7 @@ import static com.anrisoftware.sscontrol.shell.external.utils.UnixTestUtil.*
 
 import javax.inject.Inject
 
+import org.apache.commons.io.FileUtils
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
@@ -84,11 +85,13 @@ abstract class AbstractScriptTestBase {
 
     void doTest(Map test, int k) {
         log.info '{}. case: {}', k, test
+        File scriptFile = folder.newFile('Script.groovy')
         File dir = folder.newFolder()
         def services = servicesFactory.create()
         putServices services
         putSshService services
-        Eval.me 'service', services, test.input as String
+        FileUtils.write scriptFile, test.input
+        services = runScript scriptFile, services
         def all = services.targets.getHosts('default')
         createDummyCommands dir
         services.getServices().each { String name ->
@@ -131,6 +134,20 @@ abstract class AbstractScriptTestBase {
         script.setEnv [:]
         script.env.PATH = args.dir
         return script
+    }
+
+    HostServices runScript(File file, HostServices services) {
+        Binding binding = createBinding services
+        GroovyScriptEngine engine = new GroovyScriptEngine([file.parentFile.toURL()] as URL[]);
+        engine.run(file.name, binding);
+        return binding.service
+    }
+
+    Binding createBinding(HostServices services) {
+        Binding binding = new Binding();
+        binding.setProperty("service", services);
+        binding.setProperty("targets", services.getTargets());
+        return binding;
     }
 
     Injector createInjector() {
